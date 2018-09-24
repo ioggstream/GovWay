@@ -56,6 +56,7 @@ import org.openspcoop2.core.config.Tracciamento;
 import org.openspcoop2.core.config.ValidazioneBuste;
 import org.openspcoop2.core.config.ValidazioneContenutiApplicativi;
 import org.openspcoop2.core.config.constants.AlgoritmoCache;
+import org.openspcoop2.core.config.constants.CostantiConfigurazione;
 import org.openspcoop2.core.config.constants.Severita;
 import org.openspcoop2.core.config.constants.StatoFunzionalita;
 import org.openspcoop2.core.config.constants.StatoFunzionalitaConWarning;
@@ -157,6 +158,9 @@ public final class ConfigurazioneGenerale extends Action {
 			String idlecache_token = confHelper.getParameter(ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_IDLE_CACHE_TOKEN);
 			String lifecache_token = confHelper.getParameter(ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_LIFE_CACHE_TOKEN);
 			
+			String multitenantStatoTmp = confHelper.getParameter(ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_MULTITENANT_STATO);
+			boolean multitenantEnabled = CostantiConfigurazione.ABILITATO.getValue().equals(multitenantStatoTmp);
+			
 			Boolean confPersB = ServletUtils.getConfigurazioniPersonalizzateFromSession(session); 
 			String confPers = confPersB ? "true" : "false";
 			Configurazione configurazione = confCore.getConfigurazioneGenerale();
@@ -227,7 +231,8 @@ public final class ConfigurazioneGenerale extends Action {
 					dati = confHelper.addConfigurazioneToDati(  inoltromin, stato, controllo, severita, severita_log4j, integman, nomeintegman, profcoll, 
 							connessione, utilizzo, validman, gestman, registrazioneTracce, dumpPD, dumpPA, 
 							xsd, tipoValidazione, confPers, configurazione, dati, applicaMTOM,
-							configurazione.getProtocolli());
+							configurazione.getProtocolli(),
+							multitenantEnabled);
 
 					confHelper.setDataElementCache(dati,ConfigurazioneCostanti.LABEL_CONFIGURAZIONE_CACHE_CONFIG,
 							ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_STATO_CACHE_CONFIG,statocache_config,
@@ -491,7 +496,8 @@ public final class ConfigurazioneGenerale extends Action {
 				dati = confHelper.addConfigurazioneToDati(  inoltromin, stato, controllo, severita, severita_log4j, integman, nomeintegman, profcoll, 
 						connessione, utilizzo, validman, gestman, registrazioneTracce, dumpPD, dumpPA, 
 						xsd, tipoValidazione, confPers, configurazione, dati, applicaMTOM,
-						configurazione.getProtocolli());
+						configurazione.getProtocolli(),
+						multitenantEnabled);
 
 				confHelper.setDataElementCache(dati,ConfigurazioneCostanti.LABEL_CONFIGURAZIONE_CACHE_CONFIG,
 						ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_STATO_CACHE_CONFIG,statocache_config,
@@ -660,7 +666,8 @@ public final class ConfigurazioneGenerale extends Action {
 			dati = confHelper.addConfigurazioneToDati(  inoltromin, stato, controllo, severita, severita_log4j, integman, nomeintegman, profcoll, 
 					connessione, utilizzo, validman, gestman, registrazioneTracce, dumpPD, dumpPA, 
 					xsd, tipoValidazione, confPers, configurazione, dati, applicaMTOM,
-					configurazione.getProtocolli());
+					configurazione.getProtocolli(),
+					multitenantEnabled);
 
 			confHelper.setDataElementCache(dati,ConfigurazioneCostanti.LABEL_CONFIGURAZIONE_CACHE_CONFIG,
 					ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_STATO_CACHE_CONFIG,statocache_config,

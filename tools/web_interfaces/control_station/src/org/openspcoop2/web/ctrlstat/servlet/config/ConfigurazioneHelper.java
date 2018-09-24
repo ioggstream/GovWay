@@ -115,6 +115,7 @@ import org.openspcoop2.web.ctrlstat.servlet.pa.PorteApplicativeCostanti;
 import org.openspcoop2.web.ctrlstat.servlet.pa.PorteApplicativeHelper;
 import org.openspcoop2.web.ctrlstat.servlet.pd.PorteDelegateCostanti;
 import org.openspcoop2.web.ctrlstat.servlet.pd.PorteDelegateHelper;
+import org.openspcoop2.web.ctrlstat.servlet.sa.ServiziApplicativiCostanti;
 import org.openspcoop2.web.ctrlstat.servlet.soggetti.SoggettiCostanti;
 import org.openspcoop2.web.lib.mvc.CheckboxStatusType;
 import org.openspcoop2.web.lib.mvc.Costanti;
@@ -2901,7 +2902,9 @@ public class ConfigurazioneHelper extends ConsoleHelper{
 			String connessione, String utilizzo, String validman,
 			String gestman, String registrazioneTracce, String dumpPD, String dumpPA,
 			String xsd,	String tipoValidazione, String confPers, Configurazione configurazione,
-			Vector<DataElement> dati, String applicaMTOM, ConfigurazioneProtocolli configProtocolli) throws Exception {
+			Vector<DataElement> dati, String applicaMTOM, ConfigurazioneProtocolli configProtocolli,
+			boolean multitenantEnabled
+			) throws Exception {
 		DataElement de = new DataElement();
 
 		if (this.isModalitaStandard()) {
@@ -3207,6 +3210,68 @@ public class ConfigurazioneHelper extends ConsoleHelper{
 		}
 		de.setValue(gestman);
 		dati.addElement(de);
+		
+		
+		de = new DataElement();
+		de.setLabel(ConfigurazioneCostanti.LABEL_CONFIGURAZIONE_MULTITENANT);
+		de.setType(DataElementType.TITLE);
+		dati.addElement(de);
+		
+		de = new DataElement();
+		de.setLabel(ConfigurazioneCostanti.LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_STATO);
+		de.setName(ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_MULTITENANT_STATO);
+		de.setType(DataElementType.SELECT);
+		de.setValues(ConfigurazioneCostanti.STATI);
+		de.setSelected(multitenantEnabled ? CostantiConfigurazione.ABILITATO.getValue() : CostantiConfigurazione.DISABILITATO.getValue());
+		de.setValue(multitenantEnabled ? CostantiConfigurazione.ABILITATO.getValue() : CostantiConfigurazione.DISABILITATO.getValue());
+		de.setPostBack(true);
+		dati.addElement(de);
+		
+		if(multitenantEnabled) {
+			
+			de = new DataElement();
+			de.setValue(ConfigurazioneCostanti.LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_SOGGETTI);
+			de.setType(DataElementType.LINK);
+			de.setUrl(SoggettiCostanti.SERVLET_NAME_SOGGETTI_LIST);
+	//				new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_ID,idSoggettoLong+""),
+	//				new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_NOME,idSoggetto.getNome()),
+	//				new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_TIPO,idSoggetto.getTipo()),
+	//				new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_MODIFICA_OPERATIVO,"true"));
+			dati.addElement(de);
+			
+			de = new DataElement();
+			de.setLabel(ConfigurazioneCostanti.LABEL_CONFIGURAZIONE_MULTITENANT_FRUIZIONI);
+			de.setType(DataElementType.SUBTITLE);
+			dati.addElement(de);
+			
+			de = new DataElement();
+			de.setLabel(ConfigurazioneCostanti.LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_FRUIZIONI_SOGGETTO_EROGATORE);
+			de.setName(ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_MULTITENANT_FRUIZIONI_SOGGETTO_EROGATORE);
+			de.setType(DataElementType.SELECT);
+			String [] todoV = new String [] { "Solo Soggetti Esterni", "Escludi Soggetto Fruitore", "Tutti" };
+			de.setValues(todoV);
+			//de.setSelected(multitenantEnabled ? CostantiConfigurazione.ABILITATO.getValue() : CostantiConfigurazione.DISABILITATO.getValue());
+			//de.setValue(multitenantEnabled ? CostantiConfigurazione.ABILITATO.getValue() : CostantiConfigurazione.DISABILITATO.getValue());
+			//de.setPostBack(true);
+			dati.addElement(de);
+			
+			de = new DataElement();
+			de.setLabel(ConfigurazioneCostanti.LABEL_CONFIGURAZIONE_MULTITENANT_EROGAZIONI);
+			de.setType(DataElementType.SUBTITLE);
+			dati.addElement(de);
+			
+			de = new DataElement();
+			de.setLabel(ConfigurazioneCostanti.LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_FRUIZIONI_SOGGETTI_AUTENTICATI);
+			de.setName(ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_MULTITENANT_EROGAZIONI_SOGGETTI_AUTENTICATI);
+			de.setType(DataElementType.SELECT);
+			todoV = new String [] { "Solo Soggetti Esterni", "Escludi Soggetto Erogatore", "Tutti" };
+			de.setValues(todoV);
+			//de.setSelected(multitenantEnabled ? CostantiConfigurazione.ABILITATO.getValue() : CostantiConfigurazione.DISABILITATO.getValue());
+			//de.setValue(multitenantEnabled ? CostantiConfigurazione.ABILITATO.getValue() : CostantiConfigurazione.DISABILITATO.getValue());
+			//de.setPostBack(true);
+			dati.addElement(de);
+			
+		}
 		
 		
 		de = new DataElement();

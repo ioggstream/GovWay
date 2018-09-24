@@ -398,6 +398,9 @@ public class ConfigurazioneCostanti {
 	public final static String LABEL_CONFIGURAZIONE_INDIRIZZO_TELEMATICO = "Indirizzo Telematico";
 	public final static String LABEL_CONFIGURAZIONE_MANIFEST_ATTACHMENTS = "Manifest Attachments";
 	public final static String LABEL_CONFIGURAZIONE_URL_INVOCAZIONE = "Modalit&agrave;"; //"URL di Invocazione dei Servizi";
+	public final static String LABEL_CONFIGURAZIONE_MULTITENANT = "Multitenant";
+	public final static String LABEL_CONFIGURAZIONE_MULTITENANT_FRUIZIONI = "Fruizioni";
+	public final static String LABEL_CONFIGURAZIONE_MULTITENANT_EROGAZIONI = "Erogazioni (Controllo Accesso)";
 	public final static String LABEL_CONFIGURAZIONE_REGISTRO_SERVIZI = "Registro dei Servizi";
 	
 	public final static String LABEL_CONFIGURAZIONE_CACHE_REGISTRY = "Cache";
@@ -777,6 +780,10 @@ public class ConfigurazioneCostanti {
 	public final static String PARAMETRO_CONFIGURAZIONE_GESTORE_POLICY_TOKEN_TIPO = "tipo";
 	public final static String PARAMETRO_CONFIGURAZIONE_GESTORE_POLICY_TOKEN_TIPOLOGIA = "tipologia";
 	public final static String PARAMETRO_CONFIGURAZIONE_GESTORE_POLICY_TOKEN_ID = "idPolicy";
+	
+	public final static String PARAMETRO_CONFIGURAZIONE_MULTITENANT_STATO = "ConfMTStato";
+	public final static String PARAMETRO_CONFIGURAZIONE_MULTITENANT_FRUIZIONI_SOGGETTO_EROGATORE = "ConfMTFruSoggEro";
+	public final static String PARAMETRO_CONFIGURAZIONE_MULTITENANT_EROGAZIONI_SOGGETTI_AUTENTICATI = "ConfMTEroSoggAutenticati";
 		
 	/* LABEL PARAMETRI */
 	
@@ -1052,6 +1059,10 @@ public class ConfigurazioneCostanti {
 	public final static String LABEL_PARAMETRO_CONFIGURAZIONE_GESTORE_POLICY_TOKEN_TIPO = "Tipo";
 	public final static String LABEL_PARAMETRO_CONFIGURAZIONE_GESTORE_POLICY_TOKEN_TIPOLOGIA = "Tipologia";
 	
+	public final static String LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_STATO = "Stato";
+	public final static String LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_SOGGETTI = "Soggetti";
+	public final static String LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_FRUIZIONI_SOGGETTO_EROGATORE = "Soggetto Erogatore";
+	public final static String LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_FRUIZIONI_SOGGETTI_AUTENTICATI = "Soggetti Autenticati";
 	
 	/* DEFAULT VALUE PARAMETRI */
 	public final static String DEFAULT_VALUE_PARAMETRO_CONFIGURAZIONE_TIPO_XML = "xml";
