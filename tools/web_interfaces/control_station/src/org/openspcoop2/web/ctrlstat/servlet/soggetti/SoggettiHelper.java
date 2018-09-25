@@ -883,7 +883,7 @@ public class SoggettiHelper extends ConnettoriHelper {
 				// pdd o dominio
 				totEl++;
 			}
-			if(multiTenant || this.isModalitaCompleta()) {
+			if(this.isModalitaCompleta()) {
 				totEl++; // connettore column
 			}
 			if(this.isModalitaCompleta()) {

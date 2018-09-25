@@ -239,7 +239,8 @@ public final class ConfigurazioneGenerale extends Action {
 							connessione, utilizzo, validman, gestman, registrazioneTracce, dumpPD, dumpPA, 
 							xsd, tipoValidazione, confPers, configurazione, dati, applicaMTOM,
 							configurazione.getProtocolli(),
-							multitenantEnabled, multitenantSoggettiFruizioni, multitenantSoggettiErogazioni);
+							multitenantEnabled, multitenantSoggettiFruizioni, multitenantSoggettiErogazioni,
+							true);
 
 					confHelper.setDataElementCache(dati,ConfigurazioneCostanti.LABEL_CONFIGURAZIONE_CACHE_CONFIG,
 							ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_STATO_CACHE_CONFIG,statocache_config,
@@ -551,7 +552,8 @@ public final class ConfigurazioneGenerale extends Action {
 						connessione, utilizzo, validman, gestman, registrazioneTracce, dumpPD, dumpPA, 
 						xsd, tipoValidazione, confPers, configurazione, dati, applicaMTOM,
 						configurazione.getProtocolli(),
-						multitenantEnabled, multitenantSoggettiFruizioni, multitenantSoggettiErogazioni);
+						multitenantEnabled, multitenantSoggettiFruizioni, multitenantSoggettiErogazioni,
+						false);
 
 				confHelper.setDataElementCache(dati,ConfigurazioneCostanti.LABEL_CONFIGURAZIONE_CACHE_CONFIG,
 						ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_STATO_CACHE_CONFIG,statocache_config,
@@ -756,7 +758,8 @@ public final class ConfigurazioneGenerale extends Action {
 					connessione, utilizzo, validman, gestman, registrazioneTracce, dumpPD, dumpPA, 
 					xsd, tipoValidazione, confPers, configurazione, dati, applicaMTOM,
 					configurazione.getProtocolli(),
-					multitenantEnabled, multitenantSoggettiFruizioni, multitenantSoggettiErogazioni);
+					multitenantEnabled, multitenantSoggettiFruizioni, multitenantSoggettiErogazioni,
+					true);
 
 			confHelper.setDataElementCache(dati,ConfigurazioneCostanti.LABEL_CONFIGURAZIONE_CACHE_CONFIG,
 					ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_STATO_CACHE_CONFIG,statocache_config,

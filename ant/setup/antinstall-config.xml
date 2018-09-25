@@ -226,8 +226,8 @@
     <page name="preinstallazioneEDelivery" type="input" displayText="Configurazione eDelivery" ifProperty="${antinstaller_protocollo_as4}==true">
 
 	<comment displayText="HTTP Endpoint" bold="true"/>
-	<validated defaultValue="http://127.0.0.1:8080/domibus/services/msh" property="antinstaller_as4_msh" displayText="Domibus MSH URL" regex="http(s?):\/\/(.+)\/(.*)"/>
-	<validated defaultValue="http://127.0.0.1:8080/domibus/services/backend" property="antinstaller_as4_backend" displayText="Domibus Backend WS URL" regex="http(s?):\/\/(.+)\/(.*)"/>
+	<validated defaultValue="http://localhost:8080/domibus/services/msh" property="antinstaller_as4_msh" displayText="Domibus MSH URL" regex="http(s?):\/\/(.+)\/(.*)"/>
+	<validated defaultValue="http://localhost:8080/domibus/services/backend" property="antinstaller_as4_backend" displayText="Domibus Backend WS URL" regex="http(s?):\/\/(.+)\/(.*)"/>
 
 	<comment displayText="Broker JMS" bold="true"/>
 	<validated defaultValue="tcp://127.0.0.1:61616" property="antinstaller_as4_jms_url" displayText="Provider URL" regex="(.+):\/\/(.+)"/>

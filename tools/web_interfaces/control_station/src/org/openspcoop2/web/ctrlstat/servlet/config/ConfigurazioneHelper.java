@@ -2906,7 +2906,8 @@ public class ConfigurazioneHelper extends ConsoleHelper{
 			String gestman, String registrazioneTracce, String dumpPD, String dumpPA,
 			String xsd,	String tipoValidazione, String confPers, Configurazione configurazione,
 			Vector<DataElement> dati, String applicaMTOM, ConfigurazioneProtocolli configProtocolli,
-			boolean multitenantEnabled, String multitenantSoggettiFruizioni, String multitenantSoggettiErogazioni
+			boolean multitenantEnabled, String multitenantSoggettiFruizioni, String multitenantSoggettiErogazioni,
+			boolean editModeEnabled
 			) throws Exception {
 		DataElement de = new DataElement();
 
@@ -3271,14 +3272,31 @@ public class ConfigurazioneHelper extends ConsoleHelper{
 			de = new DataElement();
 			de.setLabel(ConfigurazioneCostanti.LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_FRUIZIONI_SOGGETTO_EROGATORE);
 			de.setName(ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_MULTITENANT_FRUIZIONI_SOGGETTO_EROGATORE);
-			de.setType(DataElementType.SELECT);
-			String [] values = MultitenantSoggettiFruizioni.toEnumNameArray();
-			String [] labels = MultitenantSoggettiFruizioni.toArray();
-			de.setValues(values);
-			de.setLabels(labels);
-			de.setSelected(multitenantSoggettiFruizioni);
+			if(editModeEnabled) {
+				de.setType(DataElementType.SELECT);
+				String [] values = MultitenantSoggettiFruizioni.toEnumNameArray();
+				String [] labels = MultitenantSoggettiFruizioni.toArray();
+				de.setValues(values);
+				de.setLabels(labels);
+				de.setSelected(multitenantSoggettiFruizioni);
+			}
+			else {
+				de.setType(DataElementType.HIDDEN);
+			}
 			de.setValue(multitenantSoggettiFruizioni);
 			dati.addElement(de);
+			
+			if(!editModeEnabled) {
+				de = new DataElement();
+				de.setLabel(ConfigurazioneCostanti.LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_FRUIZIONI_SOGGETTO_EROGATORE);
+				de.setName(ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_MULTITENANT_FRUIZIONI_SOGGETTO_EROGATORE+"__LABEL");
+				String multi = MultitenantSoggettiFruizioni.SOLO_SOGGETTI_ESTERNI.getValue();
+				try {
+					multi = MultitenantSoggettiFruizioni.valueOf(multitenantSoggettiFruizioni).getValue();
+				}catch(Exception e) {}
+				de.setValue(multi);
+				dati.addElement(de);
+			}
 			
 			de = new DataElement();
 			de.setLabel(ConfigurazioneCostanti.LABEL_CONFIGURAZIONE_MULTITENANT_EROGAZIONI);
@@ -3288,16 +3306,31 @@ public class ConfigurazioneHelper extends ConsoleHelper{
 			de = new DataElement();
 			de.setLabel(ConfigurazioneCostanti.LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_EROGAZIONI_SOGGETTI_AUTENTICATI);
 			de.setName(ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_MULTITENANT_EROGAZIONI_SOGGETTI_AUTENTICATI);
-			de.setType(DataElementType.SELECT);
-			values = MultitenantSoggettiErogazioni.toEnumNameArray();
-			labels = MultitenantSoggettiErogazioni.toArray();
-			de.setValues(values);
-			de.setLabels(labels);
-			de.setSelected(multitenantSoggettiErogazioni);
+			if(editModeEnabled) {
+				de.setType(DataElementType.SELECT);
+				String [] values = MultitenantSoggettiErogazioni.toEnumNameArray();
+				String [] labels = MultitenantSoggettiErogazioni.toArray();
+				de.setValues(values);
+				de.setLabels(labels);
+				de.setSelected(multitenantSoggettiErogazioni);
+			}
+			else {
+				de.setType(DataElementType.HIDDEN);
+			}
 			de.setValue(multitenantSoggettiErogazioni);
 			dati.addElement(de);
 			
-			
+			if(!editModeEnabled) {
+				de = new DataElement();
+				de.setLabel(ConfigurazioneCostanti.LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_EROGAZIONI_SOGGETTI_AUTENTICATI);
+				de.setName(ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_MULTITENANT_EROGAZIONI_SOGGETTI_AUTENTICATI+"__LABEL");
+				String multi = MultitenantSoggettiErogazioni.SOLO_SOGGETTI_ESTERNI.getValue();
+				try {
+					multi = MultitenantSoggettiErogazioni.valueOf(multitenantSoggettiErogazioni).getValue();
+				}catch(Exception e) {}
+				de.setValue(multi);
+				dati.addElement(de);
+			}
 		}
 		
 		
