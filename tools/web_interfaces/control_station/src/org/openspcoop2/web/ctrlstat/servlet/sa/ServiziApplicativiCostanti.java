@@ -82,6 +82,7 @@ public class ServiziApplicativiCostanti {
 	public final static String LABEL_FRUITORE ="Fruitore";
 	public final static String LABEL_EROGATORE ="Erogatore";
 	public final static String LABEL_APPLICATIVI = "Applicativi";
+	public final static String LABEL_APPLICATIVO = "Applicativo";
 	public final static String LABEL_SERVIZI_APPLICATIVI = "Servizi Applicativi";
 	public final static String LABEL_SERVIZIO_APPLICATIVO = "Servizio Applicativo";
 	public final static String LABEL_CREDENZIALI_ACCESSO_SERVIZIO_APPLICATIVO ="Autenticazione";

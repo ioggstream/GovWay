@@ -237,7 +237,6 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 		TipoOperazione tipoOp = TipoOperazione.ADD;
 
 		try {
-			boolean multitenant = ServletUtils.getUserFromSession(session).isPermitMultiTenant(); 
 			
 			ErogazioniHelper apsHelper = new ErogazioniHelper(request, pd, session);
 			this.consoleInterfaceType = ProtocolPropertiesUtilities.getTipoInterfaccia(apsHelper); 
@@ -1393,8 +1392,8 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 					}
 					
 					dati = apsHelper.addEndPointToDati(dati, this.connettoreDebug, this.endpointtype, this.autenticazioneHttp, 
-							(apsHelper.isModalitaCompleta() || !multitenant)?null:
-								(generaPortaApplicativa?AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_INTERNO_PREFIX : AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_ESTERNO_PREFIX), 
+							null,//(apsHelper.isModalitaCompleta() || !multitenant)?null:
+							//	(generaPortaApplicativa?AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_INTERNO_PREFIX : AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_ESTERNO_PREFIX), 
 							this.url, this.nome,
 							tipoJms, this.user,
 							this.password, this.initcont, this.urlpgk,
@@ -1549,8 +1548,8 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 					}
 					
 					dati = apsHelper.addEndPointToDati(dati, this.connettoreDebug, this.endpointtype, this.autenticazioneHttp, 
-							(apsHelper.isModalitaCompleta() || !multitenant)?null:
-								(generaPortaApplicativa?AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_INTERNO_PREFIX : AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_ESTERNO_PREFIX), 
+							null, //(apsHelper.isModalitaCompleta() || !multitenant)?null:
+							//	(generaPortaApplicativa?AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_INTERNO_PREFIX : AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_ESTERNO_PREFIX), 
 							this.url, this.nome, this.tipo, this.user,
 							this.password, this.initcont, this.urlpgk,
 							this.provurl, this.connfact, this.sendas,
@@ -1739,8 +1738,8 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 						}
 						
 						dati = apsHelper.addEndPointToDati(dati, this.connettoreDebug, this.endpointtype, this.autenticazioneHttp, 
-								(apsHelper.isModalitaCompleta() || !multitenant)?null:
-									(generaPortaApplicativa?AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_INTERNO_PREFIX : AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_ESTERNO_PREFIX), 
+								null, //(apsHelper.isModalitaCompleta() || !multitenant)?null:
+								//	(generaPortaApplicativa?AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_INTERNO_PREFIX : AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_ESTERNO_PREFIX), 
 								this.url, this.nome, this.tipo, this.user,
 								this.password, this.initcont, this.urlpgk,
 								this.provurl, this.connfact, this.sendas,

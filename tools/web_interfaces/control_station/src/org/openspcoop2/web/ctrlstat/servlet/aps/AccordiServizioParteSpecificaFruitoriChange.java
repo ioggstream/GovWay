@@ -159,7 +159,6 @@ public final class AccordiServizioParteSpecificaFruitoriChange extends Action {
 			parentPD = PorteDelegateCostanti.ATTRIBUTO_PORTE_DELEGATE_PARENT_NONE;
 		
 		try {
-			boolean multitenant = ServletUtils.getUserFromSession(session).isPermitMultiTenant(); 
 			Boolean vistaErogazioni = ServletUtils.getBooleanAttributeFromSession(ErogazioniCostanti.ASPS_EROGAZIONI_ATTRIBUTO_VISTA_EROGAZIONI, session);
 			
 			// prendo i dati hidden del pdold e li metto nel pd attuale
@@ -167,6 +166,9 @@ public final class AccordiServizioParteSpecificaFruitoriChange extends Action {
 			pd.setHidden(pdOld.getHidden());
 
 			AccordiServizioParteSpecificaHelper apsHelper = new AccordiServizioParteSpecificaHelper(request, pd, session);
+			
+			boolean isModalitaCompleta = apsHelper.isModalitaCompleta();
+			
 			this.consoleInterfaceType = ProtocolPropertiesUtilities.getTipoInterfaccia(apsHelper); 
 			this.editMode = apsHelper.getParameter(Costanti.DATA_ELEMENT_EDIT_MODE_NAME);
 			this.protocolPropertiesSet = apsHelper.getParameter(ProtocolPropertiesCostanti.PARAMETRO_PP_SET);
@@ -515,7 +517,7 @@ public final class AccordiServizioParteSpecificaFruitoriChange extends Action {
 								
 				String labelPerPorta = null;
 				if(accessoDaListaAPS) {
-					if(!multitenant) {
+					if(!isModalitaCompleta) {
 						if(vistaErogazioni != null && vistaErogazioni.booleanValue()) {
 							labelPerPorta = ErogazioniCostanti.LABEL_ASPS_PORTE_DELEGATE_MODIFICA_CONNETTORE;
 						} else {
@@ -854,7 +856,7 @@ public final class AccordiServizioParteSpecificaFruitoriChange extends Action {
 
 					//if (apsHelper.isModalitaAvanzata() || connettoreOnly) {
 					dati = apsHelper.addEndPointToDati(dati, connettoreDebug, endpointtype, autenticazioneHttp,
-							(apsHelper.isModalitaCompleta() || !multitenant)?null:AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_ESTERNO_PREFIX,
+							null, //(apsHelper.isModalitaCompleta() || !multitenant)?null:AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_ESTERNO_PREFIX,
 							url, nome,
 							tipo, user, password, initcont, urlpgk, provurl,
 							connfact, sendas, AccordiServizioParteSpecificaCostanti.OBJECT_NAME_APS_FRUITORI,tipoOp, httpsurl,
@@ -966,7 +968,7 @@ public final class AccordiServizioParteSpecificaFruitoriChange extends Action {
 
 				//if (apsHelper.isModalitaAvanzata() || connettoreOnly) {
 				dati = apsHelper.addEndPointToDati(dati, connettoreDebug, endpointtype, autenticazioneHttp, 
-						(apsHelper.isModalitaCompleta() || !multitenant)?null:AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_ESTERNO_PREFIX,
+						null, //(apsHelper.isModalitaCompleta() || !multitenant)?null:AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_ESTERNO_PREFIX,
 						url, nome,
 						tipo, user, password, initcont, urlpgk, provurl,
 						connfact, sendas, AccordiServizioParteSpecificaCostanti.OBJECT_NAME_APS_FRUITORI,tipoOp, httpsurl,
@@ -1031,7 +1033,7 @@ public final class AccordiServizioParteSpecificaFruitoriChange extends Action {
 
 					//if (apsHelper.isModalitaAvanzata() || connettoreOnly) {
 					dati = apsHelper.addEndPointToDati(dati, connettoreDebug, endpointtype, autenticazioneHttp, 
-							(apsHelper.isModalitaCompleta() || !multitenant)?null:AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_ESTERNO_PREFIX,
+							null, //(apsHelper.isModalitaCompleta() || !multitenant)?null:AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_ESTERNO_PREFIX,
 							url, nome,
 							tipo, user, password, initcont, urlpgk, provurl,
 							connfact, sendas, AccordiServizioParteSpecificaCostanti.OBJECT_NAME_APS_FRUITORI,tipoOp, httpsurl,
@@ -1241,7 +1243,7 @@ public final class AccordiServizioParteSpecificaFruitoriChange extends Action {
 
 					//if (apsHelper.isModalitaAvanzata() || connettoreOnly) {
 					dati = apsHelper.addEndPointToDati(dati, connettoreDebug, endpointtype, autenticazioneHttp, 
-							(apsHelper.isModalitaCompleta() || !multitenant)?null:AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_ESTERNO_PREFIX,
+							null, //(apsHelper.isModalitaCompleta() || !multitenant)?null:AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_ESTERNO_PREFIX,
 							url,
 							nome, tipo, user, password, initcont, urlpgk,
 							provurl, connfact, sendas,

@@ -962,8 +962,7 @@ public class ConsoleHelper {
 			Boolean singlePdD = (Boolean) this.session.getAttribute(CostantiControlStation.SESSION_PARAMETRO_SINGLE_PDD);
 
 			boolean isModalitaAvanzata = this.isModalitaAvanzata();
-			
-			boolean multiTenant = ServletUtils.getUserFromSession(this.session).isPermitMultiTenant();
+			boolean isModalitaCompleta = this.isModalitaCompleta();
 			
 			List<IExtendedMenu> extendedMenu = this.core.getExtendedMenu();
 
@@ -995,15 +994,15 @@ public class ConsoleHelper {
 						// ASPC 
 						totEntries ++;
 						
-						if(multiTenant) {
+						if(isModalitaCompleta) {
 							totEntries +=1;
 						} else {
 							// ASPS vecchia visualizzazione 
 							if(serviziVisualizzaModalitaElenco) {
 								totEntries +=2;
 							} 
-						// ASPS nuova visualizzazione
-						totEntries +=2;
+							// ASPS nuova visualizzazione
+							totEntries +=2;
 						}
 					}
 				}
@@ -1090,7 +1089,7 @@ public class ConsoleHelper {
 						
 
 						//ASPS
-						if(multiTenant) {
+						if(isModalitaCompleta) {
 							entries[index][0] = AccordiServizioParteSpecificaCostanti.LABEL_APS_MENU_VISUALE_AGGREGATA;
 							entries[index][1] = AccordiServizioParteSpecificaCostanti.SERVLET_NAME_APS_LIST+"?"+
 									AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_TIPO_EROGAZIONE+"="+

@@ -130,7 +130,7 @@ public class PorteDelegateHelper extends ConnettoriHelper {
 			String autorizzazione_tokenOptions,
 			String autorizzazioneScope, int numScope, String autorizzazioneScopeMatch, BinaryParameter allegatoXacmlPolicy) throws Exception {
 
-		boolean multitenant = ServletUtils.getUserFromSession(this.session).isPermitMultiTenant(); 
+		boolean multitenant = this.pddCore.isMultitenant();
 
 //		Boolean confPers = (Boolean) this.session.getAttribute(CostantiControlStation.SESSION_PARAMETRO_GESTIONE_CONFIGURAZIONI_PERSONALIZZATE);
 		Boolean contaListe = ServletUtils.getContaListeFromSession(this.session);

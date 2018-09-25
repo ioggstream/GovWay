@@ -108,6 +108,7 @@ public class SoggettiCostanti {
 	public final static String PARAMETRO_SOGGETTO_CODICE_IPA = "codice_ipa";
 	public final static String PARAMETRO_SOGGETTO_PD_URL_PREFIX_REWRITER = "pd_url_prefix_rewriter";
 	public final static String PARAMETRO_SOGGETTO_PA_URL_PREFIX_REWRITER = "pa_url_prefix_rewriter";
+	public final static String PARAMETRO_SOGGETTO_FILTER_DOMINIO_INTERNO= "internalDomain";
 	
 	public final static String PARAMETRO_SOGGETTO_RUOLO_ID = "ruoloId";
 	

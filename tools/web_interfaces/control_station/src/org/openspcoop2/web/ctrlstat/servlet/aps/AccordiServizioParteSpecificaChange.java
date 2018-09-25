@@ -170,7 +170,6 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 		List<ProtocolProperty> oldProtocolPropertyList = null;
 
 		try {
-			boolean multitenant = ServletUtils.getUserFromSession(session).isPermitMultiTenant(); 
 			
 			AccordiServizioParteSpecificaHelper apsHelper = new AccordiServizioParteSpecificaHelper(request, pd, session);
 			this.consoleInterfaceType = ProtocolPropertiesUtilities.getTipoInterfaccia(apsHelper); 
@@ -369,7 +368,6 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 				}
 			}
 			
-			boolean multiTenant = ServletUtils.getUserFromSession(session).isPermitMultiTenant();
 			
 			PermessiUtente pu = ServletUtils.getUserFromSession(session).getPermessi();
 
@@ -1009,7 +1007,7 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 							null,
 							null,null,null,null);
 
-					if(multiTenant || apsHelper.isModalitaCompleta() || (!soggettoOperativo && !gestioneFruitori)) {
+					if(apsHelper.isModalitaCompleta() || (!soggettoOperativo && !gestioneFruitori)) {
 					
 						boolean forceEnableConnettore = false;
 //						if( apsHelper.isModalitaStandard() && !TipiConnettore.DISABILITATO.getNome().equals(endpointtype) ) {
@@ -1017,7 +1015,7 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 //						}
 						
 						dati = apsHelper.addEndPointToDati(dati, connettoreDebug, endpointtype, autenticazioneHttp,  
-								(apsHelper.isModalitaCompleta() || !multitenant)?null:AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_ESTERNO_PREFIX,
+								null, //(apsHelper.isModalitaCompleta() || !multitenant)?null:AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_ESTERNO_PREFIX,
 								url,nome, tipo, user, password, initcont, urlpgk,
 								provurl, connfact, sendas, AccordiServizioParteSpecificaCostanti.OBJECT_NAME_APS,tipoOp,
 								httpsurl, httpstipologia, httpshostverify,
@@ -1175,7 +1173,7 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 						null,
 						null,null,null,null);
 
-				if(multiTenant || apsHelper.isModalitaCompleta() || (!soggettoOperativo && !gestioneFruitori)) {
+				if(apsHelper.isModalitaCompleta() || (!soggettoOperativo && !gestioneFruitori)) {
 				
 					boolean forceEnableConnettore = false;
 //					if( apsHelper.isModalitaStandard() && !TipiConnettore.DISABILITATO.getNome().equals(endpointtype) ) {
@@ -1183,7 +1181,7 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 //					}
 					
 					dati = apsHelper.addEndPointToDati(dati, connettoreDebug,  endpointtype, autenticazioneHttp, 
-							(apsHelper.isModalitaCompleta() || !multitenant)?null:AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_ESTERNO_PREFIX,
+							null, //(apsHelper.isModalitaCompleta() || !multitenant)?null:AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_ESTERNO_PREFIX,
 							url, nome,
 							tipo, user, password, initcont, urlpgk, provurl,
 							connfact, sendas, AccordiServizioParteSpecificaCostanti.OBJECT_NAME_APS,tipoOp, httpsurl, httpstipologia,
@@ -1275,14 +1273,14 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 							null,
 							null,null,null,null);
 
-					if(multiTenant || apsHelper.isModalitaCompleta() || (!soggettoOperativo && !gestioneFruitori)) {
+					if(apsHelper.isModalitaCompleta() || (!soggettoOperativo && !gestioneFruitori)) {
 						boolean forceEnableConnettore = false;
 						if( apsHelper.isModalitaStandard() && !TipiConnettore.DISABILITATO.getNome().equals(endpointtype) ) {
 							forceEnableConnettore = true;
 						}
 						
 						dati = apsHelper.addEndPointToDati(dati, connettoreDebug,  endpointtype, autenticazioneHttp, 
-								(apsHelper.isModalitaCompleta() || !multitenant)?null:AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_ESTERNO_PREFIX,
+								null, //(apsHelper.isModalitaCompleta() || !multitenant)?null:AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_ESTERNO_PREFIX,
 								url, nome,
 								tipo, user, password, initcont, urlpgk, provurl,
 								connfact, sendas, AccordiServizioParteSpecificaCostanti.OBJECT_NAME_APS,tipoOp, httpsurl, httpstipologia,
@@ -1510,7 +1508,7 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 							null,
 							null,null,null,null);
 
-					if(multiTenant || apsHelper.isModalitaCompleta() || (!soggettoOperativo && !gestioneFruitori)) {
+					if(apsHelper.isModalitaCompleta() || (!soggettoOperativo && !gestioneFruitori)) {
 					
 						boolean forceEnableConnettore = false;
 //						if( apsHelper.isModalitaStandard() && !TipiConnettore.DISABILITATO.getNome().equals(endpointtype) ) {
@@ -1518,7 +1516,7 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 //						}
 						
 						dati = apsHelper.addEndPointToDati(dati, connettoreDebug, endpointtype, autenticazioneHttp, 
-								(apsHelper.isModalitaCompleta() || !multitenant)?null:AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_ESTERNO_PREFIX,
+								null, //(apsHelper.isModalitaCompleta() || !multitenant)?null:AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_ESTERNO_PREFIX,
 								url,
 								nome, tipo, user, password, initcont, urlpgk,
 								provurl, connfact, sendas, AccordiServizioParteSpecificaCostanti.OBJECT_NAME_APS,tipoOp, httpsurl,

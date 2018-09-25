@@ -126,7 +126,7 @@ public class SoggettiHelper extends ConnettoriHelper {
 			}
 		}
 		
-		boolean multiTenant = ServletUtils.getUserFromSession(this.session).isPermitMultiTenant();
+		boolean multiTenant = this.core.isMultitenant();
 		boolean hiddenDatiDominioInterno = false;
 		if(!multiTenant) {
 			if(!gestionePdd) {
@@ -841,7 +841,7 @@ public class SoggettiHelper extends ConnettoriHelper {
 		try {
 			ServletUtils.addListElementIntoSession(this.session, SoggettiCostanti.OBJECT_NAME_SOGGETTI);
 
-			boolean multiTenant = ServletUtils.getUserFromSession(this.session).isPermitMultiTenant();
+			boolean multiTenant = this.core.isMultitenant();
 			
 			Boolean contaListe = ServletUtils.getContaListeFromSession(this.session);
 			int idLista = Liste.SOGGETTI;
@@ -883,7 +883,7 @@ public class SoggettiHelper extends ConnettoriHelper {
 				// pdd o dominio
 				totEl++;
 			}
-			if(multiTenant || this.isModalitaCompleta()) {
+			if(this.isModalitaCompleta()) {
 				totEl++; // connettore column
 			}
 			if(this.isModalitaCompleta()) {
@@ -901,7 +901,7 @@ public class SoggettiHelper extends ConnettoriHelper {
 			else if(multiTenant) {
 				labels[i++] = SoggettiCostanti.LABEL_PARAMETRO_SOGGETTO_DOMINIO;
 			}
-			if(multiTenant || this.isModalitaCompleta()) {
+			if(this.isModalitaCompleta()) {
 				labels[i++] = ConnettoriCostanti.LABEL_CONNETTORE;
 			}
 			labels[i++] = RuoliCostanti.LABEL_RUOLI;
@@ -996,7 +996,7 @@ public class SoggettiHelper extends ConnettoriHelper {
 					e.addElement(de);
 				}
 
-				if(multiTenant || this.isModalitaCompleta()) {
+				if(this.isModalitaCompleta()) {
 					
 					boolean showConnettore = this.core.isRegistroServiziLocale() &&
 							(this.isModalitaCompleta() || this.pddCore.isPddEsterna(nomePdD) || multiTenant );

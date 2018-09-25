@@ -129,9 +129,7 @@ public final class UtentiChange extends Action {
 				String protocolloName = protocolliRegistratiConsole.get(i);
 				modalitaScelte[i] = utentiHelper.getParameter(UtentiCostanti.PARAMETRO_UTENTI_MODALITA_PREFIX + protocolloName);
 			}
-
-			String multiTenant = utentiHelper.getParameter(UtentiCostanti.PARAMETRO_UTENTE_MULTI_TENANT);
-						
+			
 			// Prendo l'utente
 			User user = utentiCore.getUser(nomesu);
 			//Prendo i vecchi dati dell'utente
@@ -163,40 +161,10 @@ public final class UtentiChange extends Action {
 				protocolliSupportati  = oldProtocolliSupportati;
 				first = true;
 			}
-			
-			if(multiTenant==null && first) {
-				if(user.isPermitMultiTenant()) {
-					multiTenant = Costanti.CHECK_BOX_ENABLED;
-				}
-				else {
-					multiTenant = Costanti.CHECK_BOX_DISABLED;
-				}
-			}
-			
-			boolean forceEnableMultitenant = false;
-			if(!first) {
-				User userPerCheck = new User();
-				for (int i = 0; i < protocolliRegistratiConsole.size() ; i++) {
-					String protocolloName = protocolliRegistratiConsole.get(i);
-					if(ServletUtils.isCheckBoxEnabled(modalitaScelte[i])) {
-						userPerCheck.addProtocolloSupportato(protocolloName);
-					} 
-				}
-				forceEnableMultitenant = utentiCore.isForceEnableMultiTenant(userPerCheck, false);
-			}
-			else {
-				forceEnableMultitenant = utentiCore.isForceEnableMultiTenant(user, true);
-			}
-			if(forceEnableMultitenant) {
-				multiTenant = Costanti.CHECK_BOX_ENABLED;
-			}
+
 			
 //			tipoGui = (tipoGui==null) ? user.getInterfaceType().toString() : tipoGui;
 			InterfaceType interfaceType = InterfaceType.convert(tipoGui, true);
-			
-			if(!forceEnableMultitenant && interfaceType.equals(InterfaceType.COMPLETA)) {
-				forceEnableMultitenant = true;
-			}
 			
 			// Preparo il menu
 			utentiHelper.makeMenu();
@@ -245,7 +213,7 @@ public final class UtentiChange extends Action {
 				utentiHelper.addUtentiToDati(dati, TipoOperazione.CHANGE, singlePdD,
 						nomesu,pwsu,confpwsu,interfaceType,
 						isServizi,isDiagnostica,isReportistica,isSistema,isMessaggi,isUtenti,isAuditing,isAccordiCooperazione,
-						changepwd,modalitaScelte, multiTenant, forceEnableMultitenant);
+						changepwd,modalitaScelte);
 
 				pd.setDati(dati);
 
@@ -276,7 +244,7 @@ public final class UtentiChange extends Action {
 				utentiHelper.addUtentiToDati(dati, TipoOperazione.CHANGE, singlePdD,
 						nomesu,pwsu,confpwsu,interfaceType,
 						isServizi,isDiagnostica,isReportistica,isSistema,isMessaggi,isUtenti,isAuditing,isAccordiCooperazione,
-						changepwd,modalitaScelte, multiTenant, forceEnableMultitenant);
+						changepwd,modalitaScelte);
 
 				pd.setDati(dati);
 
@@ -437,8 +405,6 @@ public final class UtentiChange extends Action {
 					pwsu = procToCall.cryptPw(pwsu);
 				}
 
-				user.setPermitMultiTenant(ServletUtils.isCheckBoxEnabled(multiTenant));
-				
 				// Modifico i dati dell'utente
 				user.setInterfaceType(InterfaceType.valueOf(tipoGui));
 				if(cpwd && !"".equals(pwsu))

@@ -1268,7 +1268,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 				if(showConfigurazionePA) {
 					showConnettorePA = true; // altrimenti non vi e' un modo per modificarlo come invece succede per la fruizione nel caso multitenant
 				}
-				showFruitori = pddTipologiaFilter==null || user.isPermitMultiTenant() || PddTipologia.ESTERNO.equals(pddTipologiaFilter);
+				showFruitori = pddTipologiaFilter==null || this.isModalitaCompleta() || PddTipologia.ESTERNO.equals(pddTipologiaFilter);
 				showSoggettoErogatore = true;
 			}
 			else {
@@ -1719,7 +1719,8 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 
 				if(showFruitori) {
 					de = new DataElement();
-					if(!user.isPermitMultiTenant() && !isPddEsterna) {
+					//if(!user.isPermitMultiTenant() && !isPddEsterna) {
+					if(!isPddEsterna) {
 						de.setValue("-");
 					}
 					else {
@@ -2063,8 +2064,6 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 		try {
 			Boolean contaListe = ServletUtils.getContaListeFromSession(this.session);
 
-			boolean multitenant = ServletUtils.getUserFromSession(this.session).isPermitMultiTenant();
-			
 			IExtendedListServlet extendedServletList = this.core.getExtendedServletPortaApplicativa();
 			
 			ServletUtils.addListElementIntoSession(this.session, AccordiServizioParteSpecificaCostanti.OBJECT_NAME_APS_PORTE_APPLICATIVE,
@@ -2202,7 +2201,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 				listaLabel.add(PorteApplicativeCostanti.LABEL_PARAMETRO_PORTE_APPLICATIVE_NOME_GRUPPO);
 			}
 			if(gestioneGruppi) {
-				if(multitenant) {
+				if(this.isModalitaCompleta()) {
 					listaLabel.add(this.getLabelAzioni(serviceBindingMessage));
 				}
 				else {
@@ -2356,7 +2355,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 					if(listaSenzaFiltro.size()>1) {
 						if(!mapping.isDefault()) {
 							de.setUrl(PorteApplicativeCostanti.SERVLET_NAME_PORTE_APPLICATIVE_AZIONE_LIST,pIdSogg, pIdPorta, pIdAsps);
-							if(multitenant) {
+							if(this.isModalitaCompleta()) {
 								ServletUtils.setDataElementVisualizzaLabel(de, countAzioni);
 							}
 							else {
@@ -2382,7 +2381,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 								}
 								String nomiAzioniNonRidefinite = sb.toString();
 								de.setUrl(PorteApplicativeCostanti.SERVLET_NAME_PORTE_APPLICATIVE_AZIONE_LIST,pIdSogg, pIdPorta, pIdAsps);
-								if(multitenant) {
+								if(this.isModalitaCompleta()) {
 									ServletUtils.setDataElementVisualizzaLabel(de, countAzioniRidefinite);
 								}
 								else {
@@ -3319,8 +3318,6 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 			
 			Boolean contaListe = ServletUtils.getContaListeFromSession(this.session);
 			
-			boolean multitenant = ServletUtils.getUserFromSession(this.session).isPermitMultiTenant();
-
 			ServletUtils.addListElementIntoSession(this.session, AccordiServizioParteSpecificaCostanti.OBJECT_NAME_APS_FRUITORI_PORTE_DELEGATE,
 					new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_ID, idServizio),
 					new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_ID_SOGGETTO, idSoggettoFruitore),
@@ -3486,7 +3483,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 			}
 			if(gestioneGruppi) {
 				//listaLabel.add(this.getLabelAzioni(serviceBindingMessage));
-				if(multitenant) {
+				if(this.isModalitaCompleta()) {
 					listaLabel.add(this.getLabelAzioni(serviceBindingMessage));
 				}
 				else {
@@ -3642,7 +3639,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 					if(listaSenzaFiltro.size()>1) {
 						if(!mapping.isDefault()) {
 							de.setUrl(PorteDelegateCostanti.SERVLET_NAME_PORTE_DELEGATE_AZIONE_LIST,pIdPD, pNomePD, pIdSoggPD, pIdAsps, pIdFruitore);
-							if(multitenant) {
+							if(this.isModalitaCompleta()) {
 								ServletUtils.setDataElementVisualizzaLabel(de, countAzioni);
 							}
 							else {
@@ -3668,7 +3665,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 								}
 								String nomiAzioniNonRidefinite = sb.toString();
 								de.setUrl(PorteDelegateCostanti.SERVLET_NAME_PORTE_DELEGATE_AZIONE_LIST,pIdPD, pNomePD, pIdSoggPD, pIdAsps, pIdFruitore);
-								if(multitenant) {
+								if(this.isModalitaCompleta()) {
 									ServletUtils.setDataElementVisualizzaLabel(de, countAzioniRidefinite);
 								}
 								else {

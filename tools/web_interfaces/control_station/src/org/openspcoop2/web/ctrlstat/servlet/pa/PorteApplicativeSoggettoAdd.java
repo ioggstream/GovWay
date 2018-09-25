@@ -164,7 +164,7 @@ public final class PorteApplicativeSoggettoAdd extends Action {
 				list = soggettiCore.getSoggettiFromTipoAutenticazione(tipiSoggettiGestitiProtocollo, userLogin, tipoAutenticazione, pddTipologiaSoggettoAutenticati);
 			}
 
-			boolean multiTenant = ServletUtils.getUserFromSession(session).isPermitMultiTenant();
+			boolean multiTenant = porteApplicativeCore.isMultitenant();
 			
 			PortaApplicativaAutorizzazioneSoggetti soggetti = pa.getSoggetti(); 
 			List<PortaApplicativaAutorizzazioneSoggetto> soggettoList = soggetti != null ? soggetti.getSoggettoList() : new ArrayList<PortaApplicativaAutorizzazioneSoggetto>();

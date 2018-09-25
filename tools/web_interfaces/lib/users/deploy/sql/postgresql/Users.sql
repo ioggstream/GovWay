@@ -12,7 +12,8 @@ CREATE TABLE users
 	protocolli TEXT,
 	protocollo_pddconsole VARCHAR(255),
 	protocollo_pddmonitor VARCHAR(255),
-	multi_tenant INT,
+	soggetto_pddconsole VARCHAR(255),
+	soggetto_pddmonitor VARCHAR(255),
 	-- fk/pk columns
 	id BIGINT DEFAULT nextval('seq_users') NOT NULL,
 	-- unique constraints

@@ -85,22 +85,13 @@ public final class UtenteChange extends Action {
 			String changepw = utentiHelper.getParameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_PASSWORD);
 			String changeModalita = utentiHelper.getParameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_MODALITA);
 			String tipoModalita = utentiHelper.getParameter(UtentiCostanti.PARAMETRO_UTENTE_TIPO_MODALITA);
-			String multiTenant = utentiHelper.getParameter(UtentiCostanti.PARAMETRO_UTENTE_MULTI_TENANT);
 			
+			@SuppressWarnings("unused")
 			String first = utentiHelper.getParameter(UtentiCostanti.PARAMETRO_UTENTI_FIRST);
 
 			UtentiCore utentiCore = new UtentiCore();
 			
 			User user = ServletUtils.getUserFromSession(session);
-			
-			if(multiTenant==null && first==null) {
-				if(user.isPermitMultiTenant()) {
-					multiTenant = Costanti.CHECK_BOX_ENABLED;
-				}
-				else {
-					multiTenant = Costanti.CHECK_BOX_DISABLED;
-				}
-			}
 			
 			InterfaceType interfaceType = null;
 			if(tipogui==null) {
@@ -120,17 +111,7 @@ public final class UtenteChange extends Action {
 				if(!tipoModalita.equals(UtentiCostanti.VALORE_PARAMETRO_MODALITA_ALL))
 					protocolloSelezionatoUtente  = tipoModalita;
 			}
-						
-			// Check multitenant
-			boolean forceEnableMultitenant = utentiCore.isForceEnableMultiTenant(user, true);
-			if(forceEnableMultitenant) {
-				multiTenant = Costanti.CHECK_BOX_ENABLED;
-			}
-
-			if(!forceEnableMultitenant && interfaceType.equals(InterfaceType.COMPLETA)) {
-				forceEnableMultitenant = true;
-			}
-
+			
 			// Preparo il menu
 			utentiHelper.makeMenu();
 			
@@ -167,7 +148,7 @@ public final class UtenteChange extends Action {
 
 						dati.addElement(ServletUtils.getDataElementForEditModeFinished());
 
-						utentiHelper.addUtenteChangeToDati(dati, interfaceType, changepw, userLogin, modalitaGatewayDisponibili, multiTenant, forceEnableMultitenant);
+						utentiHelper.addUtenteChangeToDati(dati, interfaceType, changepw, userLogin, modalitaGatewayDisponibili);
 
 						pd.setDati(dati);
 
@@ -202,7 +183,6 @@ public final class UtenteChange extends Action {
 				
 				if(changeGui != null) {
 					myS.setInterfaceType(interfaceType);
-					myS.setPermitMultiTenant(ServletUtils.isCheckBoxEnabled(multiTenant));
 					utentiCore.performUpdateOperation(userLogin, utentiHelper.smista(), myS);
 				} else if(changeModalita != null) {
 					myS.setProtocolloSelezionatoPddConsole(protocolloSelezionatoUtente);
@@ -210,7 +190,6 @@ public final class UtenteChange extends Action {
 				} else {
 					myS.setProtocolloSelezionatoPddConsole(protocolloSelezionatoUtente);
 					myS.setInterfaceType(interfaceType);
-					myS.setPermitMultiTenant(ServletUtils.isCheckBoxEnabled(multiTenant));
 					utentiCore.performUpdateOperation(userLogin, utentiHelper.smista(), myS);
 				}
 				
@@ -289,7 +268,7 @@ public final class UtenteChange extends Action {
 
 				dati.addElement(ServletUtils.getDataElementForEditModeFinished());
 
-				utentiHelper.addUtenteChangeToDati(dati, interfaceType, changepw, userLogin, modalitaGatewayDisponibili, multiTenant, forceEnableMultitenant);
+				utentiHelper.addUtenteChangeToDati(dati, interfaceType, changepw, userLogin, modalitaGatewayDisponibili);
 
 				pd.setDati(dati);
 			}

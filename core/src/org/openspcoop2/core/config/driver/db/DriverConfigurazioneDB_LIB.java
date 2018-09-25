@@ -52,6 +52,7 @@ import org.openspcoop2.core.config.AccessoRegistroRegistro;
 import org.openspcoop2.core.config.Attachments;
 import org.openspcoop2.core.config.Cache;
 import org.openspcoop2.core.config.Configurazione;
+import org.openspcoop2.core.config.ConfigurazioneMultitenant;
 import org.openspcoop2.core.config.ConfigurazioneProtocollo;
 import org.openspcoop2.core.config.Connettore;
 import org.openspcoop2.core.config.CorrelazioneApplicativa;
@@ -126,7 +127,9 @@ import org.openspcoop2.core.config.constants.GestioneErroreComportamento;
 import org.openspcoop2.core.config.constants.InvocazioneServizioTipoAutenticazione;
 import org.openspcoop2.core.config.constants.MTOMProcessorType;
 import org.openspcoop2.core.config.constants.PortaApplicativaAzioneIdentificazione;
+import org.openspcoop2.core.config.constants.PortaApplicativaSoggettiAutenticati;
 import org.openspcoop2.core.config.constants.PortaDelegataAzioneIdentificazione;
+import org.openspcoop2.core.config.constants.PortaDelegataSoggettiErogatori;
 import org.openspcoop2.core.config.constants.ProprietaProtocolloValore;
 import org.openspcoop2.core.config.constants.Severita;
 import org.openspcoop2.core.config.constants.StatoFunzionalita;
@@ -322,6 +325,23 @@ public class DriverConfigurazioneDB_LIB {
 			return valore.getValue();
 		}
 	}
+	public static String getValue(PortaApplicativaSoggettiAutenticati valore){
+		if(valore==null){
+			return null;
+		}
+		else{
+			return valore.getValue();
+		}
+	}
+	public static String getValue(PortaDelegataSoggettiErogatori valore){
+		if(valore==null){
+			return null;
+		}
+		else{
+			return valore.getValue();
+		}
+	}
+	
 	
 	public static StatoFunzionalita getEnumStatoFunzionalita(String value){
 		if(value==null){
@@ -451,6 +471,22 @@ public class DriverConfigurazioneDB_LIB {
 			return TipoConnessioneRisposte.toEnumConstant(value);
 		}
 	}
+	public static PortaApplicativaSoggettiAutenticati getEnumPortaApplicativaSoggettiAutenticati(String value){
+		if(value==null){
+			return null;
+		}
+		else{
+			return PortaApplicativaSoggettiAutenticati.toEnumConstant(value);
+		}
+	}
+	public static PortaDelegataSoggettiErogatori getEnumPortaDelegataSoggettiErogatori(String value){
+		if(value==null){
+			return null;
+		}
+		else{
+			return PortaDelegataSoggettiErogatori.toEnumConstant(value);
+		}
+	}
 	
 	
 	public static String formatSQLString(String sql, Object... params) {
@@ -496,6 +532,7 @@ public class DriverConfigurazioneDB_LIB {
 		String superuser = soggetto.getSuperUser();
 
 		boolean router = soggetto.getRouter();
+		boolean isDefault = soggetto.isDominioDefault();
 		
 		String pdUrlPrefixRewriter = soggetto.getPdUrlPrefixRewriter();
 		String paUrlPrefixRewriter = soggetto.getPaUrlPrefixRewriter();
@@ -519,20 +556,23 @@ public class DriverConfigurazioneDB_LIB {
 				sqlQueryObject.addInsertField("identificativo_porta", "?");
 				sqlQueryObject.addInsertField("tipo_soggetto", "?");
 				sqlQueryObject.addInsertField("is_router", "?");
+				sqlQueryObject.addInsertField("is_default", "?");
 				sqlQueryObject.addInsertField("superuser", "?");
 				sqlQueryObject.addInsertField("pd_url_prefix_rewriter", "?");
 				sqlQueryObject.addInsertField("pa_url_prefix_rewriter", "?");
 				updateQuery = sqlQueryObject.createSQLInsert();
 				updateStmt = con.prepareStatement(updateQuery);
 
-				updateStmt.setString(1, nome);
-				updateStmt.setString(2, descrizione);
-				updateStmt.setString(3, identificativoPorta);
-				updateStmt.setString(4, tipo);
-				updateStmt.setInt(5, (router ? CostantiDB.TRUE : CostantiDB.FALSE));
-				updateStmt.setString(6, superuser);
-				updateStmt.setString(7, pdUrlPrefixRewriter);
-				updateStmt.setString(8, paUrlPrefixRewriter);
+				int index = 1;
+				updateStmt.setString(index++, nome);
+				updateStmt.setString(index++, descrizione);
+				updateStmt.setString(index++, identificativoPorta);
+				updateStmt.setString(index++, tipo);
+				updateStmt.setInt(index++, (router ? CostantiDB.TRUE : CostantiDB.FALSE));
+				updateStmt.setInt(index++, (isDefault ? CostantiDB.TRUE : CostantiDB.FALSE));
+				updateStmt.setString(index++, superuser);
+				updateStmt.setString(index++, pdUrlPrefixRewriter);
+				updateStmt.setString(index++, paUrlPrefixRewriter);
 				// eseguo lo statement
 				n = updateStmt.executeUpdate();
 
@@ -574,6 +614,7 @@ public class DriverConfigurazioneDB_LIB {
 				sqlQueryObject.addUpdateField("identificativo_porta", "?");
 				sqlQueryObject.addUpdateField("tipo_soggetto", "?");
 				sqlQueryObject.addUpdateField("is_router", "?");
+				sqlQueryObject.addUpdateField("is_default", "?");
 				sqlQueryObject.addUpdateField("superuser", "?");
 				sqlQueryObject.addUpdateField("pd_url_prefix_rewriter", "?");
 				sqlQueryObject.addUpdateField("pa_url_prefix_rewriter", "?");
@@ -583,16 +624,18 @@ public class DriverConfigurazioneDB_LIB {
 				updateQuery = sqlQueryObject.createSQLUpdate();
 				updateStmt = con.prepareStatement(updateQuery);
 
-				updateStmt.setString(1, nome);
-				updateStmt.setString(2, descrizione);
-				updateStmt.setString(3, identificativoPorta);
-				updateStmt.setString(4, tipo);
-				updateStmt.setInt(5, (router ? CostantiDB.TRUE : CostantiDB.FALSE));
-				updateStmt.setString(6, superuser);
-				updateStmt.setString(7, pdUrlPrefixRewriter);
-				updateStmt.setString(8, paUrlPrefixRewriter);
-				updateStmt.setString(9, oldNomeSoggetto);
-				updateStmt.setString(10, oldTipoSoggetto);
+				index = 1;
+				updateStmt.setString(index++, nome);
+				updateStmt.setString(index++, descrizione);
+				updateStmt.setString(index++, identificativoPorta);
+				updateStmt.setString(index++, tipo);
+				updateStmt.setInt(index++, (router ? CostantiDB.TRUE : CostantiDB.FALSE));
+				updateStmt.setInt(index++, (isDefault ? CostantiDB.TRUE : CostantiDB.FALSE));
+				updateStmt.setString(index++, superuser);
+				updateStmt.setString(index++, pdUrlPrefixRewriter);
+				updateStmt.setString(index++, paUrlPrefixRewriter);
+				updateStmt.setString(index++, oldNomeSoggetto);
+				updateStmt.setString(index++, oldTipoSoggetto);
 				// eseguo lo statement
 				n = updateStmt.executeUpdate();
 				updateStmt.close();
@@ -6499,6 +6542,7 @@ public class DriverConfigurazioneDB_LIB {
 				config.getAccessoConfigurazione()==null && 
 				config.getAccessoDatiAutorizzazione()==null &&
 				config.getAccessoDatiAutenticazione()==null && 
+				config.getMultitenant()==null &&
 				config.getProtocolli()==null &&
 				config.getValidazioneBuste()==null && 
 				config.getValidazioneContenutiApplicativi()==null &&
@@ -6592,6 +6636,8 @@ public class DriverConfigurazioneDB_LIB {
 		AccessoDatiGestioneToken aDatiGestioneToken = config.getAccessoDatiGestioneToken();
 		Attachments att = config.getAttachments();
 
+		ConfigurazioneMultitenant multitenant = config.getMultitenant();
+		
 		String utilizzoIndTelematico = null;
 		if(indirizzoPerRisposta!=null){
 			utilizzoIndTelematico =	DriverConfigurazioneDB_LIB.getValue(indirizzoPerRisposta.getUtilizzo());
@@ -6816,6 +6862,10 @@ public class DriverConfigurazioneDB_LIB {
 				sqlQueryObject.addInsertField("token_algoritmocache", "?");
 				sqlQueryObject.addInsertField("token_idlecache", "?");
 				sqlQueryObject.addInsertField("token_lifecache", "?");
+				// multitenant
+				sqlQueryObject.addInsertField("multitenant_stato", "?");
+				sqlQueryObject.addInsertField("multitenant_fruizioni", "?");
+				sqlQueryObject.addInsertField("multitenant_erogazioni", "?");
 				
 				updateQuery = sqlQueryObject.createSQLInsert();
 				updateStmt = con.prepareStatement(updateQuery);
@@ -6872,6 +6922,10 @@ public class DriverConfigurazioneDB_LIB {
 				updateStmt.setString(index++, token_algoritmoCache);
 				updateStmt.setString(index++, token_idleCache);
 				updateStmt.setString(index++, token_lifeCache);
+				// multitenant
+				updateStmt.setString(index++, multitenant!=null ? getValue(multitenant.getStato()) : null);
+				updateStmt.setString(index++, multitenant!=null ? getValue(multitenant.getFruizioneSceltaSoggettiErogatori()) : null);
+				updateStmt.setString(index++, multitenant!=null ? getValue(multitenant.getErogazioneSceltaSoggettiAutenticati()) : null);
 
 				DriverConfigurazioneDB_LIB.log.debug("eseguo query :" + 
 						DBUtils.formatSQLString(updateQuery, 
@@ -6888,7 +6942,10 @@ public class DriverConfigurazioneDB_LIB {
 								config_statoCache, config_dimensioneCache, config_algoritmoCache, config_idleCache, config_lifeCache,
 								authz_statoCache, authz_dimensioneCache, authz_algoritmoCache, authz_idleCache, authz_lifeCache,
 								authn_statoCache, authn_dimensioneCache, authn_algoritmoCache, authn_idleCache, authn_lifeCache,
-								token_statoCache, token_dimensioneCache, token_algoritmoCache, token_idleCache, token_lifeCache));
+								token_statoCache, token_dimensioneCache, token_algoritmoCache, token_idleCache, token_lifeCache,
+								(multitenant!=null ? getValue(multitenant.getStato()) : null),
+								(multitenant!=null ? getValue(multitenant.getFruizioneSceltaSoggettiErogatori()) : null),
+								(multitenant!=null ? getValue(multitenant.getErogazioneSceltaSoggettiAutenticati()) : null)));
 
 				n = updateStmt.executeUpdate();
 				updateStmt.close();
@@ -7250,6 +7307,10 @@ public class DriverConfigurazioneDB_LIB {
 				sqlQueryObject.addUpdateField("token_algoritmocache", "?");
 				sqlQueryObject.addUpdateField("token_idlecache", "?");
 				sqlQueryObject.addUpdateField("token_lifecache", "?");
+				// multitenant
+				sqlQueryObject.addUpdateField("multitenant_stato", "?");
+				sqlQueryObject.addUpdateField("multitenant_fruizioni", "?");
+				sqlQueryObject.addUpdateField("multitenant_erogazioni", "?");
 
 				updateQuery = sqlQueryObject.createSQLUpdate();
 				updateStmt = con.prepareStatement(updateQuery);
@@ -7306,6 +7367,10 @@ public class DriverConfigurazioneDB_LIB {
 				updateStmt.setString(index++, token_algoritmoCache);
 				updateStmt.setString(index++, token_idleCache);
 				updateStmt.setString(index++, token_lifeCache);
+				// multitenant
+				updateStmt.setString(index++, multitenant!=null ? getValue(multitenant.getStato()) : null);
+				updateStmt.setString(index++, multitenant!=null ? getValue(multitenant.getFruizioneSceltaSoggettiErogatori()) : null);
+				updateStmt.setString(index++, multitenant!=null ? getValue(multitenant.getErogazioneSceltaSoggettiAutenticati()) : null);
 
 				DriverConfigurazioneDB_LIB.log.debug("eseguo query :" + 
 						DBUtils.formatSQLString(updateQuery, 
@@ -7323,7 +7388,10 @@ public class DriverConfigurazioneDB_LIB {
 								config_statoCache, config_dimensioneCache, config_algoritmoCache, config_idleCache, config_lifeCache,
 								authz_statoCache, authz_dimensioneCache, authz_algoritmoCache, authz_idleCache, authz_lifeCache,
 								authn_statoCache, authn_dimensioneCache, authn_algoritmoCache, authn_idleCache, authn_lifeCache,
-								token_statoCache, token_dimensioneCache, token_algoritmoCache, token_idleCache, token_lifeCache));
+								token_statoCache, token_dimensioneCache, token_algoritmoCache, token_idleCache, token_lifeCache,
+								(multitenant!=null ? getValue(multitenant.getStato()) : null),
+								(multitenant!=null ? getValue(multitenant.getFruizioneSceltaSoggettiErogatori()) : null),
+								(multitenant!=null ? getValue(multitenant.getErogazioneSceltaSoggettiAutenticati()) : null)));
 
 				n = updateStmt.executeUpdate();
 				updateStmt.close();

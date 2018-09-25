@@ -2932,7 +2932,6 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 		boolean isInterfacciaAvanzata = this.isModalitaAvanzata();
 		boolean ripristinoStatoOperativo = this.core.isGestioneWorkflowStatoDocumenti_ripristinoStatoOperativoDaFinale();
 
-		boolean multiTenant = ServletUtils.getUserFromSession(this.session).isPermitMultiTenant();
 		
 		boolean modificheAbilitate = false;
 		if( tipoOperazione.equals(TipoOperazione.ADD) ){
@@ -3420,7 +3419,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 
 		}
 		
-		if(TipoOperazione.CHANGE.equals(tipoOperazione) && multiTenant) {
+		if(TipoOperazione.CHANGE.equals(tipoOperazione) && this.isModalitaCompleta()) {
 			de = new DataElement();
 			de.setType(DataElementType.LINK);
 			de.setUrl(AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_EROGATORI_LIST, 
@@ -4696,7 +4695,6 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 
 			Boolean contaListe = ServletUtils.getContaListeFromSession(this.session);
 			
-			boolean multiTenant = ServletUtils.getUserFromSession(this.session).isPermitMultiTenant();
 			
 			boolean showProtocolli = this.core.countProtocolli(this.session)>1;
 			boolean showServiceBinding = true;
@@ -4817,7 +4815,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 			}
 			
 			// erogatore++
-			if(multiTenant) {
+			if(this.isModalitaCompleta()) {
 				totEl++;
 			}
 			
@@ -4868,7 +4866,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 				index++;
 			}
 			
-			if(multiTenant) {
+			if(this.isModalitaCompleta()) {
 				labels[index] = AccordiServizioParteComuneCostanti.LABEL_ACCORDI_EROGATORI;
 				index++;
 			}
@@ -5052,7 +5050,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 					}
 					
 					// erogatori
-					if(multiTenant) {
+					if(this.isModalitaCompleta()) {
 						de = new DataElement();
 						de.setUrl(AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_EROGATORI_LIST,
 								new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_ID, accordoServizio.getId()+""),

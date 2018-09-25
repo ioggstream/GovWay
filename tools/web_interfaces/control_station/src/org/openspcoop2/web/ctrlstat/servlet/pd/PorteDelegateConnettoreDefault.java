@@ -100,8 +100,7 @@ public class PorteDelegateConnettoreDefault extends Action {
 		if(parentPD == null) parentPD = PorteDelegateCostanti.ATTRIBUTO_PORTE_DELEGATE_PARENT_NONE;
 
 		try {
-			boolean multitenant = ServletUtils.getUserFromSession(session).isPermitMultiTenant(); 
-
+			
 			PorteDelegateHelper porteDelegateHelper = new PorteDelegateHelper(request, pd, session);
 			
 			// Preparo il menu
@@ -390,7 +389,7 @@ public class PorteDelegateConnettoreDefault extends Action {
 				
 				if(modalita.equals(PorteDelegateCostanti.VALUE_PARAMETRO_PORTE_DELEGATE_MODALITA_CONNETTORE_RIDEFINITO)) {
 					dati = porteDelegateHelper.addEndPointToDati(dati, connettoreDebug, endpointtype, autenticazioneHttp, 
-							(porteDelegateHelper.isModalitaCompleta() || !multitenant)?null:AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_INTERNO_PREFIX , 
+							null,//(porteDelegateHelper.isModalitaCompleta() || !multitenant)?null:AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_INTERNO_PREFIX ,
 							url, nomeCodaJms,
 							tipoJms, user,
 							password, initcont, urlpgk,
@@ -454,7 +453,7 @@ public class PorteDelegateConnettoreDefault extends Action {
 				
 				if(modalita.equals(PorteDelegateCostanti.VALUE_PARAMETRO_PORTE_DELEGATE_MODALITA_CONNETTORE_RIDEFINITO)) {
 					dati = porteDelegateHelper.addEndPointToDati(dati, connettoreDebug, endpointtype, autenticazioneHttp, 
-							(porteDelegateHelper.isModalitaCompleta() || !multitenant)?null:AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_INTERNO_PREFIX , 
+							null,//(porteDelegateHelper.isModalitaCompleta() || !multitenant)?null:AccordiServizioParteSpecificaCostanti.LABEL_APS_APPLICATIVO_INTERNO_PREFIX , 
 							url, nomeCodaJms,
 							tipoJms, user,
 							password, initcont, urlpgk,

@@ -453,6 +453,13 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link ConfigurazioneMultitenant }
+     */
+    public ConfigurazioneMultitenant createConfigurazioneMultitenant() {
+        return new ConfigurazioneMultitenant();
+    }
+
+    /**
      * Create an instance of {@link InoltroBusteNonRiscontrate }
      */
     public InoltroBusteNonRiscontrate createInoltroBusteNonRiscontrate() {
@@ -478,6 +485,13 @@ public class ObjectFactory {
      */
     public MessageSecurityFlowParameter createMessageSecurityFlowParameter() {
         return new MessageSecurityFlowParameter();
+    }
+
+    /**
+     * Create an instance of {@link PortaApplicativaAutorizzazioneServiziApplicativi }
+     */
+    public PortaApplicativaAutorizzazioneServiziApplicativi createPortaApplicativaAutorizzazioneServiziApplicativi() {
+        return new PortaApplicativaAutorizzazioneServiziApplicativi();
     }
 
     /**
@@ -576,6 +590,13 @@ public class ObjectFactory {
      */
     public IdPortaApplicativa createIdPortaApplicativa() {
         return new IdPortaApplicativa();
+    }
+
+    /**
+     * Create an instance of {@link PortaApplicativaAutorizzazioneServizioApplicativo }
+     */
+    public PortaApplicativaAutorizzazioneServizioApplicativo createPortaApplicativaAutorizzazioneServizioApplicativo() {
+        return new PortaApplicativaAutorizzazioneServizioApplicativo();
     }
 
     /**

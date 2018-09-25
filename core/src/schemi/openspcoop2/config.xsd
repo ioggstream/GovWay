@@ -80,6 +80,16 @@
 		<xsd:attribute name="nome" type="xsd:string" use="required"/>
 		<xsd:attribute name="identificativo-porta" type="xsd:string"/>
 		<xsd:attribute name="descrizione" type="xsd:string"/>
+		<xsd:attribute name="dominio-default" type="xsd:boolean" default="false"> <!-- non uso default poiche' e' una keyword riservata -->
+			<xsd:annotation>
+				<xsd:appinfo>
+					<linkit:generator
+						xmlns:linkit="http://www.link.it/project_generator">
+						<linkit:ws-field-mapping filter-use-default="false"/>
+					</linkit:generator>
+				</xsd:appinfo>
+			</xsd:annotation>
+		</xsd:attribute>
 		<xsd:attribute name="router" type="xsd:boolean" default="false">
 			<xsd:annotation>
 				<xsd:appinfo>
@@ -409,7 +419,8 @@
 			<!-- Modificato in minOccurs=0 per gestire la possibile configurazione incrementale via WS -->
 			<xsd:element name="servizio-applicativo" type="porta-applicativa-servizio-applicativo" maxOccurs="unbounded" minOccurs="0" />
 			<xsd:element name="xacml-policy" type="xsd:string" minOccurs="0" />
-			<xsd:element name="soggetti" type="porta-applicativa-autorizzazione-soggetti" maxOccurs="1" minOccurs="0" />	
+			<xsd:element name="soggetti" type="porta-applicativa-autorizzazione-soggetti" maxOccurs="1" minOccurs="0" />
+			<xsd:element name="servizi-applicativi-autorizzati" type="porta-applicativa-autorizzazione-servizi-applicativi" maxOccurs="1" minOccurs="0" />	
 			<xsd:element name="ruoli" type="autorizzazione-ruoli" maxOccurs="1" minOccurs="0" />	
 			<xsd:element name="scope" type="autorizzazione-scope" maxOccurs="1" minOccurs="0" />	
 			<xsd:element name="gestione-token" type="gestione-token" maxOccurs="1" minOccurs="0"/>
@@ -653,6 +664,17 @@
 	</xsd:complexType>
 	<xsd:complexType name="porta-applicativa-autorizzazione-soggetto">
 		<xsd:attribute name="tipo" type="xsd:string" use="required"/>
+		<xsd:attribute name="nome" type="xsd:string" use="required"/>
+	</xsd:complexType>
+	<!-- PortaApplicativa Autorizzazione per Servizi Applicativi -->
+	<xsd:complexType name="porta-applicativa-autorizzazione-servizi-applicativi">
+		<xsd:sequence>
+			<xsd:element name="soggetto" type="porta-applicativa-autorizzazione-servizio-applicativo" minOccurs="1" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="porta-applicativa-autorizzazione-servizio-applicativo">
+		<xsd:attribute name="tipo-soggetto-proprietario" type="xsd:string" use="required"/>
+		<xsd:attribute name="nome-soggetto-proprietario" type="xsd:string" use="required"/>
 		<xsd:attribute name="nome" type="xsd:string" use="required"/>
 	</xsd:complexType>
 
@@ -1306,6 +1328,7 @@
 			<xsd:element name="accesso-dati-autorizzazione" type="accesso-dati-autorizzazione" maxOccurs="1" minOccurs="0" />
 			<xsd:element name="accesso-dati-autenticazione" type="accesso-dati-autenticazione" maxOccurs="1" minOccurs="0" />
 			<xsd:element name="accesso-dati-gestione-token" type="accesso-dati-gestione-token" maxOccurs="1" minOccurs="0" />
+			<xsd:element name="multitenant" type="configurazione-multitenant" maxOccurs="1" minOccurs="0" />
 			<xsd:element name="protocolli" type="configurazione-protocolli" maxOccurs="1" minOccurs="0" />
 			<xsd:element name="validazione-buste" type="validazione-buste" maxOccurs="1" minOccurs="0" />
 			<xsd:element name="validazione-contenuti-applicativi" type="validazione-contenuti-applicativi" maxOccurs="1" minOccurs="0" />
@@ -1418,6 +1441,13 @@
 		<xsd:sequence>
 			<xsd:element name="cache" type="cache" maxOccurs="1" minOccurs="0"/>
 		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- Configurazione Multitenant -->
+	<xsd:complexType name="configurazione-multitenant">
+		<xsd:attribute name="stato" type="StatoFunzionalita" default="disabilitato"/>
+		<xsd:attribute name="fruizioneSceltaSoggettiErogatori" type="PortaDelegataSoggettiErogatori" default="soggettiEsterni"/>
+		<xsd:attribute name="erogazioneSceltaSoggettiAutenticati" type="PortaApplicativaSoggettiAutenticati" default="soggettiEsterni"/>
 	</xsd:complexType>
 
 	<!-- Configurazione Protocolli -->
@@ -1779,6 +1809,20 @@
 		<xsd:restriction base="xsd:string">
 			<xsd:enumeration value="all"/>
 			<xsd:enumeration value="any"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="PortaDelegataSoggettiErogatori">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="soggettiEsterni"/>
+			<xsd:enumeration value="escludiSoggettoFruitore"/>
+			<xsd:enumeration value="tutti"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="PortaApplicativaSoggettiAutenticati">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="soggettiEsterni"/>
+			<xsd:enumeration value="escludiSoggettoErogatore"/>
+			<xsd:enumeration value="tutti"/>
 		</xsd:restriction>
 	</xsd:simpleType>
 	

@@ -398,7 +398,7 @@ public class ConfigurazioneCostanti {
 	public final static String LABEL_CONFIGURAZIONE_INDIRIZZO_TELEMATICO = "Indirizzo Telematico";
 	public final static String LABEL_CONFIGURAZIONE_MANIFEST_ATTACHMENTS = "Manifest Attachments";
 	public final static String LABEL_CONFIGURAZIONE_URL_INVOCAZIONE = "Modalit&agrave;"; //"URL di Invocazione dei Servizi";
-	public final static String LABEL_CONFIGURAZIONE_MULTITENANT = "Multitenant";
+	public final static String LABEL_CONFIGURAZIONE_MULTITENANT = "Multi-Tenant";
 	public final static String LABEL_CONFIGURAZIONE_MULTITENANT_FRUIZIONI = "Fruizioni";
 	public final static String LABEL_CONFIGURAZIONE_MULTITENANT_EROGAZIONI = "Erogazioni (Controllo Accesso)";
 	public final static String LABEL_CONFIGURAZIONE_REGISTRO_SERVIZI = "Registro dei Servizi";
@@ -1006,6 +1006,7 @@ public class ConfigurazioneCostanti {
 	public final static String RIAVVIO = "<BR><b>Attenzione:</b> Le modifiche saranno operative al prossimo riavvio di GovWay";
 	public final static String TEMPORANEE = "<BR><b>Attenzione:</b> Le modifiche saranno operative fino al prossimo riavvio di GovWay";
 	public final static String PERSISTENTI = "<BR><b>Attenzione:</b> La modifica effettuata rimarrà persistente anche dopo un riavvio di GovWay";
+	public final static String LABEL_CONFIGURAZIONE_GENERALE_MODIFICATA_CON_SUCCESSO_SOLO_DATI_CONSOLE = "Configurazione modificata con successo";
 	public final static String LABEL_CONFIGURAZIONE_GENERALE_MODIFICATA_CON_SUCCESSO = "Configurazione Generale modificata con successo"+RIAVVIO;
 	public final static String LABEL_CONFIGURAZIONE_ACCESSO_REGISTRO_MODIFICATA_CON_SUCCESSO = "Configurazione "+LABEL_CONFIGURAZIONE_REGISTRO+" modificata con successo"+RIAVVIO;
 	public final static String LABEL_CONFIGURAZIONE_TABELLA_ROUTING_MODIFICATA_CON_SUCCESSO = "Configurazione "+LABEL_CONFIGURAZIONE_TABELLA_DI_ROUTING+" modificata con successo"+RIAVVIO;
@@ -1062,7 +1063,7 @@ public class ConfigurazioneCostanti {
 	public final static String LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_STATO = "Stato";
 	public final static String LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_SOGGETTI = "Soggetti";
 	public final static String LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_FRUIZIONI_SOGGETTO_EROGATORE = "Soggetto Erogatore";
-	public final static String LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_FRUIZIONI_SOGGETTI_AUTENTICATI = "Soggetti Autenticati";
+	public final static String LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_EROGAZIONI_SOGGETTI_AUTENTICATI = "Soggetti Autenticati";
 	
 	/* DEFAULT VALUE PARAMETRI */
 	public final static String DEFAULT_VALUE_PARAMETRO_CONFIGURAZIONE_TIPO_XML = "xml";

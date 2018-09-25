@@ -60,6 +60,7 @@ import org.openspcoop2.core.config.AutorizzazioneScope;
 import org.openspcoop2.core.config.Cache;
 import org.openspcoop2.core.config.Configurazione;
 import org.openspcoop2.core.config.ConfigurazioneGestioneErrore;
+import org.openspcoop2.core.config.ConfigurazioneMultitenant;
 import org.openspcoop2.core.config.ConfigurazioneProtocolli;
 import org.openspcoop2.core.config.ConfigurazioneProtocollo;
 import org.openspcoop2.core.config.Connettore;
@@ -6731,6 +6732,14 @@ implements IDriverConfigurazioneGet, IDriverConfigurazioneCRUD, IDriverWS, IMoni
 				}
 				rs1.close();
 				stm1.close();
+				
+				String multitenantStato = rs.getString("multitenant_stato");
+				String multitenantStatoSoggettiFruitori = rs.getString("multitenant_fruizioni");
+				String multitenantStatoSoggettiErogatori = rs.getString("multitenant_erogazioni");
+				config.setMultitenant(new ConfigurazioneMultitenant());
+				config.getMultitenant().setStato(DriverConfigurazioneDB_LIB.getEnumStatoFunzionalita(multitenantStato));
+				config.getMultitenant().setFruizioneSceltaSoggettiErogatori(DriverConfigurazioneDB_LIB.getEnumPortaDelegataSoggettiErogatori(multitenantStatoSoggettiFruitori));
+				config.getMultitenant().setErogazioneSceltaSoggettiAutenticati(DriverConfigurazioneDB_LIB.getEnumPortaApplicativaSoggettiAutenticati(multitenantStatoSoggettiErogatori));
 
 				String msg_diag_severita = rs.getString("msg_diag_severita");
 				String msg_diag_severita_log4j = rs.getString("msg_diag_severita_log4j");
@@ -11517,6 +11526,7 @@ implements IDriverConfigurazioneGet, IDriverConfigurazioneCRUD, IDriverWS, IMoni
 				sqlQueryObject.addSelectField("descrizione");
 				sqlQueryObject.addSelectField("identificativo_porta");
 				sqlQueryObject.addSelectField("is_router");
+				sqlQueryObject.addSelectField("is_default");
 				if(tipoSoggettiProtocollo!=null && tipoSoggettiProtocollo.size()>0) {
 					sqlQueryObject.addWhereINCondition("tipo_soggetto", true, tipoSoggettiProtocollo.toArray(new String[1]));
 				}
@@ -11541,6 +11551,7 @@ implements IDriverConfigurazioneGet, IDriverConfigurazioneCRUD, IDriverWS, IMoni
 				sqlQueryObject.addSelectField("descrizione");
 				sqlQueryObject.addSelectField("identificativo_porta");
 				sqlQueryObject.addSelectField("is_router");
+				sqlQueryObject.addSelectField("is_default");
 				if(tipoSoggettiProtocollo!=null && tipoSoggettiProtocollo.size()>0) {
 					sqlQueryObject.addWhereINCondition("tipo_soggetto", true, tipoSoggettiProtocollo.toArray(new String[1]));
 				}
@@ -11568,6 +11579,7 @@ implements IDriverConfigurazioneGet, IDriverConfigurazioneCRUD, IDriverWS, IMoni
 				sog.setDescrizione(risultato.getString("descrizione"));
 				sog.setIdentificativoPorta(risultato.getString("identificativo_porta"));
 				sog.setRouter(risultato.getInt("is_router") == CostantiDB.TRUE ? true : false);
+				sog.setDominioDefault(risultato.getInt("is_default") == CostantiDB.TRUE ? true : false);
 				lista.add(sog);
 			}
 
@@ -12538,6 +12550,12 @@ implements IDriverConfigurazioneGet, IDriverConfigurazioneCRUD, IDriverWS, IMoni
 				tmp = rs.getString("identificativo_porta");
 				Soggetto.setIdentificativoPorta(((tmp == null || tmp.equals("")) ? null : tmp));
 
+				int defaultR = rs.getInt("is_default");
+				boolean is_default = false;
+				if (defaultR == CostantiDB.TRUE)
+					is_default = true;
+				Soggetto.setDominioDefault(is_default);
+				
 				int router = rs.getInt("is_router");
 				boolean isrouter = false;
 				if (router == CostantiDB.TRUE)
