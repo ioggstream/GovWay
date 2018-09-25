@@ -1,5 +1,8 @@
 2018-09-24  Andrea Poli <apoli@link.it>
 
+	Aggiunta indicazione sul dominio di default per protocollo sul soggetto:
+	ALTER TABLE soggetti ADD COLUMN INT DEFAULT 0;
+
 	Aggiunta gestione multitenant nella configurazione:
 	ALTER TABLE configurazione ADD COLUMN multitenant_stato VARCHAR(255); 
 	ALTER TABLE configurazione ADD COLUMN multitenant_fruizioni VARCHAR(255);

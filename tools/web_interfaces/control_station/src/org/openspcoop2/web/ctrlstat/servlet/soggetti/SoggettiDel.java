@@ -136,7 +136,15 @@ public final class SoggettiDel extends Action {
 					msg += DBOggettiInUsoUtils.toString(idSoggetto, whereIsInUso, true, org.openspcoop2.core.constants.Costanti.WEB_NEW_LINE, normalizeObjectIds);
 					msg += org.openspcoop2.core.constants.Costanti.WEB_NEW_LINE;
 
-				} else {
+				} 
+				else if(soggettoConfig.isDominioDefault()) {
+					isInUso = true;
+					String protocollo = soggettiCore.getProtocolloAssociatoTipoSoggetto(idSoggetto.getTipo());
+					msg += "Il Soggetto '"+soggettiHelper.getLabelNomeSoggetto(protocollo, idSoggetto)+"',  essendo il soggeto predefinito per il profilo '"+
+							soggettiHelper.getLabelProtocollo(protocollo)+"', non è eliminabile";
+					msg += org.openspcoop2.core.constants.Costanti.WEB_NEW_LINE;
+				}
+				else {
 					SoggettoCtrlStat sog = new SoggettoCtrlStat(soggettoRegistro, soggettoConfig);
 					soggettiCore.performDeleteOperation(userLogin, soggettiHelper.smista(), sog);
 				}

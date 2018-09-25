@@ -259,7 +259,12 @@ public class ServiziApplicativiHelper extends ConnettoriHelper {
 		}
 
 		DataElement de = new DataElement();
-		de.setLabel(ServiziApplicativiCostanti.LABEL_SERVIZIO_APPLICATIVO);
+		if(this.isModalitaCompleta()) {
+			de.setLabel(ServiziApplicativiCostanti.LABEL_SERVIZIO_APPLICATIVO);
+		}
+		else {
+			de.setLabel(ServiziApplicativiCostanti.LABEL_APPLICATIVO);
+		}
 		de.setType(DataElementType.TITLE);
 		dati.addElement(de);
 
@@ -432,7 +437,7 @@ public class ServiziApplicativiHelper extends ConnettoriHelper {
 			de.setValue(tipoENomeSoggetto);
 			dati.addElement(de);
 			
-			if(multitenant) {
+			if(this.isModalitaCompleta()) {
 				de = new DataElement();
 				de.setType(DataElementType.LINK);
 				de.setValue(ServiziApplicativiCostanti.LABEL_PARAMETRO_SERVIZI_APPLICATIVI_VISUALIZZA_DATI_PROVIDER);

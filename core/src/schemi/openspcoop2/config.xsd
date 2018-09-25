@@ -80,6 +80,16 @@
 		<xsd:attribute name="nome" type="xsd:string" use="required"/>
 		<xsd:attribute name="identificativo-porta" type="xsd:string"/>
 		<xsd:attribute name="descrizione" type="xsd:string"/>
+		<xsd:attribute name="dominio-default" type="xsd:boolean" default="false"> <!-- non uso default poiche' e' una keyword riservata -->
+			<xsd:annotation>
+				<xsd:appinfo>
+					<linkit:generator
+						xmlns:linkit="http://www.link.it/project_generator">
+						<linkit:ws-field-mapping filter-use-default="false"/>
+					</linkit:generator>
+				</xsd:appinfo>
+			</xsd:annotation>
+		</xsd:attribute>
 		<xsd:attribute name="router" type="xsd:boolean" default="false">
 			<xsd:annotation>
 				<xsd:appinfo>

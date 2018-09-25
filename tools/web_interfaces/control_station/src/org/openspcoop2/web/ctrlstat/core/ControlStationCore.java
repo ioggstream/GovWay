@@ -5085,6 +5085,18 @@ public class ControlStationCore {
 		}
 	}
 	
+	public List<org.openspcoop2.core.registry.Soggetto> getSoggettiOperativi() throws DriverRegistroServiziException{
+		return this.getSoggettiOperativi(null);
+	}
+	public List<org.openspcoop2.core.registry.Soggetto> getSoggettiOperativi(String protocollo) throws DriverRegistroServiziException{
+		Search s = new Search(true);
+		if(protocollo!=null) {
+			s.addFilter(Liste.SOGGETTI, Filtri.FILTRO_PROTOCOLLO, protocollo); // imposto protocollo
+		}
+		s.addFilter(Liste.SOGGETTI, Filtri.FILTRO_DOMINIO, PddTipologia.OPERATIVO.toString()); // imposto dominio
+		return this.soggettiRegistroList(null, s);
+	}
+	
 	public List<org.openspcoop2.core.registry.Soggetto> soggettiRegistroList(String superuser, ISearch ricerca) throws DriverRegistroServiziException {
 		Connection con = null;
 		String nomeMetodo = "soggettiRegistroList";

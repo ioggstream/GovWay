@@ -1,3 +1,5 @@
+ALTER TABLE soggetti ADD is_default INT DEFAULT 0;
+
 ALTER TABLE configurazione ADD multitenant_stato VARCHAR(255);
 ALTER TABLE configurazione ADD multitenant_fruizioni VARCHAR(255);
 ALTER TABLE configurazione ADD multitenant_erogazioni VARCHAR(255);

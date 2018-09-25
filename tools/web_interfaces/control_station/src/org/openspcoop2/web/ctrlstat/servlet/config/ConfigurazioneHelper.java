@@ -23,9 +23,11 @@ package org.openspcoop2.web.ctrlstat.servlet.config;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
@@ -2904,7 +2906,7 @@ public class ConfigurazioneHelper extends ConsoleHelper{
 			String gestman, String registrazioneTracce, String dumpPD, String dumpPA,
 			String xsd,	String tipoValidazione, String confPers, Configurazione configurazione,
 			Vector<DataElement> dati, String applicaMTOM, ConfigurazioneProtocolli configProtocolli,
-			boolean multitenantEnabled
+			boolean multitenantEnabled, String multitenantSoggettiFruizioni, String multitenantSoggettiErogazioni
 			) throws Exception {
 		DataElement de = new DataElement();
 
@@ -3218,14 +3220,38 @@ public class ConfigurazioneHelper extends ConsoleHelper{
 		de.setType(DataElementType.TITLE);
 		dati.addElement(de);
 		
+		boolean existsMoreThanOneSoggettoOperativoPerProtocollo = false;
+		List<org.openspcoop2.core.registry.Soggetto> l = this.soggettiCore.getSoggettiOperativi();
+		Map<String, Integer> countSoggettoOperativiByProtocol = new HashMap<>();
+		if(l!=null && !l.isEmpty()) {
+			for (org.openspcoop2.core.registry.Soggetto soggetto : l) {
+				String protocol = this.soggettiCore.getProtocolloAssociatoTipoSoggetto(soggetto.getTipo());
+				int count = 0;
+				if(countSoggettoOperativiByProtocol.containsKey(protocol)) {
+					count = countSoggettoOperativiByProtocol.remove(protocol);
+				}
+				count ++;
+				if(count>1) {
+					existsMoreThanOneSoggettoOperativoPerProtocollo = true;
+					break;
+				}
+				countSoggettoOperativiByProtocol.put(protocol, count);
+			}
+		}
+		
 		de = new DataElement();
 		de.setLabel(ConfigurazioneCostanti.LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_STATO);
 		de.setName(ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_MULTITENANT_STATO);
-		de.setType(DataElementType.SELECT);
-		de.setValues(ConfigurazioneCostanti.STATI);
-		de.setSelected(multitenantEnabled ? CostantiConfigurazione.ABILITATO.getValue() : CostantiConfigurazione.DISABILITATO.getValue());
+		if(!existsMoreThanOneSoggettoOperativoPerProtocollo) {
+			de.setType(DataElementType.SELECT);
+			de.setPostBack(true);
+			de.setValues(ConfigurazioneCostanti.STATI);
+			de.setSelected(multitenantEnabled ? CostantiConfigurazione.ABILITATO.getValue() : CostantiConfigurazione.DISABILITATO.getValue());
+		}
+		else {
+			de.setType(DataElementType.TEXT);
+		}
 		de.setValue(multitenantEnabled ? CostantiConfigurazione.ABILITATO.getValue() : CostantiConfigurazione.DISABILITATO.getValue());
-		de.setPostBack(true);
 		dati.addElement(de);
 		
 		if(multitenantEnabled) {
@@ -3233,11 +3259,8 @@ public class ConfigurazioneHelper extends ConsoleHelper{
 			de = new DataElement();
 			de.setValue(ConfigurazioneCostanti.LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_SOGGETTI);
 			de.setType(DataElementType.LINK);
-			de.setUrl(SoggettiCostanti.SERVLET_NAME_SOGGETTI_LIST);
-	//				new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_ID,idSoggettoLong+""),
-	//				new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_NOME,idSoggetto.getNome()),
-	//				new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_TIPO,idSoggetto.getTipo()),
-	//				new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_MODIFICA_OPERATIVO,"true"));
+			de.setUrl(SoggettiCostanti.SERVLET_NAME_SOGGETTI_LIST,
+					new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_FILTER_DOMINIO_INTERNO,"true"));
 			dati.addElement(de);
 			
 			de = new DataElement();
@@ -3249,13 +3272,12 @@ public class ConfigurazioneHelper extends ConsoleHelper{
 			de.setLabel(ConfigurazioneCostanti.LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_FRUIZIONI_SOGGETTO_EROGATORE);
 			de.setName(ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_MULTITENANT_FRUIZIONI_SOGGETTO_EROGATORE);
 			de.setType(DataElementType.SELECT);
-			String [] values = MultitenantSoggettiErogazioni.toEnumNameArray();
-			String [] labels = MultitenantSoggettiErogazioni.toArray();
+			String [] values = MultitenantSoggettiFruizioni.toEnumNameArray();
+			String [] labels = MultitenantSoggettiFruizioni.toArray();
 			de.setValues(values);
 			de.setLabels(labels);
-			//de.setSelected(multitenantEnabled ? CostantiConfigurazione.ABILITATO.getValue() : CostantiConfigurazione.DISABILITATO.getValue());
-			//de.setValue(multitenantEnabled ? CostantiConfigurazione.ABILITATO.getValue() : CostantiConfigurazione.DISABILITATO.getValue());
-			//de.setPostBack(true);
+			de.setSelected(multitenantSoggettiFruizioni);
+			de.setValue(multitenantSoggettiFruizioni);
 			dati.addElement(de);
 			
 			de = new DataElement();
@@ -3264,17 +3286,17 @@ public class ConfigurazioneHelper extends ConsoleHelper{
 			dati.addElement(de);
 			
 			de = new DataElement();
-			de.setLabel(ConfigurazioneCostanti.LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_FRUIZIONI_SOGGETTI_AUTENTICATI);
+			de.setLabel(ConfigurazioneCostanti.LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_EROGAZIONI_SOGGETTI_AUTENTICATI);
 			de.setName(ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_MULTITENANT_EROGAZIONI_SOGGETTI_AUTENTICATI);
 			de.setType(DataElementType.SELECT);
-			values = MultitenantSoggettiFruizioni.toEnumNameArray();
-			labels = MultitenantSoggettiFruizioni.toArray();
+			values = MultitenantSoggettiErogazioni.toEnumNameArray();
+			labels = MultitenantSoggettiErogazioni.toArray();
 			de.setValues(values);
 			de.setLabels(labels);
-			//de.setSelected(multitenantEnabled ? CostantiConfigurazione.ABILITATO.getValue() : CostantiConfigurazione.DISABILITATO.getValue());
-			//de.setValue(multitenantEnabled ? CostantiConfigurazione.ABILITATO.getValue() : CostantiConfigurazione.DISABILITATO.getValue());
-			//de.setPostBack(true);
+			de.setSelected(multitenantSoggettiErogazioni);
+			de.setValue(multitenantSoggettiErogazioni);
 			dati.addElement(de);
+			
 			
 		}
 		
