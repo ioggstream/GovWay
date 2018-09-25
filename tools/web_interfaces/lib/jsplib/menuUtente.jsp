@@ -39,6 +39,7 @@ GeneralData gd = (GeneralData) session.getAttribute(gdString);
 Vector<GeneralLink> v = gd.getHeaderLinks();
 
 Vector<GeneralLink> modalitaLinks = gd.getModalitaLinks();
+Vector<GeneralLink> soggettoLinks = gd.getSoggettiLinks();
 	if(v!= null && v.size() > 1) {
 		
 %>
@@ -109,7 +110,16 @@ $(document).ready(function(){
 		window.location = destinazione;
 	});
 	
-<% if(modalitaLinks!= null && modalitaLinks.size() > 1) { %>
+<% if(modalitaLinks!= null && modalitaLinks.size() > 1) { 
+	GeneralLink modalitaTitoloLink = modalitaLinks.get(0);
+	int widthLabel = 12 + modalitaTitoloLink.getLabelWidth();
+%>
+		var oldModalitaWidthLabel = $('#menuModalita').css('min-width');
+		var newModalitaWidthLabel = <%=widthLabel %>;
+		
+		var oldModalitaShiftLeft = $('#menuModalita_menu').css('left');
+		var newModalitaShiftLeft = oldModalitaShiftLeft - (oldModalitaWidthLabel - newModalitaWidthLabel);
+		
 		// menu modalita
 		$('#menuModalita').hover(
 		        function () {
@@ -128,6 +138,43 @@ $(document).ready(function(){
 			var destinazione = $( this ).parent().children('span[class*="label"]').children().attr('href');
 			window.location = destinazione;
 		});
+		
+		$('#menuModalita').css('min-width', newModalitaWidthLabel);
+		$('#menuModalita_menu').css('left', newModalitaShiftLeft);
+<% } %>
+
+<% if(soggettoLinks!= null && soggettoLinks.size() > 1) { 
+	GeneralLink soggettoTitoloLink = soggettoLinks.get(0);
+	int widthLabel = 12 + soggettoTitoloLink.getLabelWidth();
+%>
+
+	var oldSoggettoWidthLabel = $('#menuSoggetto').css('min-width');
+	var newSoggettoWidthLabel = <%=widthLabel %>;
+	
+	var oldSoggettoShiftLeft = $('#menuSoggetto_menu').css('left');
+	var newSoggettoShiftLeft = oldSoggettoShiftLeft - (oldSoggettoWidthLabel - newSoggettoWidthLabel);
+	
+	// menu soggetto
+	$('#menuSoggetto').hover(
+	        function () {
+	            //mostra sottomenu
+	            // $('ul', this).stop(true, true).delay(50).slideDown(100); versione jquery > 1.3
+	            //.animate({top: 0}, 50)
+	            $('#menuSoggetto_menu', this).stop(true, true).delay(50).slideDown(100);
+	        }, 
+	        function () {
+	            //nascondi sottomenu
+	            $('#menuSoggetto_menu', this).stop(true, true).delay(150).slideUp(200);        
+	        }
+	    );
+	
+	$('#menuSoggetto_menu span[class*="icon-check"]').click(function() {
+		var destinazione = $( this ).parent().children('span[class*="label"]').children().attr('href');
+		window.location = destinazione;
+	});
+	
+	$('#menuSoggetto').css('min-width', newSoggettoWidthLabel);
+	$('#menuSoggetto_menu').css('left', newSoggettoShiftLeft);
 <% } %>
 	
 	if(isIE()){

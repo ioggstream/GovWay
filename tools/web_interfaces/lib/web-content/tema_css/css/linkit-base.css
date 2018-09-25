@@ -814,6 +814,23 @@ span.modalitaImg {
     padding: 0px 8px;
 }
 
+span.soggetto {
+/* 	padding-left: 4px; */
+/*     padding-right: 4px; */
+    font-size: 16px;
+}
+
+span.soggettoImg {
+	vertical-align: middle;
+	cursor: pointer;
+	background-image: url(../images/tema_link/down_white.png) ! important;
+	background-repeat: no-repeat;
+	background-position: center center;
+	width: 16px;
+    height: 16px;
+    padding: 0px 8px;
+}
+
 .text-decor {
 	font-family: 'Roboto';
 	font-size: 18px;
@@ -860,6 +877,27 @@ span.modalitaImg {
 #menuModalita_menu {
 	background-color: ${page.header.background.color};
 	border-color: ${page.header.background.color};
+	min-width: 180px;
+	display:none;
+	position:absolute;
+	color: ${page.header.text.color};
+	top: 18px;
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
+	left: 88px;
+} 
+
+#menuSoggetto {
+   	background-color: ${page.header.background.color};
+	border-color: ${page.header.background.color};
+	color: ${page.header.text.color};
+	min-width: 260px;
+	padding-right: 16px;
+	cursor: pointer;
+}  
+
+#menuSoggetto_menu {
+	background-color: ${page.header.background.color};
+	border-color: ${page.header.background.color};
 	min-width: 200px;
 	display:none;
 	position:absolute;
@@ -867,7 +905,7 @@ span.modalitaImg {
 	top: 18px;
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
 	left: 68px;
-} 
+}
 
 .menu-separator {
 	border-bottom: 1px solid ${page.header.border.bottom.color};
@@ -875,6 +913,11 @@ span.modalitaImg {
 
 .menu-no-pointer {
 	cursor: default;
+}
+
+.menu-item-no-icon {
+	color: ${page.header.text.color};
+	padding: 8px 0px 8px 0px; 
 }
 
 .menu-item {
@@ -887,10 +930,8 @@ span.modalitaImg {
 	padding: 8px 0px 8px 8px;
 }
 
-.menu-item a{
-	text-decoration: none;
-}
-
+.menu-item a,
+.menu-item-no-icon a,
 .menu-item-with-icon a{
 	text-decoration: none;
 }

@@ -23,14 +23,21 @@
 
 package org.openspcoop2.web.ctrlstat.servlet;
 
+import java.awt.Font;
 import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.openspcoop2.core.id.IDSoggetto;
+import org.openspcoop2.core.registry.driver.FiltroRicercaSoggetti;
 import org.openspcoop2.protocol.utils.ProtocolUtils;
 import org.openspcoop2.web.ctrlstat.core.ControlStationCore;
 import org.openspcoop2.web.ctrlstat.core.ControlStationLogger;
@@ -215,6 +222,8 @@ public class GeneralHelper {
 
 			if(!u.hasOnlyPermessiUtenti())  
 				gd.setModalitaLinks(this.caricaMenuProtocolliUtente(u));
+			
+			gd.setSoggettiLinks(this.caricaMenuSoggetti(u));
 		}
 
 		return gd;
@@ -277,8 +286,10 @@ public class GeneralHelper {
 				
 				GeneralLink glModalitaCorrente = new GeneralLink();
  				String labelSelezionato = protocolloSelezionato == null ? UtentiCostanti.LABEL_PARAMETRO_MODALITA_ALL : ConsoleHelper._getLabelProtocollo(protocolloSelezionato);
-				glModalitaCorrente.setLabel(MessageFormat.format(LoginCostanti.LABEL_MENU_MODALITA_CORRENTE_WITH_PARAM, labelSelezionato)); 
+				String labelSelezionatoCompleta = MessageFormat.format(LoginCostanti.LABEL_MENU_MODALITA_CORRENTE_WITH_PARAM, labelSelezionato);
+				glModalitaCorrente.setLabel(labelSelezionatoCompleta); 
 				glModalitaCorrente.setUrl("");
+				glModalitaCorrente.setLabelWidth(this.core.getFontWidth(labelSelezionatoCompleta,  Font.BOLD, 16)); 
 				link.addElement(glModalitaCorrente);
 
 				// popolo la tendina con i protocolli disponibili
@@ -315,5 +326,87 @@ public class GeneralHelper {
 		return link;
 	}
 
+	public Vector<GeneralLink> caricaMenuSoggetti(User u){
+		Vector<GeneralLink> link = new Vector<GeneralLink>();
 
+		FiltroRicercaSoggetti filtroRicerca = new FiltroRicercaSoggetti();
+		try {
+			// TODO aggiungere filtri
+			List<IDSoggetto> allIdSoggettiRegistro = this.soggettiCore.getAllIdSoggettiRegistro(filtroRicerca);
+			
+			// TODO label selezionato da info utente
+			
+			
+			if(allIdSoggettiRegistro != null && !allIdSoggettiRegistro.isEmpty()) {
+				
+				if(allIdSoggettiRegistro.size() < 20) {
+					IDSoggetto idSoggettoScelto = allIdSoggettiRegistro.get(0);
+					
+					GeneralLink glSoggettoCorrente = new GeneralLink();
+	 				String labelSelezionato = ConsoleHelper._getLabelNomeSoggetto(idSoggettoScelto);
+					String labelSelezionatoCompleta = MessageFormat.format(LoginCostanti.LABEL_MENU_SOGGETTO_CORRENTE_WITH_PARAM, labelSelezionato);
+					glSoggettoCorrente.setLabel(labelSelezionatoCompleta); 
+					glSoggettoCorrente.setUrl("");
+					glSoggettoCorrente.setLabelWidth(this.core.getFontWidth(labelSelezionatoCompleta, Font.BOLD, 16)); 
+					link.addElement(glSoggettoCorrente);
+					
+					// seleziona tutti 
+					GeneralLink glAll = new GeneralLink();
+					glAll.setLabel(UtentiCostanti.LABEL_PARAMETRO_MODALITA_ALL);
+					glAll.setIcon((labelSelezionato == null) ? LoginCostanti.ICONA_MENU_UTENTE_CHECKED : LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED);
+					glAll.setUrl(UtentiCostanti.SERVLET_NAME_UTENTE_CHANGE,
+							new Parameter(UtentiCostanti.PARAMETRO_UTENTE_TIPO_MODALITA, UtentiCostanti.VALORE_PARAMETRO_MODALITA_ALL),
+							new Parameter(Costanti.DATA_ELEMENT_EDIT_MODE_NAME,Costanti.DATA_ELEMENT_EDIT_MODE_VALUE_EDIT_END),
+							new Parameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_MODALITA,Costanti.CHECK_BOX_ENABLED)
+							);
+					link.addElement(glAll);
+					
+					Map<String, IDSoggetto> mapLabelSoggettiUnsorted = new HashMap<>();
+					for (IDSoggetto idSoggetto : allIdSoggettiRegistro) {
+						String labelSoggetto = ConsoleHelper._getLabelNomeSoggetto(idSoggetto);
+						if(!mapLabelSoggettiUnsorted.containsKey(labelSoggetto)) {
+							mapLabelSoggettiUnsorted.put(labelSoggetto, idSoggetto);
+						}
+					}
+					
+					Map<String, IDSoggetto> mapLabelSoggetti = mapLabelSoggettiUnsorted.entrySet().stream()
+			                .sorted(Map.Entry.comparingByKey())
+			                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+			                        (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+					
+					for (String label : mapLabelSoggetti.keySet()) {
+						IDSoggetto idSoggetto = mapLabelSoggetti.get(label);
+						
+						GeneralLink glSoggetto = new GeneralLink();
+						
+						glSoggetto.setLabel(label);
+						String iconProt = labelSelezionato == null ? LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED :
+							(label.equals(labelSelezionato) ? LoginCostanti.ICONA_MENU_UTENTE_CHECKED : LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED);
+						glSoggetto.setIcon(iconProt);
+						glSoggetto.setUrl(UtentiCostanti.SERVLET_NAME_UTENTE_CHANGE,
+								new Parameter(UtentiCostanti.PARAMETRO_UTENTE_TIPO_MODALITA, idSoggetto.toString()),
+								new Parameter(Costanti.DATA_ELEMENT_EDIT_MODE_NAME,Costanti.DATA_ELEMENT_EDIT_MODE_VALUE_EDIT_END),
+								new Parameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_MODALITA,Costanti.CHECK_BOX_ENABLED)
+								);
+						
+						link.addElement(glSoggetto);
+					}
+				}
+			} else {
+				IDSoggetto idSoggettoScelto = allIdSoggettiRegistro.get(0);
+				
+				GeneralLink glSoggettoCorrente = new GeneralLink();
+ 				String labelSelezionato = ConsoleHelper._getLabelNomeSoggetto(idSoggettoScelto);
+				String labelSelezionatoCompleta = MessageFormat.format(LoginCostanti.LABEL_MENU_SOGGETTO_CORRENTE_WITH_PARAM, labelSelezionato);
+				glSoggettoCorrente.setLabel(labelSelezionatoCompleta);
+				// TODO
+				glSoggettoCorrente.setUrl("urlModifica");
+				glSoggettoCorrente.setLabelWidth(this.core.getFontWidth(labelSelezionatoCompleta, Font.BOLD, 16)); 
+				link.addElement(glSoggettoCorrente);
+			}
+		} catch (Exception e) {
+		}
+
+		return link;
+	}
 }

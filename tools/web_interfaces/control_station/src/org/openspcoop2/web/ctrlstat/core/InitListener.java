@@ -23,9 +23,14 @@
 
 package org.openspcoop2.web.ctrlstat.core;
 
+import java.awt.Font;
+import java.awt.GraphicsEnvironment;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Properties;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -266,6 +271,41 @@ public class InitListener implements ServletContextListener {
 			throw new RuntimeException(e.getMessage(),e);
 		}
 		InitListener.log.info("Inizializzazione DataElement effettuata con successo");
+		
+		ServletContext servletContext = sce.getServletContext();
+
+		InputStream isFont = null;
+
+		try{
+			String fontFileName = ConsoleProperties.getInstance().getConsoleFont();
+			
+			InitListener.log.debug("Caricato Font dal file: ["+fontFileName+"] in corso... ");
+			
+			isFont = servletContext.getResourceAsStream("/fonts/"+ fontFileName);
+
+			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			Font fontCaricato = Font.createFont(Font.PLAIN, isFont);
+			
+			InitListener.log.debug("Caricato Font: ["+fontCaricato.getName()+"] FontName: ["+fontCaricato.getFontName()+"] FontFamily: ["+fontCaricato.getFamily()+"] FontStyle: ["+fontCaricato.getStyle()+"]");
+			
+			ge.registerFont(fontCaricato);
+
+			InitListener.log.debug("Check Graphics Environment: is HeadeLess ["+java.awt.GraphicsEnvironment.isHeadless()+"]");
+
+			InitListener.log.debug("Elenco Nomi Font disponibili: " + Arrays.asList(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()));
+			
+			ConsoleProperties.getInstance().setConsoleFontName(fontCaricato.getName());
+			ConsoleProperties.getInstance().setConsoleFontFamilyName(fontCaricato.getFamily());
+			ConsoleProperties.getInstance().setConsoleFontStyle(fontCaricato.getStyle());
+			
+			InitListener.log.debug("Caricato Font dal file: ["+fontFileName+"] completato.");
+		}catch (Exception e) {
+			InitListener.log.error(e.getMessage(),e);
+		} finally {
+			if(isFont != null){
+				try {	isFont.close(); } catch (IOException e) {	}
+			}
+		}
 	}
 
 	public static void setInitialized(boolean initialized) {

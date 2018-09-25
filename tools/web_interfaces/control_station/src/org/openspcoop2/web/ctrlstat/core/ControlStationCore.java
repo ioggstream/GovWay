@@ -23,6 +23,10 @@
 
 package org.openspcoop2.web.ctrlstat.core;
 
+import java.awt.Font;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -243,6 +247,9 @@ public class ControlStationCore {
 	private String logoHeaderImage = null;
 	private String logoHeaderTitolo = null;
 	private String logoHeaderLink = null;
+	private transient AffineTransform affineTransform = null;
+	private transient FontRenderContext fontRenderContext = null;
+	private transient Font defaultFont = null;
 	
 	public String getConsoleNomeSintesi() {
 		return this.consoleNomeSintesi;
@@ -1349,6 +1356,9 @@ public class ControlStationCore {
 		this.logoHeaderImage = core.logoHeaderImage;
 		this.logoHeaderLink = core.logoHeaderLink;
 		this.logoHeaderTitolo = core.logoHeaderTitolo;
+		this.defaultFont = core.defaultFont;
+		this.affineTransform = core.affineTransform;
+		this.fontRenderContext = core.fontRenderContext;
 
 		/** Tipo del Database */
 		this.tipoDB = core.tipoDB;
@@ -1683,6 +1693,9 @@ public class ControlStationCore {
 			this.logoHeaderImage = consoleProperties.getLogoHeaderImage();
 			this.logoHeaderLink = consoleProperties.getLogoHeaderLink();
 			this.logoHeaderTitolo = consoleProperties.getLogoHeaderTitolo();
+			String fontName = consoleProperties.getConsoleFontFamilyName();
+			int fontStyle = consoleProperties.getConsoleFontStyle();
+			this.defaultFont = new Font(fontName,fontStyle, 14);
 			
 			// Opzioni di Visualizzazione
 			this.showJ2eeOptions = consoleProperties.isShowJ2eeOptions();
@@ -5664,4 +5677,52 @@ public class ControlStationCore {
 	public IExtendedListServlet getExtendedServletPortaApplicativa(){
 		return this.pluginPortaApplicativa;
 	}
+	
+	/***
+	 * utilizzo Lucida sans come font di dafault poiche' e' generalmente presente nella jdk
+	 * 
+	 * @return Font di defualt dell'applicazione
+	 */
+	public Font getDefaultFont() {
+		if(this.defaultFont == null)
+			this.defaultFont = new Font("Lucida Sans", Font.PLAIN , 14);
+
+		return this.defaultFont;
+	}
+	public void setDefaultFont(Font defaultFont) {
+		this.defaultFont = defaultFont;
+	}
+	
+	// UTILITIES misurazione dimensione text
+	public Integer getFontWidth(String text){
+		return getFontWidth(text, this.getDefaultFont());
+	} 
+	
+	public Integer getFontWidth(String text, int fontSize){
+		Font defaultFont2 = this.getDefaultFont();
+		return getFontWidth(text, defaultFont2.getFontName(), defaultFont2.getStyle(), fontSize);
+	} 
+	
+	public Integer getFontWidth(String text, int fontStyle, int fontSize){
+		Font defaultFont2 = this.getDefaultFont();
+		return getFontWidth(text, defaultFont2.getFontName(), fontStyle, fontSize);
+	} 
+
+	public Integer getFontWidth(String text, String fontName, int fontStyle, int fontSize){
+		Font fontToCheck = new Font(fontName,  fontStyle , fontSize);
+		return getFontWidth(text, fontToCheck);
+	} 
+
+
+	public Integer getFontWidth(String text, Font fontToCheck){
+		if(this.fontRenderContext == null){
+			if(this.affineTransform == null)
+				this.affineTransform = new AffineTransform();
+
+			this.fontRenderContext = new FontRenderContext(this.affineTransform,true,true);
+		}
+
+		Rectangle2D rectangle2d = fontToCheck.getStringBounds(text, this.fontRenderContext);
+		return (int) rectangle2d.getWidth(); 
+	}	
 }
