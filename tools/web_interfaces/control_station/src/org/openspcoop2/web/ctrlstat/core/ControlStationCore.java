@@ -48,6 +48,7 @@ import org.openspcoop2.core.config.AccessoDatiAutorizzazione;
 import org.openspcoop2.core.config.AccessoRegistro;
 import org.openspcoop2.core.config.AccessoRegistroRegistro;
 import org.openspcoop2.core.config.Configurazione;
+import org.openspcoop2.core.config.ConfigurazioneMultitenant;
 import org.openspcoop2.core.config.GenericProperties;
 import org.openspcoop2.core.config.GestioneErrore;
 import org.openspcoop2.core.config.MessaggiDiagnostici;
@@ -62,6 +63,7 @@ import org.openspcoop2.core.config.ServizioApplicativo;
 import org.openspcoop2.core.config.Soggetto;
 import org.openspcoop2.core.config.SystemProperties;
 import org.openspcoop2.core.config.Tracciamento;
+import org.openspcoop2.core.config.constants.StatoFunzionalita;
 import org.openspcoop2.core.config.driver.DriverConfigurazioneException;
 import org.openspcoop2.core.config.driver.DriverConfigurazioneNotFound;
 import org.openspcoop2.core.config.driver.db.DriverConfigurazioneDB;
@@ -127,6 +129,8 @@ import org.openspcoop2.utils.transport.http.HttpUtilities;
 import org.openspcoop2.web.ctrlstat.config.ConsoleProperties;
 import org.openspcoop2.web.ctrlstat.config.DatasourceProperties;
 import org.openspcoop2.web.ctrlstat.costanti.CostantiControlStation;
+import org.openspcoop2.web.ctrlstat.costanti.MultitenantSoggettiErogazioni;
+import org.openspcoop2.web.ctrlstat.costanti.MultitenantSoggettiFruizioni;
 import org.openspcoop2.web.ctrlstat.costanti.OperationsParameter;
 import org.openspcoop2.web.ctrlstat.costanti.TipoOggettoDaSmistare;
 import org.openspcoop2.web.ctrlstat.dao.PdDControlStation;
@@ -672,6 +676,20 @@ public class ControlStationCore {
 		return this.exportArchive_servizi_standard;
 	}
 
+	/** Multitenant */
+	private boolean multitenant = false;
+	private MultitenantSoggettiErogazioni multitenantSoggettiErogazioni = null;
+	private MultitenantSoggettiFruizioni multitenantSoggettiFruizioni = null;
+	public boolean isMultitenant() {
+		return this.multitenant;
+	}
+	public MultitenantSoggettiErogazioni getMultitenantSoggettiErogazioni() {
+		return this.multitenantSoggettiErogazioni;
+	}
+	public MultitenantSoggettiFruizioni getMultitenantSoggettiFruizioni() {
+		return this.multitenantSoggettiFruizioni;
+	}
+	
 	/** Altro */
 	private String suffissoConnettoreAutomatico;
 	private boolean enabledToken_generazioneAutomaticaPorteDelegate;
@@ -1331,6 +1349,47 @@ public class ControlStationCore {
 				this.protocolloDefault = this.protocolFactoryManager.getDefaultProtocolFactory().getProtocol();
 			}
 
+			// Leggo configurazione multitenant
+			ConfigurazioneMultitenant confMultitenant = this.getConfigurazioneGenerale().getMultitenant();
+			if(confMultitenant!=null) {
+				
+				this.multitenant = StatoFunzionalita.ABILITATO.equals(confMultitenant.getStato());
+				
+				if(confMultitenant.getErogazioneSceltaSoggettiAutenticati()!=null) {
+					switch (confMultitenant.getErogazioneSceltaSoggettiAutenticati()) {
+					case SOGGETTI_ESTERNI:
+						this.multitenantSoggettiErogazioni = MultitenantSoggettiErogazioni.SOLO_SOGGETTI_ESTERNI;
+						break;
+					case ESCLUDI_SOGGETTO_EROGATORE:
+						this.multitenantSoggettiErogazioni = MultitenantSoggettiErogazioni.ESCLUDI_SOGGETTO_EROGATORE;
+						break;
+					case TUTTI:
+						this.multitenantSoggettiErogazioni = MultitenantSoggettiErogazioni.TUTTI;
+						break;
+					}
+				}
+				else {
+					this.multitenantSoggettiErogazioni = MultitenantSoggettiErogazioni.SOLO_SOGGETTI_ESTERNI; // default
+				}
+				
+				if(confMultitenant.getFruizioneSceltaSoggettiErogatori()!=null) {
+					switch (confMultitenant.getFruizioneSceltaSoggettiErogatori()) {
+					case SOGGETTI_ESTERNI:
+						this.multitenantSoggettiFruizioni = MultitenantSoggettiFruizioni.SOLO_SOGGETTI_ESTERNI;
+						break;
+					case ESCLUDI_SOGGETTO_FRUITORE:
+						this.multitenantSoggettiFruizioni = MultitenantSoggettiFruizioni.ESCLUDI_SOGGETTO_FRUITORE;
+						break;
+					case TUTTI:
+						this.multitenantSoggettiFruizioni = MultitenantSoggettiFruizioni.TUTTI;
+						break;
+					}
+				}
+				else {
+					this.multitenantSoggettiFruizioni = MultitenantSoggettiFruizioni.SOLO_SOGGETTI_ESTERNI; // default
+				}
+			}
+			
 		}catch(Exception e){
 			ControlStationCore.logError("Errore di inizializzazione: "+e.getMessage(), e);
 			throw e;
@@ -1468,6 +1527,11 @@ public class ControlStationCore {
 		this.importArchivi_tipoPdD = core.importArchivi_tipoPdD;
 		this.exportArchive_configurazione_soloDumpCompleto = core.exportArchive_configurazione_soloDumpCompleto;
 		this.exportArchive_servizi_standard = core.exportArchive_servizi_standard;
+		
+		/** Multitenant */
+		this.multitenant = core.multitenant;
+		this.multitenantSoggettiErogazioni = core.multitenantSoggettiErogazioni;
+		this.multitenantSoggettiFruizioni = core.multitenantSoggettiFruizioni;
 		
 		/** Altro */
 		this.suffissoConnettoreAutomatico = core.suffissoConnettoreAutomatico;
@@ -1760,6 +1824,9 @@ public class ControlStationCore {
 			this.importArchivi_tipoPdD = consoleProperties.getImportArchive_tipoPdD();
 			this.exportArchive_configurazione_soloDumpCompleto = consoleProperties.isExportArchive_configurazione_soloDumpCompleto();
 			this.exportArchive_servizi_standard = consoleProperties.isExportArchive_servizi_standard();
+			
+			// Multitenant
+			// Inizializzato dopo aver attivato il Database, per leggere la configurazione su DB
 			
 			// Gestione Visibilità utenti
 			this.visioneOggettiGlobale = consoleProperties.isVisibilitaOggettiGlobale();

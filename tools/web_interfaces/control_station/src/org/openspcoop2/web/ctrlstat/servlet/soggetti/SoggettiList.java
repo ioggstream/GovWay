@@ -79,7 +79,7 @@ public final class SoggettiList extends Action {
 
 			SoggettiCore soggettiCore = new SoggettiCore();
 			
-			boolean multiTenant = ServletUtils.getUserFromSession(session).isPermitMultiTenant();
+			boolean multiTenant = soggettiCore.isMultitenant();
 			
 			// Preparo la lista
 			Search ricerca = (Search) ServletUtils.getSearchObjectFromSession(session, Search.class);

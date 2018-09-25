@@ -109,13 +109,14 @@ import org.openspcoop2.utils.xml.XPathNotValidException;
 import org.openspcoop2.web.ctrlstat.core.ControlStationCore;
 import org.openspcoop2.web.ctrlstat.core.Search;
 import org.openspcoop2.web.ctrlstat.costanti.CostantiControlStation;
+import org.openspcoop2.web.ctrlstat.costanti.MultitenantSoggettiErogazioni;
+import org.openspcoop2.web.ctrlstat.costanti.MultitenantSoggettiFruizioni;
 import org.openspcoop2.web.ctrlstat.driver.DriverControlStationNotFound;
 import org.openspcoop2.web.ctrlstat.servlet.ConsoleHelper;
 import org.openspcoop2.web.ctrlstat.servlet.pa.PorteApplicativeCostanti;
 import org.openspcoop2.web.ctrlstat.servlet.pa.PorteApplicativeHelper;
 import org.openspcoop2.web.ctrlstat.servlet.pd.PorteDelegateCostanti;
 import org.openspcoop2.web.ctrlstat.servlet.pd.PorteDelegateHelper;
-import org.openspcoop2.web.ctrlstat.servlet.sa.ServiziApplicativiCostanti;
 import org.openspcoop2.web.ctrlstat.servlet.soggetti.SoggettiCostanti;
 import org.openspcoop2.web.lib.mvc.CheckboxStatusType;
 import org.openspcoop2.web.lib.mvc.Costanti;
@@ -3248,8 +3249,10 @@ public class ConfigurazioneHelper extends ConsoleHelper{
 			de.setLabel(ConfigurazioneCostanti.LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_FRUIZIONI_SOGGETTO_EROGATORE);
 			de.setName(ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_MULTITENANT_FRUIZIONI_SOGGETTO_EROGATORE);
 			de.setType(DataElementType.SELECT);
-			String [] todoV = new String [] { "Solo Soggetti Esterni", "Escludi Soggetto Fruitore", "Tutti" };
-			de.setValues(todoV);
+			String [] values = MultitenantSoggettiErogazioni.toEnumNameArray();
+			String [] labels = MultitenantSoggettiErogazioni.toArray();
+			de.setValues(values);
+			de.setLabels(labels);
 			//de.setSelected(multitenantEnabled ? CostantiConfigurazione.ABILITATO.getValue() : CostantiConfigurazione.DISABILITATO.getValue());
 			//de.setValue(multitenantEnabled ? CostantiConfigurazione.ABILITATO.getValue() : CostantiConfigurazione.DISABILITATO.getValue());
 			//de.setPostBack(true);
@@ -3264,8 +3267,10 @@ public class ConfigurazioneHelper extends ConsoleHelper{
 			de.setLabel(ConfigurazioneCostanti.LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_FRUIZIONI_SOGGETTI_AUTENTICATI);
 			de.setName(ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_MULTITENANT_EROGAZIONI_SOGGETTI_AUTENTICATI);
 			de.setType(DataElementType.SELECT);
-			todoV = new String [] { "Solo Soggetti Esterni", "Escludi Soggetto Erogatore", "Tutti" };
-			de.setValues(todoV);
+			values = MultitenantSoggettiFruizioni.toEnumNameArray();
+			labels = MultitenantSoggettiFruizioni.toArray();
+			de.setValues(values);
+			de.setLabels(labels);
 			//de.setSelected(multitenantEnabled ? CostantiConfigurazione.ABILITATO.getValue() : CostantiConfigurazione.DISABILITATO.getValue());
 			//de.setValue(multitenantEnabled ? CostantiConfigurazione.ABILITATO.getValue() : CostantiConfigurazione.DISABILITATO.getValue());
 			//de.setPostBack(true);
@@ -3303,7 +3308,6 @@ public class ConfigurazioneHelper extends ConsoleHelper{
 			}
 			
 			User user = ServletUtils.getUserFromSession(this.session);
-			boolean multiTenant = user.isPermitMultiTenant();
 			String userLogin = user.getLogin();
 			
 			String nameP = this.getParameter(ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_PROTOCOLLO_PREFIX_NAME+protocollo);
@@ -3358,7 +3362,7 @@ public class ConfigurazioneHelper extends ConsoleHelper{
 			de.setValue(urlInvocazionePD);
 			dati.addElement(de);
 					
-			if(!multiTenant) {
+			if(!multitenantEnabled) {
 				IDSoggetto idSoggetto = this.soggettiCore.getSoggettoOperativo(userLogin, protocollo);
 				long idSoggettoLong = this.soggettiCore.getIdSoggetto(idSoggetto.getNome(), idSoggetto.getTipo());
 						
@@ -10179,7 +10183,7 @@ public class ConfigurazioneHelper extends ConsoleHelper{
 		}
 		configurazione = !delegata && !applicativa;
 		
-		boolean multitenant = ServletUtils.getUserFromSession(this.session).isPermitMultiTenant(); 
+		boolean multitenant = this.confCore.isMultitenant();
 		
 		// Elaboro valori con dipendenze
 		

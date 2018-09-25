@@ -53,7 +53,8 @@ public class User implements Serializable {
 	private List<String> protocolliSupportati;
 	private String protocolloSelezionatoPddConsole;
 	private String protocolloSelezionatoPddMonitor;
-	private boolean permitMultiTenant = false;
+	private String soggettoSelezionatoPddConsole; 
+	private String soggettoSelezionatoPddMonitor; 
 	private List<IDSoggetto> soggetti = new ArrayList<>();
 	private List<IDServizio> servizi = new ArrayList<>();
 	private List<Stato> stati = new ArrayList<>();
@@ -194,13 +195,6 @@ public class User implements Serializable {
 		else
 			return false;
 	}
-
-	public boolean isPermitMultiTenant() {
-		return this.permitMultiTenant;
-	}
-	public void setPermitMultiTenant(boolean permitMultiTenant) {
-		this.permitMultiTenant = permitMultiTenant;
-	}
 	
 	public List<IDSoggetto> getSoggetti() {
 		return this.soggetti;
@@ -210,6 +204,19 @@ public class User implements Serializable {
 	}
 	public List<Stato> getStati() {
 		return this.stati;
+	}
+	
+	public String getSoggettoSelezionatoPddConsole() {
+		return this.soggettoSelezionatoPddConsole;
+	}
+	public void setSoggettoSelezionatoPddConsole(String soggettoSelezionatoPddConsole) {
+		this.soggettoSelezionatoPddConsole = soggettoSelezionatoPddConsole;
+	}
+	public String getSoggettoSelezionatoPddMonitor() {
+		return this.soggettoSelezionatoPddMonitor;
+	}
+	public void setSoggettoSelezionatoPddMonitor(String soggettoSelezionatoPddMonitor) {
+		this.soggettoSelezionatoPddMonitor = soggettoSelezionatoPddMonitor;
 	}
 	
 	

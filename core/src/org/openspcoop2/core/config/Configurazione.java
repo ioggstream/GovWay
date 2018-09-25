@@ -45,6 +45,7 @@ import java.util.List;
  * 			&lt;element name="accesso-dati-autorizzazione" type="{http://www.openspcoop2.org/core/config}accesso-dati-autorizzazione" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="accesso-dati-autenticazione" type="{http://www.openspcoop2.org/core/config}accesso-dati-autenticazione" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="accesso-dati-gestione-token" type="{http://www.openspcoop2.org/core/config}accesso-dati-gestione-token" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="multitenant" type="{http://www.openspcoop2.org/core/config}configurazione-multitenant" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="protocolli" type="{http://www.openspcoop2.org/core/config}configurazione-protocolli" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="validazione-buste" type="{http://www.openspcoop2.org/core/config}validazione-buste" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="validazione-contenuti-applicativi" type="{http://www.openspcoop2.org/core/config}validazione-contenuti-applicativi" minOccurs="0" maxOccurs="1"/>
@@ -79,6 +80,7 @@ import java.util.List;
   	"accessoDatiAutorizzazione",
   	"accessoDatiAutenticazione",
   	"accessoDatiGestioneToken",
+  	"multitenant",
   	"protocolli",
   	"validazioneBuste",
   	"validazioneContenutiApplicativi",
@@ -187,6 +189,14 @@ public class Configurazione extends org.openspcoop2.utils.beans.BaseBean impleme
 
   public void setAccessoDatiGestioneToken(AccessoDatiGestioneToken accessoDatiGestioneToken) {
     this.accessoDatiGestioneToken = accessoDatiGestioneToken;
+  }
+
+  public ConfigurazioneMultitenant getMultitenant() {
+    return this.multitenant;
+  }
+
+  public void setMultitenant(ConfigurazioneMultitenant multitenant) {
+    this.multitenant = multitenant;
   }
 
   public ConfigurazioneProtocolli getProtocolli() {
@@ -391,6 +401,9 @@ public class Configurazione extends org.openspcoop2.utils.beans.BaseBean impleme
 
   @XmlElement(name="accesso-dati-gestione-token",required=false,nillable=false)
   protected AccessoDatiGestioneToken accessoDatiGestioneToken;
+
+  @XmlElement(name="multitenant",required=false,nillable=false)
+  protected ConfigurazioneMultitenant multitenant;
 
   @XmlElement(name="protocolli",required=false,nillable=false)
   protected ConfigurazioneProtocolli protocolli;

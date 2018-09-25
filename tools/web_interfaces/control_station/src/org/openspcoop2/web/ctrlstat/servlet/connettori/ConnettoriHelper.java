@@ -113,7 +113,7 @@ public class ConnettoriHelper extends ConsoleHelper {
 			String myId, String correlato, String idSoggErogatore, String nomeservizioApplicativo,String idsil,String tipoAccordo,
 			String provider, String idPorta) throws Exception{
 		
-		boolean multitenant = ServletUtils.getUserFromSession(this.session).isPermitMultiTenant(); 
+		boolean isModalitaCompleta = this.isModalitaCompleta();
 		Boolean vistaErogazioni = ServletUtils.getBooleanAttributeFromSession(ErogazioniCostanti.ASPS_EROGAZIONI_ATTRIBUTO_VISTA_EROGAZIONI, this.session);
 		
 		boolean accessoDaListaAPS = false;
@@ -199,7 +199,7 @@ public class ConnettoriHelper extends ConsoleHelper {
 				
 				String labelPerPorta = null;
 				if(accessoDaListaAPS) {
-					if(!multitenant) {
+					if(!isModalitaCompleta) {
 						if(vistaErogazioni != null && vistaErogazioni.booleanValue()) {
 							labelPerPorta = ErogazioniCostanti.LABEL_ASPS_PORTE_DELEGATE_MODIFICA_CONNETTORE;
 						} else {
@@ -250,7 +250,7 @@ public class ConnettoriHelper extends ConsoleHelper {
 				AccordoServizioParteSpecifica asps = this.apsCore.getAccordoServizioParteSpecifica(Integer.parseInt(id));
 				
 				if(accessoDaListaAPS) {
-					if(!multitenant) {
+					if(!isModalitaCompleta) {
 						if(vistaErogazioni != null && vistaErogazioni.booleanValue()) {
 							labelPerPorta = ErogazioniCostanti.LABEL_ASPS_PORTE_APPLICATIVE_MODIFICA_CONNETTORE;
 						} else {

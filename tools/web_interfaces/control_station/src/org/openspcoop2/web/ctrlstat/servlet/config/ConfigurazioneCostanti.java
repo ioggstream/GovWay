@@ -398,7 +398,7 @@ public class ConfigurazioneCostanti {
 	public final static String LABEL_CONFIGURAZIONE_INDIRIZZO_TELEMATICO = "Indirizzo Telematico";
 	public final static String LABEL_CONFIGURAZIONE_MANIFEST_ATTACHMENTS = "Manifest Attachments";
 	public final static String LABEL_CONFIGURAZIONE_URL_INVOCAZIONE = "Modalit&agrave;"; //"URL di Invocazione dei Servizi";
-	public final static String LABEL_CONFIGURAZIONE_MULTITENANT = "Multitenant";
+	public final static String LABEL_CONFIGURAZIONE_MULTITENANT = "Multi-Tenant";
 	public final static String LABEL_CONFIGURAZIONE_MULTITENANT_FRUIZIONI = "Fruizioni";
 	public final static String LABEL_CONFIGURAZIONE_MULTITENANT_EROGAZIONI = "Erogazioni (Controllo Accesso)";
 	public final static String LABEL_CONFIGURAZIONE_REGISTRO_SERVIZI = "Registro dei Servizi";

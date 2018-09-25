@@ -1,3 +1,18 @@
+2018-09-24  Andrea Poli <apoli@link.it>
+
+	Aggiunta gestione multitenant nella configurazione:
+	ALTER TABLE configurazione ADD COLUMN multitenant_stato VARCHAR(255); 
+	ALTER TABLE configurazione ADD COLUMN multitenant_fruizioni VARCHAR(255);
+	ALTER TABLE configurazione ADD COLUMN multitenant_erogazioni VARCHAR(255);
+
+	Aggiunta funzionalità di autorizzazione degli applicativi nelle porte applicative:
+	CREATE TABLE porte_applicative_sa_auth
+	(
+	       id_porta BIGINT NOT NULL,
+	       id_servizio_applicativo BIGINT NOT NULL,
+	       ...
+	);
+
 2017-11-28  Andrea Poli <apoli@link.it>
 
 	Creato file ChangeLog

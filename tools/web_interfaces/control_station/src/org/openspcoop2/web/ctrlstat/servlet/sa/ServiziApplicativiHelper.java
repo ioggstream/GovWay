@@ -237,7 +237,7 @@ public class ServiziApplicativiHelper extends ConnettoriHelper {
 			ruoloErogatore = TipologiaErogazione.DISABILITATO.getValue();
 		}
 		
-		boolean multitenant = ServletUtils.getUserFromSession(this.session).isPermitMultiTenant(); 
+		boolean multitenant = this.saCore.isMultitenant();
 		
 		boolean configurazioneStandardNonApplicabile = false;
 		
@@ -1332,7 +1332,7 @@ public class ServiziApplicativiHelper extends ConnettoriHelper {
 		try {
 			String idProvider = this.getParameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_PROVIDER);
 			
-			boolean multitenant = ServletUtils.getUserFromSession(this.session).isPermitMultiTenant(); 
+			boolean multitenant = this.saCore.isMultitenant();
 			
 			// prelevo il flag che mi dice da quale pagina ho acceduto la sezione
 			Integer parentSA = ServletUtils.getIntegerAttributeFromSession(ServiziApplicativiCostanti.ATTRIBUTO_SERVIZI_APPLICATIVI_PARENT, this.session);

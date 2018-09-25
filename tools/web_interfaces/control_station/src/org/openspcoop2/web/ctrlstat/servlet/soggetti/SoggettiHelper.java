@@ -126,7 +126,7 @@ public class SoggettiHelper extends ConnettoriHelper {
 			}
 		}
 		
-		boolean multiTenant = ServletUtils.getUserFromSession(this.session).isPermitMultiTenant();
+		boolean multiTenant = this.core.isMultitenant();
 		boolean hiddenDatiDominioInterno = false;
 		if(!multiTenant) {
 			if(!gestionePdd) {
@@ -841,7 +841,7 @@ public class SoggettiHelper extends ConnettoriHelper {
 		try {
 			ServletUtils.addListElementIntoSession(this.session, SoggettiCostanti.OBJECT_NAME_SOGGETTI);
 
-			boolean multiTenant = ServletUtils.getUserFromSession(this.session).isPermitMultiTenant();
+			boolean multiTenant = this.core.isMultitenant();
 			
 			Boolean contaListe = ServletUtils.getContaListeFromSession(this.session);
 			int idLista = Liste.SOGGETTI;

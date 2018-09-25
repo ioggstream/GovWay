@@ -33,7 +33,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 import org.openspcoop2.core.commons.ISearch;
 import org.openspcoop2.core.commons.Liste;
-import org.openspcoop2.core.config.constants.CostantiConfigurazione;
 import org.openspcoop2.core.id.IDServizio;
 import org.openspcoop2.core.id.IDSoggetto;
 import org.openspcoop2.core.registry.driver.DriverRegistroServiziException;
@@ -109,15 +108,9 @@ public class UtentiHelper extends ConsoleHelper {
 	public Vector<DataElement> addUtentiToDati(Vector<DataElement> dati,TipoOperazione tipoOperazione,boolean singlePdD,
 			String nomesu,String pwsu,String confpwsu,InterfaceType interfaceType,
 			String isServizi,String isDiagnostica,String isReportistica,String isSistema,String isMessaggi,String isUtenti,String isAuditing, String isAccordiCooperazione,
-			String changepwd, String [] modalitaGateway, String multiTenant, boolean forceEnableMultitenant) throws Exception{
+			String changepwd, String [] modalitaGateway) throws Exception{
 
 		Boolean contaListe = ServletUtils.getContaListeFromSession(this.session);
-		
-		boolean oldMultiTenantValue = false;
-		if(TipoOperazione.CHANGE.equals(tipoOperazione)) {
-			User user = this.utentiCore.getUser(nomesu);
-			oldMultiTenantValue = user.isPermitMultiTenant();
-		}
 		
 		boolean onlyUser = ServletUtils.isCheckBoxEnabled(isUtenti) &&
 				!ServletUtils.isCheckBoxEnabled(isServizi) &&
@@ -146,33 +139,6 @@ public class UtentiHelper extends ConsoleHelper {
 		de.setName(UtentiCostanti.PARAMETRO_UTENTI_USERNAME);
 		de.setSize(this.getSize());
 		dati.addElement(de);
-		
-		de = new DataElement();
-		de.setLabel(UtentiCostanti.LABEL_PARAMETRO_UTENTE_MULTI_TENANT);
-		de.setName(UtentiCostanti.PARAMETRO_UTENTE_MULTI_TENANT);
-		if(onlyUser) {
-			de.setType(DataElementType.HIDDEN);
-			de.setValue(Costanti.CHECK_BOX_DISABLED);
-		}
-		else if(forceEnableMultitenant) {
-			de.setType(DataElementType.HIDDEN);
-			de.setValue(Costanti.CHECK_BOX_ENABLED);
-			de.setSize(this.getSize());
-			dati.addElement(de);
-			
-			de = new DataElement();
-			de.setLabel(UtentiCostanti.LABEL_PARAMETRO_UTENTE_MULTI_TENANT);
-			de.setName(UtentiCostanti.PARAMETRO_UTENTE_MULTI_TENANT+"__LABEL");
-			// forceEnableMultitenant
-			de.setValue(CostantiConfigurazione.ABILITATO.getValue());
-		}
-		else {
-			de.setType(DataElementType.CHECKBOX);
-			de.setSelected(ServletUtils.isCheckBoxEnabled(multiTenant));
-		}
-		de.setSize(this.getSize());
-		dati.addElement(de);
-		
 		
 		
 		de = new DataElement();
@@ -336,8 +302,7 @@ public class UtentiHelper extends ConsoleHelper {
 			de.setLabel(getLabelSezionePddMonitorSoggettiServizi(isDiagnosticaEnabled, isReportisticaEnabled));
 			de.setType(DataElementType.TITLE);
 			dati.addElement(de);
-			
-			if(oldMultiTenantValue) {
+			if(this.utentiCore.isMultitenant()) {
 				de = new DataElement();
 				de.setType(DataElementType.LINK);
 				de.setUrl(UtentiCostanti.SERVLET_NAME_UTENTI_SOGGETTI_LIST, new Parameter(UtentiCostanti.PARAMETRO_UTENTI_USERNAME, nomesu));
@@ -587,7 +552,7 @@ public class UtentiHelper extends ConsoleHelper {
 	}
 
 	public void addUtenteChangeToDati(Vector<DataElement> dati,InterfaceType interfaceType,
-			String changepw, String nomeUtente, String modalitaDisponibili, String multiTenant, boolean forceEnableMultitenant) throws DriverUsersDBException{
+			String changepw, String nomeUtente, String modalitaDisponibili) throws DriverUsersDBException{
 
 		DataElement de = new DataElement();
 		de.setName(UtentiCostanti.PARAMETRO_UTENTI_FIRST);
@@ -668,53 +633,6 @@ public class UtentiHelper extends ConsoleHelper {
 			}
 		}
 		dati.addElement(de);
-		
-		boolean onlyViewMultiTenant = true; // e' stato deciso che l'utenza diretta deve vedere questa info solo come view, sarà il gestore delle utenze a modificarlo nel caso.
-		User userCollegato = ServletUtils.getUserFromSession(this.session);
-		if(nomeUtente.equals(userCollegato.getLogin())) {
-			// se l'utente collegato e' anche amministratore delle utenze allora posso farlo modificare
-			if(userCollegato.getPermessi().isUtenti()) {
-				onlyViewMultiTenant = false;
-			}
-		}
-		
-		de = new DataElement();
-		de.setLabel(UtentiCostanti.LABEL_PARAMETRO_UTENTE_MULTI_TENANT);
-		de.setName(UtentiCostanti.PARAMETRO_UTENTE_MULTI_TENANT);
-		if(utente.hasOnlyPermessiUtenti()) {
-			de.setType(DataElementType.HIDDEN);
-			de.setValue(ServletUtils.isCheckBoxEnabled(multiTenant)?Costanti.CHECK_BOX_ENABLED:Costanti.CHECK_BOX_DISABLED);
-		}
-		if(onlyViewMultiTenant || forceEnableMultitenant) {
-			de.setType(DataElementType.HIDDEN);
-			if(forceEnableMultitenant) {
-				de.setValue(Costanti.CHECK_BOX_ENABLED);
-			}
-			else {
-				de.setValue(ServletUtils.isCheckBoxEnabled(multiTenant)?Costanti.CHECK_BOX_ENABLED:Costanti.CHECK_BOX_DISABLED);
-			}
-			de.setSize(this.getSize());
-			dati.addElement(de);
-			
-			de = new DataElement();
-			de.setLabel(UtentiCostanti.LABEL_PARAMETRO_UTENTE_MULTI_TENANT);
-			de.setName(UtentiCostanti.PARAMETRO_UTENTE_MULTI_TENANT+"__LABEL");
-			if(onlyViewMultiTenant) {
-				de.setValue(ServletUtils.isCheckBoxEnabled(multiTenant)?CostantiConfigurazione.ABILITATO.getValue():CostantiConfigurazione.DISABILITATO.getValue());
-			}
-			else {
-				// forceEnableMultitenant
-				de.setValue(CostantiConfigurazione.ABILITATO.getValue());
-			}
-			de.setSize(this.getSize());
-		}
-		else {
-			de.setType(DataElementType.CHECKBOX);
-			de.setSelected(ServletUtils.isCheckBoxEnabled(multiTenant));
-		}
-		de.setSize(this.getSize());
-		dati.addElement(de);
-
 		
 		de = new DataElement();
 		de.setLabel(UtentiCostanti.LABEL_PASSWORD);
@@ -1234,7 +1152,6 @@ public class UtentiHelper extends ConsoleHelper {
 
 			// setto le label delle colonne
 			String[] labels = { UtentiCostanti.LABEL_UTENTE, UtentiCostanti.LABEL_MODALITA_INTERFACCIA, 
-					UtentiCostanti.LABEL_PARAMETRO_UTENTE_MULTI_TENANT, 
 					UtentiCostanti.LABEL_MODALITA_GATEWAY_COMPACT, 
 					UtentiCostanti.LABEL_PERMESSI_GESTIONE, UtentiCostanti.LABEL_CAMBIA_IDENTITA };
 			this.pd.setLabels(labels);
@@ -1264,21 +1181,6 @@ public class UtentiHelper extends ConsoleHelper {
 					}
 					else {
 						de.setValue(mySU.getInterfaceType().toString().toLowerCase());
-					}
-					e.addElement(de);
-					
-					// multi-tenant
-					de = new DataElement();
-					if(mySU.hasOnlyPermessiUtenti()) {
-						de.setValue("-");
-					}
-					else {
-						if(mySU.isPermitMultiTenant()) {
-							de.setValue(CostantiConfigurazione.ABILITATO.getValue());
-						}
-						else {
-							de.setValue(CostantiConfigurazione.DISABILITATO.getValue());
-						}
 					}
 					e.addElement(de);
 					

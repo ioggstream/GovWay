@@ -117,6 +117,10 @@ CREATE TABLE configurazione
 	id_ge_cooperazione BIGINT,
 	-- FOREIGN KEY (id_ge_integrazione) REFERENCES gestione_errore(id) Nota: indica un eventuale tipologia di gestione dell'errore di default durante l'utilizzo di un connettore
 	id_ge_integrazione BIGINT,
+	-- Gestione MultiTenant
+	multitenant_stato VARCHAR(255),
+	multitenant_fruizioni VARCHAR(255),
+	multitenant_erogazioni VARCHAR(255),
 	-- fk/pk columns
 	id BIGINT DEFAULT nextval('seq_configurazione') NOT NULL,
 	-- fk/pk keys constraints

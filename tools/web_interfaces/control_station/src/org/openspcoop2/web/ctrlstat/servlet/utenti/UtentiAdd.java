@@ -40,7 +40,6 @@ import org.openspcoop2.web.ctrlstat.core.ControlStationCore;
 import org.openspcoop2.web.ctrlstat.core.Search;
 import org.openspcoop2.web.ctrlstat.costanti.CostantiControlStation;
 import org.openspcoop2.web.ctrlstat.servlet.GeneralHelper;
-import org.openspcoop2.web.lib.mvc.Costanti;
 import org.openspcoop2.web.lib.mvc.DataElement;
 import org.openspcoop2.web.lib.mvc.ForwardParams;
 import org.openspcoop2.web.lib.mvc.GeneralData;
@@ -115,22 +114,7 @@ public final class UtentiAdd extends Action {
 				String protocolloName = protocolliRegistratiConsole.get(i);
 				modalitaScelte[i] = utentiHelper.getParameter(UtentiCostanti.PARAMETRO_UTENTI_MODALITA_PREFIX + protocolloName);
 			}
-			
-			String multiTenant = utentiHelper.getParameter(UtentiCostanti.PARAMETRO_UTENTE_MULTI_TENANT);
-			
-			// Check multitenant
-			User userPerCheck = new User();
-			for (int i = 0; i < protocolliRegistratiConsole.size() ; i++) {
-				String protocolloName = protocolliRegistratiConsole.get(i);
-				if(ServletUtils.isCheckBoxEnabled(modalitaScelte[i])) {
-					userPerCheck.addProtocolloSupportato(protocolloName);
-				} 
-			}
-			boolean forceEnableMultitenant = utentiCore.isForceEnableMultiTenant(userPerCheck, false);
-			if(forceEnableMultitenant) {
-				multiTenant = Costanti.CHECK_BOX_ENABLED;
-			}
-			
+						
 			// Preparo il menu
 			utentiHelper.makeMenu();
 	
@@ -162,7 +146,7 @@ public final class UtentiAdd extends Action {
 				utentiHelper.addUtentiToDati(dati, TipoOperazione.ADD, singlePdD,
 						nomesu,pwsu,confpwsu,interfaceType,
 						isServizi,isDiagnostica,isReportistica,isSistema,isMessaggi,isUtenti,isAuditing,isAccordiCooperazione,
-						null,modalitaScelte, multiTenant, forceEnableMultitenant);
+						null,modalitaScelte);
 				
 				pd.setDati(dati);
 		
@@ -191,7 +175,7 @@ public final class UtentiAdd extends Action {
 				utentiHelper.addUtentiToDati(dati, TipoOperazione.ADD, singlePdD,
 						nomesu,pwsu,confpwsu,interfaceType,
 						isServizi,isDiagnostica,isReportistica,isSistema,isMessaggi,isUtenti,isAuditing,isAccordiCooperazione,
-						null,modalitaScelte, multiTenant, forceEnableMultitenant);
+						null,modalitaScelte);
 				
 				pd.setDati(dati);
 	
@@ -264,8 +248,6 @@ public final class UtentiAdd extends Action {
 					newU.addProtocolloSupportato(protocolloName);
 				} 
 			}
-			
-			newU.setPermitMultiTenant(ServletUtils.isCheckBoxEnabled(multiTenant));
 			
 			utentiCore.performCreateOperation(userLogin, utentiHelper.smista(), newU);
 	
