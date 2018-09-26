@@ -136,8 +136,12 @@ public class ErogazioniHelper extends AccordiServizioParteSpecificaHelper{
 					ricerca.addFilter(idLista, Filtri.FILTRO_DOMINIO, SoggettiCostanti.SOGGETTO_DOMINIO_ESTERNO_VALUE);
 				gestioneFruitori = true;
 			}
-			else if(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_TIPO_EROGAZIONE_VALUE_MULTI_TENANT.equals(tipologia)) {
+			else if(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_TIPO_EROGAZIONE_VALUE_COMPLETA.equals(tipologia)) {
 				ServletUtils.removeObjectFromSession(session, AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_TIPO_EROGAZIONE);
+			}
+			
+			if(addFilterToRicerca && this.isSoggettoMultitenantSelezionato()) {
+				ricerca.addFilter(idLista, Filtri.FILTRO_SOGGETTO, this.getSoggettoMultitenantSelezionato());
 			}
 		}
 		return gestioneFruitori;
@@ -182,6 +186,9 @@ public class ErogazioniHelper extends AccordiServizioParteSpecificaHelper{
 					}
 				}
 			}
+			
+			boolean showSoggettoErogatoreInErogazioni = this.core.isMultitenant() && 
+					!this.isSoggettoMultitenantSelezionato();
 
 			int idLista = Liste.SERVIZI;
 			int limit = ricerca.getPageSize(idLista);
@@ -296,7 +303,7 @@ public class ErogazioniHelper extends AccordiServizioParteSpecificaHelper{
 
 				// Titolo Servizio
 				DataElement de = new DataElement();
-				String labelServizio = gestioneFruitori ? this.getLabelIdServizio(idServizio) :  this.getLabelIdServizioSenzaErogatore(idServizio);
+				String labelServizio = (gestioneFruitori || showSoggettoErogatoreInErogazioni) ? this.getLabelIdServizio(idServizio) :  this.getLabelIdServizioSenzaErogatore(idServizio);
 
 				de.setLabel(AccordiServizioParteSpecificaCostanti.LABEL_APS_NOME_SERVIZIO); 
 				de.setUrl(ErogazioniCostanti.SERVLET_NAME_ASPS_EROGAZIONI_CHANGE, new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_ID, asps.getId() + ""), pNomeServizio, pTipoServizio, pIdsoggErogatore);
@@ -893,6 +900,9 @@ public class ErogazioniHelper extends AccordiServizioParteSpecificaHelper{
 		Soggetto sog = this.soggettiCore.getSoggettoRegistro(asps.getIdSoggetto());
 		boolean isPddEsterna = this.pddCore.isPddEsterna(sog.getPortaDominio());
 
+		boolean showSoggettoErogatoreInErogazioni = this.core.isMultitenant() && 
+				!this.isSoggettoMultitenantSelezionato();
+		
 		// sezione 1 riepilogo
 		Vector<DataElement> dati = datiPagina.elementAt(0);
 
@@ -912,7 +922,7 @@ public class ErogazioniHelper extends AccordiServizioParteSpecificaHelper{
 		dati.addElement(de);
 		
 		// soggetto erogatore
-		if(gestioneFruitori) {
+		if(gestioneFruitori || showSoggettoErogatoreInErogazioni) {
 			de = new DataElement();
 			de.setLabel(AccordiServizioParteSpecificaCostanti.LABEL_APS_SOGGETTO_EROGATORE);
 			de.setValue(this.getLabelNomeSoggetto(protocollo,asps.getTipoSoggettoErogatore(),asps.getNomeSoggettoErogatore()));

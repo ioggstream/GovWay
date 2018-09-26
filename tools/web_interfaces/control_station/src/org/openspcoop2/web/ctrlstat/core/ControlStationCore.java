@@ -4908,6 +4908,10 @@ public class ControlStationCore {
 		return this.getProtocolli(session, false);
 	}
 	public List<String> getProtocolli(HttpSession session, boolean ignoreProtocolloSelezionato) throws  DriverRegistroServiziException {
+		return this.getProtocolli(session, ignoreProtocolloSelezionato, false);
+	}
+	public List<String> getProtocolli(HttpSession session, boolean ignoreProtocolloSelezionato, 
+			boolean consideraProtocolliCompatibiliSoggettoSelezionato) throws  DriverRegistroServiziException {
 		String getProtocolli = "getProtocolli";
 		try{
 
@@ -4918,6 +4922,21 @@ public class ControlStationCore {
 			if(!ignoreProtocolloSelezionato) {
 				if(u.getProtocolloSelezionatoPddConsole()!=null) {
 					protocolliList.add(u.getProtocolloSelezionatoPddConsole());
+					return protocolliList;
+				}
+				else if(consideraProtocolliCompatibiliSoggettoSelezionato &&
+						u.getSoggettoSelezionatoPddConsole()!=null && !"".equals(u.getSoggettoSelezionatoPddConsole())) {
+					List<org.openspcoop2.core.registry.Soggetto> listSoggettiOperativi = this.getSoggettiOperativi();
+					SoggettiCore soggettiCore = new SoggettiCore(this);
+					for (org.openspcoop2.core.registry.Soggetto soggetto : listSoggettiOperativi) {
+						String protocollo = soggettiCore.getProtocolloAssociatoTipoSoggetto(soggetto.getTipo());
+						if(protocolliList.contains(protocollo)==false) {
+							String name = NamingUtils.getLabelSoggetto(protocollo, new IDSoggetto(soggetto.getTipo(),soggetto.getNome()));
+							if(name.equals(u.getSoggettoSelezionatoPddConsole())) {
+								protocolliList.add(protocollo);
+							}
+						}
+					}
 					return protocolliList;
 				}
 			}
@@ -4963,8 +4982,15 @@ public class ControlStationCore {
 	}
 	public List<String> getProtocolliByFilter(HttpSession session, boolean filtraSoggettiEsistenti, PddTipologia dominio, 
 			boolean filtraAccordiEsistenti, boolean filtraAccordiCooperazioneEsistenti) throws  DriverRegistroServiziException {
+		return this.getProtocolliByFilter(session, filtraSoggettiEsistenti, dominio, 
+				filtraAccordiEsistenti, filtraAccordiCooperazioneEsistenti, 
+				false);
+	}
+	public List<String> getProtocolliByFilter(HttpSession session, boolean filtraSoggettiEsistenti, PddTipologia dominio, 
+			boolean filtraAccordiEsistenti, boolean filtraAccordiCooperazioneEsistenti, 
+			boolean consideraProtocolliCompatibiliSoggettoSelezionato) throws  DriverRegistroServiziException {
 		
-		List<String> _listaTipiProtocollo = this.getProtocolli(session);
+		List<String> _listaTipiProtocollo = this.getProtocolli(session, false, consideraProtocolliCompatibiliSoggettoSelezionato);
 		
 		String userLogin = ServletUtils.getUserLoginFromSession(session);
 		

@@ -341,6 +341,14 @@ public class ConsoleHelper {
 				InterfaceType.STANDARD); 
 	}
 
+	/** Soggetto Selezionato */
+	public boolean isSoggettoMultitenantSelezionato() {
+		return this.core.isMultitenant() && StringUtils.isNotEmpty(this.getSoggettoMultitenantSelezionato());
+	}
+	public String getSoggettoMultitenantSelezionato() {
+		return ServletUtils.getUserFromSession(this.session).getSoggettoSelezionatoPddConsole();
+	}
+	
 	private boolean errorInit = false;
 	private Exception eErrorInit;
 	
@@ -1093,7 +1101,7 @@ public class ConsoleHelper {
 							entries[index][0] = AccordiServizioParteSpecificaCostanti.LABEL_APS_MENU_VISUALE_AGGREGATA;
 							entries[index][1] = AccordiServizioParteSpecificaCostanti.SERVLET_NAME_APS_LIST+"?"+
 									AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_TIPO_EROGAZIONE+"="+
-									AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_TIPO_EROGAZIONE_VALUE_MULTI_TENANT;
+									AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_TIPO_EROGAZIONE_VALUE_COMPLETA;
 							index++;
 						}
 						else {

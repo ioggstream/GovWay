@@ -4187,6 +4187,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 
 		Boolean contaListe = ServletUtils.getContaListeFromSession(this.session);
 
+		boolean multitenant = this.core.isMultitenant();
 		
 		// accordo di servizio parte comune 
 
@@ -4386,7 +4387,9 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 
 		//Sezione Soggetto Erogatore (provider)
 
-		if(!gestioneErogatori) {
+		boolean showSoggettoErogatoreInErogazioni = this.core.isMultitenant() && 
+				!this.isSoggettoMultitenantSelezionato();
+		if(!gestioneErogatori || showSoggettoErogatoreInErogazioni) {
 			de = new DataElement();
 			de.setLabel(AccordiServizioParteSpecificaCostanti.LABEL_APS_SOGGETTO_EROGATORE);
 			de.setType(DataElementType.SUBTITLE);
@@ -4396,7 +4399,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 		de = new DataElement();
 		de.setLabel(AccordiServizioParteSpecificaCostanti.LABEL_PARAMETRO_APS_PROVIDER_EROGATORE);
 		de.setName(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_PROVIDER_EROGATORE);
-		if (tipoOp.equals(TipoOperazione.ADD) && !gestioneErogatori) {
+		if (tipoOp.equals(TipoOperazione.ADD) && (!gestioneErogatori || showSoggettoErogatoreInErogazioni)) {
 			de.setType(DataElementType.SELECT);
 			de.setValues(soggettiList);
 			de.setLabels(soggettiListLabel);
@@ -4408,7 +4411,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 			de.setType(DataElementType.HIDDEN);
 			dati.addElement(de);
 
-			if(!gestioneErogatori) {
+			if(!gestioneErogatori || showSoggettoErogatoreInErogazioni) {
 				de = new DataElement();
 				de.setLabel(AccordiServizioParteSpecificaCostanti.LABEL_PARAMETRO_APS_PROVIDER_EROGATORE);
 				de.setName(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_PROVIDER_TEXT);

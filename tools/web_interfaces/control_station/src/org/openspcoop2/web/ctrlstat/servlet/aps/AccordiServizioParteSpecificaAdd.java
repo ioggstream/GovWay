@@ -426,6 +426,8 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 				}
 			}
 			
+			boolean multitenant = apsCore.isMultitenant();
+			
 			PddTipologia pddTipologiaSoggettoAutenticati = null;
 			if(gestioneErogatori) {
 				pddTipologiaSoggettoAutenticati = PddTipologia.ESTERNO;
@@ -470,15 +472,16 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 							this.parametersPOST, (this.endpointtype==null), this.endpointtype); // uso endpointtype per capire se è la prima volta che entro
 
 			// Tipi protocollo supportati
-			List<String> listaTipiProtocollo = apcCore.getProtocolliByFilter(session, true, true);
-			
+			boolean filtraSoggettiEsistenti = true;
+			boolean filtraAccordiEsistenti = true;
+			List<String> listaTipiProtocollo = apcCore.getProtocolliByFilter(session, filtraSoggettiEsistenti, null, filtraAccordiEsistenti, false, true);
+					
 			// Preparo il menu
 			apsHelper.makeMenu();
 
 			if(listaTipiProtocollo.size()<=0) {
 				
-				List<String> _listaTipiProtocolloSoloSoggetti = apcCore.getProtocolliByFilter(session, true, false);
-				
+				List<String> _listaTipiProtocolloSoloSoggetti = apcCore.getProtocolliByFilter(session, filtraSoggettiEsistenti, null, !filtraAccordiEsistenti, false, true);			
 				if(_listaTipiProtocolloSoloSoggetti.size()>0) {
 					pd.setMessage("Non risultano registrate API", Costanti.MESSAGE_TYPE_INFO);
 				}
@@ -766,6 +769,9 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 			}
 			if(gestioneErogatori) {
 				searchSoggetti.addFilter(Liste.SOGGETTI, Filtri.FILTRO_DOMINIO, SoggettiCostanti.SOGGETTO_DOMINIO_OPERATIVO_VALUE);
+				if(apsHelper.isSoggettoMultitenantSelezionato()) {
+					searchSoggetti.addFilter(Liste.SOGGETTI, Filtri.FILTRO_SOGGETTO, apsHelper.getSoggettoMultitenantSelezionato());
+				}
 			}
 			if(apsCore.isVisioneOggettiGlobale(userLogin)){
 				list = soggettiCore.soggettiRegistroList(null, searchSoggetti);

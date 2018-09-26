@@ -186,7 +186,7 @@ public class AccordiServizioParteSpecificaCostanti {
 	public final static String PARAMETRO_APS_TIPO_EROGAZIONE = "tipologiaErogazione";
 	public final static String PARAMETRO_APS_TIPO_EROGAZIONE_VALUE_EROGAZIONE = "erogazione";
 	public final static String PARAMETRO_APS_TIPO_EROGAZIONE_VALUE_FRUIZIONE = "fruizione";
-	public final static String PARAMETRO_APS_TIPO_EROGAZIONE_VALUE_MULTI_TENANT = "multiTenant";
+	public final static String PARAMETRO_APS_TIPO_EROGAZIONE_VALUE_COMPLETA = "completa";
 	
 	public final static String PARAMETRO_APS_ID = CostantiControlStation.PARAMETRO_ID;
 	public final static String PARAMETRO_APS_MY_ID = CostantiControlStation.PARAMETRO_ID_FRUIZIONE;
