@@ -151,6 +151,9 @@ public class UtentiCostanti {
 	public final static String PARAMETRO_UTENTE_CHANGE_MODALITA = "change_mod";
 	public final static String PARAMETRO_UTENTI_SOGGETTO = "soggetto";
 	public final static String PARAMETRO_UTENTI_SERVIZIO = "servizio";
+	public final static String PARAMETRO_UTENTE_CHANGE_SOGGETTO = "change_sog";
+	public final static String PARAMETRO_UTENTE_LABEL_SOGGETTO = "label_sog";
+	public final static String PARAMETRO_UTENTE_LABEL_SOGGETTO_LIST = "label_sog_list";
 	
 	/* LABEL PARAMETRI */
 	
@@ -183,6 +186,11 @@ public class UtentiCostanti {
 	public final static String LABEL_UTENTE_PERMESSI_ACCORDI_COOPERAZIONE_NOTE = LABEL_UTENTE_PERMESSI_PREFIX_NOTE + LABEL_PARAMETRO_UTENTI_IS_ACCORDI_COOPERAZIONE+"'";
 	
 	public final static String LABEL_PARAMETRO_MODALITA_ALL = "Tutti";//CostantiControlStation.LABEL_QUALSIASI;
+	
+	public final static String LABEL_PARAMETRO_SOGGETTI_OPERATIVI = "Soggetti Operativi";
+	public final static String LABEL_PARAMETRO_SOGGETTO_OPERATIVO = "Soggetto Operativo";
+	public final static String LABEL_PARAMETRO_SOGGETTO_COMPACT = "Soggetto Operativo";
+	public final static String LABEL_PARAMETRO_SOGGETTI_COMPACT = "Soggetti Operativi";
 	
 	/* VALORI PARAMETRI */
 	public final static String VALORE_PARAMETRO_MODALITA_ALL = "all";

@@ -42,6 +42,7 @@ public class GeneralLink {
     String target;
     String onclick;
     String icon;
+    int labelWidth;
 
     public GeneralLink() {
     	this.label = "";
@@ -105,5 +106,12 @@ public class GeneralLink {
 
 	public void setIcon(String icon) {
 		this.icon = icon;
+	}
+
+	public int getLabelWidth() {
+		return this.labelWidth;
+	}
+	public void setLabelWidth(int labelWidth) {
+		this.labelWidth = labelWidth;
 	}
 }

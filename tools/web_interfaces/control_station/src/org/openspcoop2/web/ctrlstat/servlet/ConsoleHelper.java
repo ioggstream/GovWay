@@ -5148,6 +5148,10 @@ public class ConsoleHelper {
 	public String getLabelNomeSoggetto(IDSoggetto idSoggetto) throws Exception{
 		return NamingUtils.getLabelSoggetto(idSoggetto);
 	}
+	
+	public static String _getLabelNomeSoggetto(IDSoggetto idSoggetto) throws Exception{
+		return NamingUtils.getLabelSoggetto(idSoggetto);
+	}
 	public String getLabelNomeSoggetto(String protocollo, IDSoggetto idSoggetto) throws Exception{
 		return NamingUtils.getLabelSoggetto(protocollo, idSoggetto);
 	}
