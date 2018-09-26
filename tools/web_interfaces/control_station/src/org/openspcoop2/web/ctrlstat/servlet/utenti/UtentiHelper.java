@@ -552,7 +552,7 @@ public class UtentiHelper extends ConsoleHelper {
 	}
 
 	public void addUtenteChangeToDati(Vector<DataElement> dati,InterfaceType interfaceType,
-			String changepw, String nomeUtente, String modalitaDisponibili) throws DriverUsersDBException{
+			String changepw, String nomeUtente, String modalitaDisponibili, String soggettiDisponibili) throws DriverUsersDBException{
 
 		DataElement de = new DataElement();
 		de.setName(UtentiCostanti.PARAMETRO_UTENTI_FIRST);
@@ -584,6 +584,18 @@ public class UtentiHelper extends ConsoleHelper {
 		}
 		de.setName(UtentiCostanti.PARAMETRO_UTENTE_TIPO_MODALITA_LIST);
 		de.setValue(modalitaDisponibili);
+		dati.addElement(de);
+		
+		de = new DataElement();
+		de.setLabel(UtentiCostanti.LABEL_PARAMETRO_SOGGETTI_OPERATIVI);
+		if(utente.hasOnlyPermessiUtenti()) {
+			de.setType(DataElementType.HIDDEN);
+		}
+		else {
+			de.setType(DataElementType.TEXT);
+		}
+		de.setName(UtentiCostanti.PARAMETRO_UTENTE_LABEL_SOGGETTO_LIST);
+		de.setValue(soggettiDisponibili);
 		dati.addElement(de);
 		
 		de = new DataElement();

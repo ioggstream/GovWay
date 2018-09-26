@@ -83,14 +83,20 @@ String logoTitolo = gd.getLogoHeaderTitolo();
 				 				<tr>
 				 					<%
 										Vector<GeneralLink> soggetti = gd.getSoggettiLinks();
-							 			if(soggetti!= null && soggetti.size() > 1) {
+							 			if(soggetti!= null && soggetti.size() > 0) {
 							 				GeneralLink soggettoTitoloLink = soggetti.get(0);
 									 		%>
 									 		<td>
 										 		<div id="menuSoggetto" class="ddmenu-label">
 													<div class="text-decor"> 
-														<span class="soggetto"><%=soggettoTitoloLink.getLabel() %></span>
-														<span class="soggettoImg"></span>
+														<% if(soggetti.size() > 1){%>
+															<span class="soggetto"><%=soggettoTitoloLink.getLabel() %></span>
+															<span class="soggettoImg"></span>
+														<% }else {%>
+															<span class="soggetto">
+																<a class="td2PageHeader" href="<%= soggettoTitoloLink.getUrl() %>"><%= soggettoTitoloLink.getLabel() %></a>
+															 </span>
+														<% }%>
 													</div>
 													<div style="margin: 0px; padding: 0px; border: 0px; position: absolute; z-index: 100;">
 														<div id="menuSoggetto_menu">

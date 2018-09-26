@@ -551,6 +551,7 @@ public class ControlStationCore {
 	private String tokenPolicyForceId = null;
 	private boolean tokenPolicyForceIdEnabled = false;
 	private boolean showServiziVisualizzaModalitaElenco = false;
+	private Integer selectListSoggettiOperativi_numeroMassimoSoggetti = null;
 	
 	public boolean isShowCorrelazioneAsincronaInAccordi() {
 		return this.showCorrelazioneAsincronaInAccordi;
@@ -629,6 +630,9 @@ public class ControlStationCore {
 	}
 	public boolean isShowServiziVisualizzaModalitaElenco() {
 		return this.showServiziVisualizzaModalitaElenco;
+	}
+	public Integer getNumeroMassimoSoggettiSelectListSoggettiOperatiti() {
+		return this.selectListSoggettiOperativi_numeroMassimoSoggetti;
 	}
 
 	/** Motori di Sincronizzazione */
@@ -1521,6 +1525,7 @@ public class ControlStationCore {
 		this.tokenPolicyForceId = core.tokenPolicyForceId;
 		this.tokenPolicyForceIdEnabled = core.tokenPolicyForceIdEnabled;
 		this.showServiziVisualizzaModalitaElenco = core.showServiziVisualizzaModalitaElenco;
+		this.selectListSoggettiOperativi_numeroMassimoSoggetti = core.selectListSoggettiOperativi_numeroMassimoSoggetti;
 
 		/** Motori di Sincronizzazione */
 		this.sincronizzazionePddEngineEnabled = core.sincronizzazionePddEngineEnabled;
@@ -1793,6 +1798,7 @@ public class ControlStationCore {
 			this.tokenPolicyForceId = consoleProperties.getTokenPolicyForceId();
 			this.tokenPolicyForceIdEnabled = StringUtils.isNotEmpty(this.tokenPolicyForceId);
 			this.showServiziVisualizzaModalitaElenco = consoleProperties.isEnableServiziVisualizzaModalitaElenco();
+			this.selectListSoggettiOperativi_numeroMassimoSoggetti = consoleProperties.getNumeroMassimoSoggettiOperativiMenuUtente();
 			
 			// Gestione govwayConsole centralizzata
 			if(this.singlePdD == false){

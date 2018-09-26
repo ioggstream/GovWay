@@ -25,6 +25,8 @@ package org.openspcoop2.web.ctrlstat.servlet;
 
 import java.awt.Font;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -37,6 +39,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.openspcoop2.core.id.IDSoggetto;
+import org.openspcoop2.core.registry.Soggetto;
 import org.openspcoop2.core.registry.driver.FiltroRicercaSoggetti;
 import org.openspcoop2.protocol.utils.ProtocolUtils;
 import org.openspcoop2.web.ctrlstat.core.ControlStationCore;
@@ -298,8 +301,8 @@ public class GeneralHelper {
 					
 					String labelProt = ConsoleHelper._getLabelProtocollo(protocolloDisponibile);
 					glProt.setLabel(labelProt);
-					String iconProt = protocolloSelezionato == null ? LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED : (protocolloDisponibile.equals(protocolloSelezionato) ? LoginCostanti.ICONA_MENU_UTENTE_CHECKED : LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED);
-					glProt.setIcon(iconProt);
+//					String iconProt = protocolloSelezionato == null ? LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED : (protocolloDisponibile.equals(protocolloSelezionato) ? LoginCostanti.ICONA_MENU_UTENTE_CHECKED : LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED);
+//					glProt.setIcon(iconProt);
 					glProt.setUrl(UtentiCostanti.SERVLET_NAME_UTENTE_CHANGE,
 							new Parameter(UtentiCostanti.PARAMETRO_UTENTE_TIPO_MODALITA, protocolloDisponibile),
 							new Parameter(Costanti.DATA_ELEMENT_EDIT_MODE_NAME,Costanti.DATA_ELEMENT_EDIT_MODE_VALUE_EDIT_END),
@@ -312,7 +315,7 @@ public class GeneralHelper {
 				// seleziona tutti 
 				GeneralLink glAll = new GeneralLink();
 				glAll.setLabel(UtentiCostanti.LABEL_PARAMETRO_MODALITA_ALL);
-				glAll.setIcon((protocolloSelezionato == null) ? LoginCostanti.ICONA_MENU_UTENTE_CHECKED : LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED);
+//				glAll.setIcon((protocolloSelezionato == null) ? LoginCostanti.ICONA_MENU_UTENTE_CHECKED : LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED);
 				glAll.setUrl(UtentiCostanti.SERVLET_NAME_UTENTE_CHANGE,
 						new Parameter(UtentiCostanti.PARAMETRO_UTENTE_TIPO_MODALITA, UtentiCostanti.VALORE_PARAMETRO_MODALITA_ALL),
 						new Parameter(Costanti.DATA_ELEMENT_EDIT_MODE_NAME,Costanti.DATA_ELEMENT_EDIT_MODE_VALUE_EDIT_END),
@@ -329,80 +332,67 @@ public class GeneralHelper {
 	public Vector<GeneralLink> caricaMenuSoggetti(User u){
 		Vector<GeneralLink> link = new Vector<GeneralLink>();
 
-		FiltroRicercaSoggetti filtroRicerca = new FiltroRicercaSoggetti();
 		try {
-			// TODO aggiungere filtri
-			List<IDSoggetto> allIdSoggettiRegistro = this.soggettiCore.getAllIdSoggettiRegistro(filtroRicerca);
+			// prelevo l'eventuale protocollo selezionato
+			String protocolloSelezionato = u.getProtocolloSelezionatoPddConsole();
+			String soggettoOperativoSelezionato = u.getSoggettoSelezionatoPddConsole();
 			
-			// TODO label selezionato da info utente
+			List<Soggetto> soggettiOperativi = this.soggettiCore.getSoggettiOperativi(protocolloSelezionato);
 			
-			
-			if(allIdSoggettiRegistro != null && !allIdSoggettiRegistro.isEmpty()) {
+			if(soggettiOperativi != null && !soggettiOperativi.isEmpty()) {
 				
-				if(allIdSoggettiRegistro.size() < 20) {
-					IDSoggetto idSoggettoScelto = allIdSoggettiRegistro.get(0);
-					
-					GeneralLink glSoggettoCorrente = new GeneralLink();
-	 				String labelSelezionato = ConsoleHelper._getLabelNomeSoggetto(idSoggettoScelto);
-					String labelSelezionatoCompleta = MessageFormat.format(LoginCostanti.LABEL_MENU_SOGGETTO_CORRENTE_WITH_PARAM, labelSelezionato);
-					glSoggettoCorrente.setLabel(labelSelezionatoCompleta); 
-					glSoggettoCorrente.setUrl("");
-					glSoggettoCorrente.setLabelWidth(this.core.getFontWidth(labelSelezionatoCompleta, Font.BOLD, 16)); 
-					link.addElement(glSoggettoCorrente);
-					
+				GeneralLink glSoggettoCorrente = new GeneralLink();
+ 				String labelSelezionato = soggettoOperativoSelezionato == null ? UtentiCostanti.LABEL_PARAMETRO_MODALITA_ALL : soggettoOperativoSelezionato;
+				String labelSelezionatoCompleta = MessageFormat.format(LoginCostanti.LABEL_MENU_SOGGETTO_CORRENTE_WITH_PARAM, labelSelezionato);
+				glSoggettoCorrente.setLabel(labelSelezionatoCompleta); 
+				glSoggettoCorrente.setUrl("");
+				glSoggettoCorrente.setLabelWidth(this.core.getFontWidth(labelSelezionatoCompleta,  Font.BOLD, 16)); 
+				link.addElement(glSoggettoCorrente);
+				
+				Integer numeroMassimoSoggettiSelectListSoggettiOperatiti = this.core.getNumeroMassimoSoggettiSelectListSoggettiOperatiti();
+								
+				if(soggettiOperativi.size() < numeroMassimoSoggettiSelectListSoggettiOperatiti) {
 					// seleziona tutti 
 					GeneralLink glAll = new GeneralLink();
 					glAll.setLabel(UtentiCostanti.LABEL_PARAMETRO_MODALITA_ALL);
-					glAll.setIcon((labelSelezionato == null) ? LoginCostanti.ICONA_MENU_UTENTE_CHECKED : LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED);
+//					glAll.setIcon((labelSelezionato == null) ? LoginCostanti.ICONA_MENU_UTENTE_CHECKED : LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED);
 					glAll.setUrl(UtentiCostanti.SERVLET_NAME_UTENTE_CHANGE,
-							new Parameter(UtentiCostanti.PARAMETRO_UTENTE_TIPO_MODALITA, UtentiCostanti.VALORE_PARAMETRO_MODALITA_ALL),
+							new Parameter(UtentiCostanti.PARAMETRO_UTENTE_LABEL_SOGGETTO, UtentiCostanti.VALORE_PARAMETRO_MODALITA_ALL),
 							new Parameter(Costanti.DATA_ELEMENT_EDIT_MODE_NAME,Costanti.DATA_ELEMENT_EDIT_MODE_VALUE_EDIT_END),
-							new Parameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_MODALITA,Costanti.CHECK_BOX_ENABLED)
+							new Parameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_SOGGETTO,Costanti.CHECK_BOX_ENABLED)
 							);
 					link.addElement(glAll);
-					
-					Map<String, IDSoggetto> mapLabelSoggettiUnsorted = new HashMap<>();
-					for (IDSoggetto idSoggetto : allIdSoggettiRegistro) {
+
+					List<String> listaLabel = new ArrayList<>();
+					for (Soggetto soggetto : soggettiOperativi) {
+						IDSoggetto idSoggetto = new IDSoggetto(soggetto.getTipo(), soggetto.getNome()); 
 						String labelSoggetto = ConsoleHelper._getLabelNomeSoggetto(idSoggetto);
-						if(!mapLabelSoggettiUnsorted.containsKey(labelSoggetto)) {
-							mapLabelSoggettiUnsorted.put(labelSoggetto, idSoggetto);
+						if(!listaLabel.contains(labelSoggetto)) {
+							listaLabel.add(labelSoggetto);
 						}
 					}
 					
-					Map<String, IDSoggetto> mapLabelSoggetti = mapLabelSoggettiUnsorted.entrySet().stream()
-			                .sorted(Map.Entry.comparingByKey())
-			                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-			                        (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+					Collections.sort(listaLabel);
 					
-					for (String label : mapLabelSoggetti.keySet()) {
-						IDSoggetto idSoggetto = mapLabelSoggetti.get(label);
-						
+					for (String label : listaLabel) {
 						GeneralLink glSoggetto = new GeneralLink();
 						
 						glSoggetto.setLabel(label);
-						String iconProt = labelSelezionato == null ? LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED :
-							(label.equals(labelSelezionato) ? LoginCostanti.ICONA_MENU_UTENTE_CHECKED : LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED);
-						glSoggetto.setIcon(iconProt);
+//						String iconProt = labelSelezionato == null ? LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED :
+//							(label.equals(labelSelezionato) ? LoginCostanti.ICONA_MENU_UTENTE_CHECKED : LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED);
+//						glSoggetto.setIcon(iconProt);
 						glSoggetto.setUrl(UtentiCostanti.SERVLET_NAME_UTENTE_CHANGE,
-								new Parameter(UtentiCostanti.PARAMETRO_UTENTE_TIPO_MODALITA, idSoggetto.toString()),
+								new Parameter(UtentiCostanti.PARAMETRO_UTENTE_LABEL_SOGGETTO, label),
 								new Parameter(Costanti.DATA_ELEMENT_EDIT_MODE_NAME,Costanti.DATA_ELEMENT_EDIT_MODE_VALUE_EDIT_END),
-								new Parameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_MODALITA,Costanti.CHECK_BOX_ENABLED)
+								new Parameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_SOGGETTO,Costanti.CHECK_BOX_ENABLED)
 								);
 						
 						link.addElement(glSoggetto);
 					}
+				} else {
+					// TODO
+					glSoggettoCorrente.setUrl("urlModifica");
 				}
-			} else {
-				IDSoggetto idSoggettoScelto = allIdSoggettiRegistro.get(0);
-				
-				GeneralLink glSoggettoCorrente = new GeneralLink();
- 				String labelSelezionato = ConsoleHelper._getLabelNomeSoggetto(idSoggettoScelto);
-				String labelSelezionatoCompleta = MessageFormat.format(LoginCostanti.LABEL_MENU_SOGGETTO_CORRENTE_WITH_PARAM, labelSelezionato);
-				glSoggettoCorrente.setLabel(labelSelezionatoCompleta);
-				// TODO
-				glSoggettoCorrente.setUrl("urlModifica");
-				glSoggettoCorrente.setLabelWidth(this.core.getFontWidth(labelSelezionatoCompleta, Font.BOLD, 16)); 
-				link.addElement(glSoggettoCorrente);
 			}
 		} catch (Exception e) {
 		}

@@ -118,7 +118,7 @@ $(document).ready(function(){
 		var newModalitaWidthLabel = <%=widthLabel %>;
 		
 		var oldModalitaShiftLeft = $('#menuModalita_menu').css('left');
-		var newModalitaShiftLeft = oldModalitaShiftLeft - (oldModalitaWidthLabel - newModalitaWidthLabel);
+		var newModalitaShiftLeft = parseInt(oldModalitaShiftLeft) - (parseInt(oldModalitaWidthLabel) - newModalitaWidthLabel);
 		
 		// menu modalita
 		$('#menuModalita').hover(
@@ -139,43 +139,49 @@ $(document).ready(function(){
 			window.location = destinazione;
 		});
 		
-		$('#menuModalita').css('min-width', newModalitaWidthLabel);
-		$('#menuModalita_menu').css('left', newModalitaShiftLeft);
+		$('#menuModalita').css('min-width', newModalitaWidthLabel +'px');
+		$('#menuModalita_menu').css('left', newModalitaShiftLeft +'px');
 <% } %>
 
-<% if(soggettoLinks!= null && soggettoLinks.size() > 1) { 
+<% 
+if(soggettoLinks!= null && soggettoLinks.size() > 0) {
 	GeneralLink soggettoTitoloLink = soggettoLinks.get(0);
-	int widthLabel = 12 + soggettoTitoloLink.getLabelWidth();
-%>
+	int widthLabelSoggetto = 12 + soggettoTitoloLink.getLabelWidth();
+	
+	%>
+		var oldSoggettoWidthLabel = $('#menuSoggetto').css('min-width');
+		var newSoggettoWidthLabel = <%=widthLabelSoggetto %>;
+		$('#menuSoggetto').css('min-width', newSoggettoWidthLabel+'px');
+	<%
 
-	var oldSoggettoWidthLabel = $('#menuSoggetto').css('min-width');
-	var newSoggettoWidthLabel = <%=widthLabel %>;
-	
-	var oldSoggettoShiftLeft = $('#menuSoggetto_menu').css('left');
-	var newSoggettoShiftLeft = oldSoggettoShiftLeft - (oldSoggettoWidthLabel - newSoggettoWidthLabel);
-	
-	// menu soggetto
-	$('#menuSoggetto').hover(
-	        function () {
-	            //mostra sottomenu
-	            // $('ul', this).stop(true, true).delay(50).slideDown(100); versione jquery > 1.3
-	            //.animate({top: 0}, 50)
-	            $('#menuSoggetto_menu', this).stop(true, true).delay(50).slideDown(100);
-	        }, 
-	        function () {
-	            //nascondi sottomenu
-	            $('#menuSoggetto_menu', this).stop(true, true).delay(150).slideUp(200);        
-	        }
-	    );
-	
-	$('#menuSoggetto_menu span[class*="icon-check"]').click(function() {
-		var destinazione = $( this ).parent().children('span[class*="label"]').children().attr('href');
-		window.location = destinazione;
-	});
-	
-	$('#menuSoggetto').css('min-width', newSoggettoWidthLabel);
-	$('#menuSoggetto_menu').css('left', newSoggettoShiftLeft);
-<% } %>
+	if(soggettoLinks!= null && soggettoLinks.size() > 1) { 
+		%>
+			var oldSoggettoShiftLeft = $('#menuSoggetto_menu').css('left');
+			var newSoggettoShiftLeft = parseInt(oldSoggettoShiftLeft) - (parseInt(oldSoggettoWidthLabel) - newSoggettoWidthLabel);
+			
+			// menu soggetto
+			$('#menuSoggetto').hover(
+			        function () {
+			            //mostra sottomenu
+			            // $('ul', this).stop(true, true).delay(50).slideDown(100); versione jquery > 1.3
+			            //.animate({top: 0}, 50)
+			            $('#menuSoggetto_menu', this).stop(true, true).delay(50).slideDown(100);
+			        }, 
+			        function () {
+			            //nascondi sottomenu
+			            $('#menuSoggetto_menu', this).stop(true, true).delay(150).slideUp(200);        
+			        }
+			    );
+			
+			$('#menuSoggetto_menu span[class*="icon-check"]').click(function() {
+				var destinazione = $( this ).parent().children('span[class*="label"]').children().attr('href');
+				window.location = destinazione;
+			});
+			
+			$('#menuSoggetto_menu').css('left', newSoggettoShiftLeft+'px');
+		<% 
+	}
+} %>
 	
 	if(isIE()){
 		if(IEVersione() == 10){

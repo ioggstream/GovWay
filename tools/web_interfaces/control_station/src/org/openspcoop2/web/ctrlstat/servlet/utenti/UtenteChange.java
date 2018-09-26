@@ -75,6 +75,7 @@ public final class UtenteChange extends Action {
 
 		String userLogin = ServletUtils.getUserLoginFromSession(session);
 		String modalitaGatewayDisponibili = "";
+		String soggettiDisponibili = "";
 
 		try {
 			UtentiHelper utentiHelper = new UtentiHelper(request, pd, session);
@@ -85,10 +86,9 @@ public final class UtenteChange extends Action {
 			String changepw = utentiHelper.getParameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_PASSWORD);
 			String changeModalita = utentiHelper.getParameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_MODALITA);
 			String tipoModalita = utentiHelper.getParameter(UtentiCostanti.PARAMETRO_UTENTE_TIPO_MODALITA);
+			String changeSoggetto = utentiHelper.getParameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_SOGGETTO);
+			String labelSoggetto = utentiHelper.getParameter(UtentiCostanti.PARAMETRO_UTENTE_LABEL_SOGGETTO);
 			
-			@SuppressWarnings("unused")
-			String first = utentiHelper.getParameter(UtentiCostanti.PARAMETRO_UTENTI_FIRST);
-
 			UtentiCore utentiCore = new UtentiCore();
 			
 			User user = ServletUtils.getUserFromSession(session);
@@ -101,15 +101,34 @@ public final class UtenteChange extends Action {
 				interfaceType = InterfaceType.convert(tipogui, true);
 			}
 			
+			String soggettoSelezionatoUtente = null;
+			
+			if(labelSoggetto == null) {
+				// prelevo il vecchio valore del protocollo
+				soggettoSelezionatoUtente = user.getSoggettoSelezionatoPddConsole();
+			} else {
+				// il caso all viene gestito impostando il valore del protocollo selezionato = null;
+				if(!labelSoggetto.equals(UtentiCostanti.VALORE_PARAMETRO_MODALITA_ALL))
+					soggettoSelezionatoUtente  = labelSoggetto;
+			}
+			
 			String protocolloSelezionatoUtente = null;
+			String oldProtocolloSelezionatoUtente = user.getProtocolloSelezionatoPddConsole();
+			boolean updateSoggetto = false;
 			
 			if(tipoModalita == null) {
 				// prelevo il vecchio valore del protocollo
-				protocolloSelezionatoUtente = user.getProtocolloSelezionatoPddConsole();
+				protocolloSelezionatoUtente = oldProtocolloSelezionatoUtente;
 			} else {
 				// il caso all viene gestito impostando il valore del protocollo selezionato = null;
-				if(!tipoModalita.equals(UtentiCostanti.VALORE_PARAMETRO_MODALITA_ALL))
+				if(!tipoModalita.equals(UtentiCostanti.VALORE_PARAMETRO_MODALITA_ALL)) 
 					protocolloSelezionatoUtente  = tipoModalita;
+
+				// 	reset soggetto scelto se non ho scelto tutti e se ho cambiato modalita
+				if(!tipoModalita.equals(UtentiCostanti.VALORE_PARAMETRO_MODALITA_ALL) && !oldProtocolloSelezionatoUtente.equals(protocolloSelezionatoUtente) ) {
+					soggettoSelezionatoUtente = null;
+					updateSoggetto = true;
+				}
 			}
 			
 			// Preparo il menu
@@ -125,9 +144,10 @@ public final class UtenteChange extends Action {
 			}
 			
 			modalitaGatewayDisponibili = sb.toString();
+			soggettiDisponibili = soggettoSelezionatoUtente != null ? soggettoSelezionatoUtente : UtentiCostanti.LABEL_PARAMETRO_MODALITA_ALL;
 
 			// setto la barra del titolo
-			if(changeGui == null && changeModalita==null) {
+			if(changeGui == null && changeModalita==null && changeSoggetto == null) {
 				ServletUtils.setPageDataTitle(pd, 
 					new Parameter(UtentiCostanti.LABEL_UTENTE, null));
 			}
@@ -148,7 +168,7 @@ public final class UtenteChange extends Action {
 
 						dati.addElement(ServletUtils.getDataElementForEditModeFinished());
 
-						utentiHelper.addUtenteChangeToDati(dati, interfaceType, changepw, userLogin, modalitaGatewayDisponibili);
+						utentiHelper.addUtenteChangeToDati(dati, interfaceType, changepw, userLogin, modalitaGatewayDisponibili,soggettiDisponibili);
 
 						pd.setDati(dati);
 
@@ -187,8 +207,16 @@ public final class UtenteChange extends Action {
 				} else if(changeModalita != null) {
 					myS.setProtocolloSelezionatoPddConsole(protocolloSelezionatoUtente);
 					utentiCore.salvaModalitaUserPddConsole(myS.getLogin(), protocolloSelezionatoUtente);
+					if(updateSoggetto) {
+						myS.setSoggettoSelezionatoPddConsole(soggettoSelezionatoUtente);
+						utentiCore.salvaSoggettoOperativoUserPddConsole(myS.getLogin(), soggettoSelezionatoUtente);
+					}
+				}  else if(changeSoggetto != null) {
+					myS.setSoggettoSelezionatoPddConsole(soggettoSelezionatoUtente);
+					utentiCore.salvaSoggettoOperativoUserPddConsole(myS.getLogin(), soggettoSelezionatoUtente);
 				} else {
 					myS.setProtocolloSelezionatoPddConsole(protocolloSelezionatoUtente);
+					myS.setSoggettoSelezionatoPddConsole(soggettoSelezionatoUtente);
 					myS.setInterfaceType(interfaceType);
 					utentiCore.performUpdateOperation(userLogin, utentiHelper.smista(), myS);
 				}
@@ -261,14 +289,31 @@ public final class UtenteChange extends Action {
 				Vector<DataElement> dati = new Vector<DataElement>();
 
 				dati.addElement(ServletUtils.getDataElementForEditModeFinished());
-			} else {
+			} else if(changeSoggetto != null) { // clic sul link cambia soggetto
+				
+				String pdMsg = "";
+				String pdMsgTitle= "Passaggio al "+UtentiCostanti.LABEL_PARAMETRO_SOGGETTO_OPERATIVO+" selezionato effettuato con successo.";
+				if(soggettoSelezionatoUtente == null) {
+					pdMsg = "<p>"+UtentiCostanti.LABEL_PARAMETRO_SOGGETTI_COMPACT+" disponibili:<p/>" + "Tutti";
+				} else {
+					pdMsg = "<p>"+UtentiCostanti.LABEL_PARAMETRO_SOGGETTO_COMPACT+" attuale:<p/>" + soggettoSelezionatoUtente;
+				}
+				
+				pd.setMessage(pdMsg, pdMsgTitle, Costanti.MESSAGE_TYPE_INFO);
+				
+				pd.setMode(Costanti.DATA_ELEMENT_EDIT_MODE_DISABLE_NAME);
+
+				Vector<DataElement> dati = new Vector<DataElement>();
+
+				dati.addElement(ServletUtils.getDataElementForEditModeFinished());
+			}else {
 				// provengo dalla maschera di modifica utente
 				// preparo i campio
 				Vector<DataElement> dati = new Vector<DataElement>();
 
 				dati.addElement(ServletUtils.getDataElementForEditModeFinished());
 
-				utentiHelper.addUtenteChangeToDati(dati, interfaceType, changepw, userLogin, modalitaGatewayDisponibili);
+				utentiHelper.addUtenteChangeToDati(dati, interfaceType, changepw, userLogin, modalitaGatewayDisponibili,soggettiDisponibili);
 
 				pd.setDati(dati);
 			}
