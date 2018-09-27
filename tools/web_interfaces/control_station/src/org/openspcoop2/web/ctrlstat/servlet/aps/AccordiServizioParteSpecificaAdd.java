@@ -737,7 +737,7 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 			// Fix per bug che accadeva in modalita' standard quando si seleziona un servizio di un accordo operativo, poi si cambia idea e si seleziona un accordo bozza.
 			// lo stato del package rimaneva operativo.
 			if(this.statoPackage!=null && apsHelper.isModalitaStandard()){
-				if(apsCore.isShowGestioneWorkflowStatoDocumenti()){
+				if(apsHelper.isShowGestioneWorkflowStatoDocumenti()){
 					if(StatiAccordo.operativo.toString().equals(this.statoPackage) || StatiAccordo.finale.toString().equals(this.statoPackage)){
 						if(as!=null && as.getStatoPackage().equals(StatiAccordo.bozza.toString()) ){
 							this.statoPackage = StatiAccordo.bozza.toString(); 
@@ -934,15 +934,25 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 			// calcolo soggetti fruitori
 			List<Soggetto> listFruitori = null;
 			if(gestioneFruitori) {
-				Search searchSoggettiFruitori = new Search(true);
-				searchSoggettiFruitori.addFilter(Liste.SOGGETTI, Filtri.FILTRO_PROTOCOLLO, this.tipoProtocollo);
-				searchSoggettiFruitori.addFilter(Liste.SOGGETTI, Filtri.FILTRO_DOMINIO, SoggettiCostanti.SOGGETTO_DOMINIO_OPERATIVO_VALUE);
-				if(apsCore.isVisioneOggettiGlobale(userLogin)){
-					listFruitori = soggettiCore.soggettiRegistroList(null, searchSoggettiFruitori);
-				}else{
-					listFruitori = soggettiCore.soggettiRegistroList(userLogin, searchSoggettiFruitori);
+				
+				if(apsHelper.isSoggettoMultitenantSelezionato()) {
+					IDSoggetto idSoggettoSelezionato = soggettiCore.convertSoggettoSelezionatoToID(apsHelper.getSoggettoMultitenantSelezionato());
+					listFruitori = new ArrayList<>();
+					try {
+						listFruitori.add(soggettiCore.getSoggettoRegistro(idSoggettoSelezionato));
+					}catch(DriverRegistroServiziNotFound notFound) {}
 				}
-	
+				else {
+					Search searchSoggettiFruitori = new Search(true);
+					searchSoggettiFruitori.addFilter(Liste.SOGGETTI, Filtri.FILTRO_PROTOCOLLO, this.tipoProtocollo);
+					searchSoggettiFruitori.addFilter(Liste.SOGGETTI, Filtri.FILTRO_DOMINIO, SoggettiCostanti.SOGGETTO_DOMINIO_OPERATIVO_VALUE);
+					if(apsCore.isVisioneOggettiGlobale(userLogin)){
+						listFruitori = soggettiCore.soggettiRegistroList(null, searchSoggettiFruitori);
+					}else{
+						listFruitori = soggettiCore.soggettiRegistroList(userLogin, searchSoggettiFruitori);
+					}
+				}
+				
 				if (listFruitori.size() > 0) {
 					List<String> soggettiListTmp = new ArrayList<String>();
 					List<String> soggettiListLabelTmp = new ArrayList<String>();
@@ -1109,7 +1119,7 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 				ServletUtils.setPageDataTitle_ServletAdd(pd, labelList,servletList);
 				
 
-				if(apsCore.isShowGestioneWorkflowStatoDocumenti()){
+				if(apsHelper.isShowGestioneWorkflowStatoDocumenti()){
 					if(this.nomeservizio==null || "".equals(this.nomeservizio)){
 						this.statoPackage=StatiAccordo.bozza.toString();
 					}
@@ -1478,7 +1488,8 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 					generaPortaApplicativa, listExtendedConnettore,
 					this.fruizioneServizioApplicativo,this.fruizioneRuolo,this.fruizioneAutenticazione,this.fruizioneAutenticazioneOpzionale,this.fruizioneAutorizzazione,
 					this.fruizioneAutorizzazioneAutenticati, this.fruizioneAutorizzazioneRuoli, this.fruizioneAutorizzazioneRuoliTipologia, this.fruizioneAutorizzazioneRuoliMatch,
-					this.tipoProtocollo, allegatoXacmlPolicy, this.descrizione);
+					this.tipoProtocollo, allegatoXacmlPolicy, 
+					this.descrizione, this.tipoSoggettoFruitore, this.nomeSoggettoFruitore);
 
 			if(isOk){
 				if(generaPortaApplicativa && apsHelper.isModalitaCompleta() && (this.nomeSA==null || "".equals(this.nomeSA) || "-".equals(this.nomeSA))){
@@ -1687,7 +1698,7 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 			//			}
 
 			// Check stato
-			if(apsCore.isShowGestioneWorkflowStatoDocumenti()){
+			if(apsHelper.isShowGestioneWorkflowStatoDocumenti()){
 
 				ValidazioneStatoPackageException validazione = null;
 				try{

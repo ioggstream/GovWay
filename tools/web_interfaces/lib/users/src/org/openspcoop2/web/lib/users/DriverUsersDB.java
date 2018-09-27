@@ -1954,8 +1954,8 @@ public class DriverUsersDB {
 	/**
 	 * Aggiorna il soggetto utilizzato dall'utente <var>login</var>
 	 * 
-	 * @param login Identificatore di un utente
-	 * @param soggetto Soggetto
+	 * @param oldSoggetto Identita precedentemente associata
+	 * @param newSoggetto Nuova identita associata
 	 *               
 	 */
 	public void modificaSoggettoUtilizzatoConsole(String oldSoggetto, String newSoggetto) throws DriverUsersDBException {

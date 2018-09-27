@@ -607,7 +607,7 @@ public final class AccordiServizioParteSpecificaFruitoriAdd extends Action {
 						this.httpspwdprivatekey = "";
 						this.httpsalgoritmokey = "";
 
-						if(apsCore.isShowGestioneWorkflowStatoDocumenti()){
+						if(apsHelper.isShowGestioneWorkflowStatoDocumenti()){
 							if(this.statoPackage==null || "".equals(this.statoPackage)){
 								//if(serviziFruitoriAdd.generazioneAutomaticaPorteDelegate){
 								this.statoPackage=StatiAccordo.bozza.toString();
@@ -948,7 +948,7 @@ public final class AccordiServizioParteSpecificaFruitoriAdd extends Action {
 			//			}
 
 			// Check stato
-			if(apsCore.isShowGestioneWorkflowStatoDocumenti()){
+			if(apsHelper.isShowGestioneWorkflowStatoDocumenti()){
 
 				try{
 					apsCore.validaStatoFruitoreAccordoServizioParteSpecifica(fruitore, servsp);

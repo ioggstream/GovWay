@@ -881,7 +881,7 @@ public final class AccordiServizioParteSpecificaFruitoriChange extends Action {
 
 					pd.setDati(dati);
 
-					if(apsCore.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(servFru.getStatoPackage())){
+					if(apsHelper.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(servFru.getStatoPackage())){
 						pd.setMode(Costanti.DATA_ELEMENT_EDIT_MODE_DISABLE_NAME);
 					}
 
@@ -1203,7 +1203,7 @@ public final class AccordiServizioParteSpecificaFruitoriChange extends Action {
 			fruitore.setStatoPackage(statoPackage);
 
 			// Check stato
-			if(apsCore.isShowGestioneWorkflowStatoDocumenti()){
+			if(apsHelper.isShowGestioneWorkflowStatoDocumenti()){
 
 				try{
 					apsCore.validaStatoFruitoreAccordoServizioParteSpecifica(fruitore, serviziosp);

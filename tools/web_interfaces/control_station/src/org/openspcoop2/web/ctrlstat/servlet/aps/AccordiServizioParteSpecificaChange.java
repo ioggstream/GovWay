@@ -1063,7 +1063,7 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 
 					pd.setDati(dati);
 
-					if(apsCore.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(asps.getStatoPackage())){
+					if(apsHelper.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(asps.getStatoPackage())){
 						pd.setMode(Costanti.DATA_ELEMENT_EDIT_MODE_DISABLE_NAME);
 					}
 
@@ -1112,7 +1112,8 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 					generaPACheckSoggetto, listExtendedConnettore,
 					null,null,null,null,null,
 					null, null, null, null,
-					tipoProtocollo,null, descrizione);
+					tipoProtocollo,null, 
+					descrizione, tipoSoggettoFruitore, nomeSoggettoFruitore);
 			
 			// Validazione base dei parametri custom 
 			if(isOk){
@@ -1463,7 +1464,7 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 
 
 			// Check stato
-			if(apsCore.isShowGestioneWorkflowStatoDocumenti()){
+			if(apsHelper.isShowGestioneWorkflowStatoDocumenti()){
 
 				try{
 					boolean gestioneWsdlImplementativo = apcCore.showPortiAccesso(tipoProtocollo, serviceBinding, formatoSpecifica);

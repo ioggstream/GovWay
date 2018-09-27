@@ -589,8 +589,8 @@ public class ControlStationCore {
 	public boolean isShowGestioneSoggettiVirtuali() {
 		return this.showGestioneSoggettiVirtuali;
 	}
-	public boolean isShowGestioneWorkflowStatoDocumenti() {
-		return this.showGestioneWorkflowStatoDocumenti;
+	public boolean isShowGestioneWorkflowStatoDocumenti(ConsoleHelper consoleHelper) {
+		return this.showGestioneWorkflowStatoDocumenti && consoleHelper.isModalitaCompleta();
 	}
 	public boolean isGestioneWorkflowStatoDocumenti_visualizzaStatoLista() {
 		return this.gestioneWorkflowStatoDocumenti_visualizzaStatoLista;

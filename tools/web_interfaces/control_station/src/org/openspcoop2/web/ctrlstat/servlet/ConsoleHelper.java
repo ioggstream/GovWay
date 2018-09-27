@@ -443,6 +443,10 @@ public class ConsoleHelper {
 //		return ServletUtils.getBooleanAttributeFromSession(CostantiControlStation.PARAMETRO_USAIDSOGG , this.session, false);
 //	}
 	
+	public boolean isShowGestioneWorkflowStatoDocumenti() {
+		return this.core.isShowGestioneWorkflowStatoDocumenti(this);
+	}
+	
 	public IDAccordo getIDAccordoFromValues(String nomeAS, String soggettoReferente, String versione) throws Exception{
 		Soggetto s = this.soggettiCore.getSoggetto(Integer.parseInt(soggettoReferente));			
 		IDSoggetto assr = new IDSoggetto();

@@ -483,7 +483,7 @@ public final class SoggettiChange extends Action {
 
 			if(isOk){
 				// check change tipo/nome con gestione workflow abilitata
-				if(soggettiCore.isRegistroServiziLocale() && soggettiCore.isShowGestioneWorkflowStatoDocumenti()){
+				if(soggettiCore.isRegistroServiziLocale() && soggettiHelper.isShowGestioneWorkflowStatoDocumenti()){
 					if( (oldnomeprov.equals(this.nomeprov)==false) || (oldtipoprov.equals(this.tipoprov)==false) ){
 						HashMap<ErrorsHandlerCostant, String> whereIsInUso = new HashMap<ErrorsHandlerCostant, String>();
 						if (soggettiCore.isSoggettoInUsoInPackageFinali(soggettoRegistry, whereIsInUso)) {

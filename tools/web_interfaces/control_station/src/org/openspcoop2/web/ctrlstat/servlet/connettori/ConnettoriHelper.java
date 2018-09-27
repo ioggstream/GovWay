@@ -1284,7 +1284,7 @@ public class ConnettoriHelper extends ConsoleHelper {
 					|| 
 					(AccordiServizioParteSpecificaCostanti.OBJECT_NAME_APS_FRUITORI.equals(objectName) && TipoOperazione.CHANGE.equals(tipoOperazione))
 					)
-					&& StatiAccordo.finale.toString().equals(stato) && this.core.isShowGestioneWorkflowStatoDocumenti() ){
+					&& StatiAccordo.finale.toString().equals(stato) && this.isShowGestioneWorkflowStatoDocumenti() ){
 				if (endpointtype.equals(TipiConnettore.HTTP.toString()) || endpointtype.equals(TipiConnettore.HTTPS.toString())) {
 					de.setType(DataElementType.HIDDEN);
 					de.setValue(Costanti.CHECK_BOX_ENABLED);
@@ -1357,7 +1357,7 @@ public class ConnettoriHelper extends ConsoleHelper {
 			}
 			de.setValue(tmpUrl);
 			if (endpointtype.equals(TipiConnettore.HTTP.toString()) || endpointtype.equals(TipiConnettore.HTTPS.toString())) {
-				if ( !this.core.isShowGestioneWorkflowStatoDocumenti() || !StatiAccordo.finale.toString().equals(stato)) {
+				if ( !this.isShowGestioneWorkflowStatoDocumenti() || !StatiAccordo.finale.toString().equals(stato)) {
 					de.setType(DataElementType.TEXT_EDIT);
 					de.setRequired(true);
 				} else {
@@ -1464,7 +1464,7 @@ public class ConnettoriHelper extends ConsoleHelper {
 			if (endpointtype.equals(TipiConnettore.HTTPS.toString())) {
 				ConnettoreHTTPSUtils.addHTTPSDati(dati, httpsurl, httpstipologia, httpshostverify, httpspath, httpstipo, 
 						httpspwd, httpsalgoritmo, httpsstato, httpskeystore, httpspwdprivatekeytrust, httpspathkey, 
-						httpstipokey, httpspwdkey, httpspwdprivatekey, httpsalgoritmokey, stato, this.core, this.getSize(), false, prefix);
+						httpstipokey, httpspwdkey, httpspwdprivatekey, httpsalgoritmokey, stato, this.core, this, this.getSize(), false, prefix);
 			}
 			
 			// Proxy
@@ -1582,7 +1582,7 @@ public class ConnettoriHelper extends ConsoleHelper {
 			}
 			de.setValue(tmpUrl);
 			if (endpointtype.equals(TipiConnettore.HTTP.toString()) || endpointtype.equals(TipiConnettore.HTTPS.toString())){
-				if (!this.core.isShowGestioneWorkflowStatoDocumenti() || !StatiAccordo.finale.toString().equals(stato)) {
+				if (!this.isShowGestioneWorkflowStatoDocumenti() || !StatiAccordo.finale.toString().equals(stato)) {
 					de.setType(DataElementType.TEXT_EDIT);
 					de.setRequired(true);
 				} else {
@@ -1817,14 +1817,14 @@ public class ConnettoriHelper extends ConsoleHelper {
 			if (endpointtype.equals(TipiConnettore.HTTPS.toString())) {
 				ConnettoreHTTPSUtils.addHTTPSDati(dati, httpsurl, httpstipologia, httpshostverify, httpspath, httpstipo, httpspwd, httpsalgoritmo, 
 						httpsstato, httpskeystore, httpspwdprivatekeytrust, httpspathkey, httpstipokey, httpspwdkey, httpspwdprivatekey, httpsalgoritmokey, stato,
-						this.core,this.getSize(), false, prefix);
+						this.core, this, this.getSize(), false, prefix);
 			}
 
 			// Jms
 			if (endpointtype.equals(TipiConnettore.JMS.getNome())) {
 				ConnettoreJMSUtils.addJMSDati(dati, nome, tipoconn, user, password, initcont, urlpgk, 
 						provurl, connfact, sendas, objectName, tipoOperazione, stato,
-						this.core,this.getSize());
+						this.core, this, this.getSize());
 			}
 			
 			// FileSystem
@@ -1930,7 +1930,7 @@ public class ConnettoriHelper extends ConsoleHelper {
 					|| 
 					(AccordiServizioParteSpecificaCostanti.OBJECT_NAME_APS_FRUITORI.equals(objectName) && TipoOperazione.CHANGE.equals(tipoOperazione))
 					)
-					&& StatiAccordo.finale.toString().equals(stato) && this.core.isShowGestioneWorkflowStatoDocumenti() ){
+					&& StatiAccordo.finale.toString().equals(stato) && this.isShowGestioneWorkflowStatoDocumenti() ){
 				if (endpointtype.equals(TipiConnettore.HTTP.toString())) {
 					de.setType(DataElementType.HIDDEN);
 //					de.setSelected(true);
@@ -2012,7 +2012,7 @@ public class ConnettoriHelper extends ConsoleHelper {
 			de.setLabel(ConnettoriCostanti.LABEL_PARAMETRO_CONNETTORE_URL);
 			de.setValue(url);
 //			if (endpointtype.equals(TipiConnettore.HTTP.toString())){
-//				if (!this.core.isShowGestioneWorkflowStatoDocumenti() || !StatiAccordo.finale.toString().equals(stato)) {
+//				if (!this.isShowGestioneWorkflowStatoDocumenti() || !StatiAccordo.finale.toString().equals(stato)) {
 //					de.setType(DataElementType.TEXT_EDIT);
 //					de.setRequired(true);
 //				} else {

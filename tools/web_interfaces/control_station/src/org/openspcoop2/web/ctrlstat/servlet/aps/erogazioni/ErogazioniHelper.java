@@ -202,7 +202,7 @@ public class ErogazioniHelper extends AccordiServizioParteSpecificaHelper{
 				this.addFilterServiceBinding(filterTipoAccordo,false,true);
 			}
 
-			if(this.core.isShowGestioneWorkflowStatoDocumenti()){
+			if(this.isShowGestioneWorkflowStatoDocumenti()){
 				if(this.core.isGestioneWorkflowStatoDocumenti_visualizzaStatoLista()) {
 					String filterStatoAccordo = SearchUtils.getFilter(ricerca, idLista, Filtri.FILTRO_STATO_ACCORDO);
 					this.addFilterStatoAccordo(filterStatoAccordo,false);
@@ -229,7 +229,13 @@ public class ErogazioniHelper extends AccordiServizioParteSpecificaHelper{
 
 			List<String> labelLst = new ArrayList<>();
 			labelLst.add(""); // colonna stato
-			labelLst.add(ErogazioniCostanti.LABEL_ASPS_LISTA_EROGAZIONI_COLONNA_SERVIZIO);
+			//labelLst.add(ErogazioniCostanti.LABEL_ASPS_LISTA_EROGAZIONI_COLONNA_SERVIZIO);
+			if(gestioneFruitori) {
+				labelLst.add(ErogazioniCostanti.LABEL_ASPS_FRUIZIONI);
+			}
+			else {
+				labelLst.add(ErogazioniCostanti.LABEL_ASPS_EROGAZIONI);
+			}
 			
 			if(visualizzaGruppi)
 				labelLst.add(ErogazioniCostanti.LABEL_ASPS_LISTA_EROGAZIONI_COLONNA_CONFIGURAZIONE);

@@ -529,7 +529,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 
 			this.pd.setDati(dati);
 
-			if(this.core.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage())){
+			if(this.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage())){
 				this.pd.setAddButton(false);
 				this.pd.setRemoveButton(false);
 				this.pd.setSelect(false);
@@ -646,7 +646,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 
 			if(TipoOperazione.CHANGE.equals(tipoOperazione)){
 
-				if(this.core.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage())){
+				if(this.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage())){
 					this.pd.disableEditMode();
 				}
 				else{
@@ -804,7 +804,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 
 			this.pd.setDati(dati);
 
-			if(this.core.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage())){
+			if(this.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage())){
 				this.pd.setAddButton(false);
 				this.pd.setRemoveButton(false);
 				this.pd.setSelect(false);
@@ -1030,7 +1030,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 			boolean modificheAbilitate = false;
 			if( tipoOperazione.equals(TipoOperazione.ADD) ){
 				modificheAbilitate = true;
-			}else if(this.core.isShowGestioneWorkflowStatoDocumenti()==false){
+			}else if(this.isShowGestioneWorkflowStatoDocumenti()==false){
 				modificheAbilitate = true;
 			}else if(StatiAccordo.finale.toString().equals(stato)==false){
 				modificheAbilitate = true;
@@ -1603,7 +1603,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 
 			this.pd.setDati(dati);
 
-			if(this.core.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage())){
+			if(this.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage())){
 				this.pd.setAddButton(false);
 				this.pd.setRemoveButton(false);
 				this.pd.setSelect(false);
@@ -1708,7 +1708,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 			boolean modificheAbilitate = false;
 			if( tipoOperazione.equals(TipoOperazione.ADD) ){
 				modificheAbilitate = true;
-			}else if(this.core.isShowGestioneWorkflowStatoDocumenti()==false){
+			}else if(this.isShowGestioneWorkflowStatoDocumenti()==false){
 				modificheAbilitate = true;
 			}else if(StatiAccordo.finale.toString().equals(stato)==false){
 				modificheAbilitate = true;
@@ -2230,7 +2230,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 
 			this.pd.setDati(dati);
 
-			if(this.core.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage())){
+			if(this.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage())){
 				this.pd.setAddButton(false);
 				this.pd.setRemoveButton(false);
 				this.pd.setSelect(false);
@@ -2356,7 +2356,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 		boolean modificheAbilitate = false;
 		if( tipoOperazione.equals(TipoOperazione.ADD) ){
 			modificheAbilitate = true;
-		}else if(this.core.isShowGestioneWorkflowStatoDocumenti()==false){
+		}else if(this.isShowGestioneWorkflowStatoDocumenti()==false){
 			modificheAbilitate = true;
 		}else if(StatiAccordo.finale.toString().equals(stato)==false){
 			modificheAbilitate = true;
@@ -2706,7 +2706,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 		de.setName(AccordiServizioParteComuneCostanti.PARAMETRO_APC_TIPO_WSDL);
 		dati.addElement(de);
 
-		if(this.core.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(statoPackage)){
+		if(this.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(statoPackage)){
 			this.pd.disableEditMode();
 
 			if(this.core.isShowInterfacceAPI()) {
@@ -2836,7 +2836,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 		de.setName(AccordiServizioParteComuneCostanti.PARAMETRO_APC_TIPO_WSDL);
 		dati.addElement(de);
 
-		if(this.core.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(statoPackage)){
+		if(this.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(statoPackage)){
 			this.pd.disableEditMode();
 		}
 		else{
@@ -2936,7 +2936,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 		boolean modificheAbilitate = false;
 		if( tipoOperazione.equals(TipoOperazione.ADD) ){
 			modificheAbilitate = true;
-		}else if(this.core.isShowGestioneWorkflowStatoDocumenti()==false){
+		}else if(this.isShowGestioneWorkflowStatoDocumenti()==false){
 			modificheAbilitate = true;
 		}else if(StatiAccordo.finale.toString().equals(oldStato)==false){
 			modificheAbilitate = true;
@@ -3219,7 +3219,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 
 		de = new DataElement();
 		de.setLabel(AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_STATO_PACKAGE);
-		if(this.core.isShowGestioneWorkflowStatoDocumenti()){
+		if(this.isShowGestioneWorkflowStatoDocumenti()){
 			if( tipoOperazione.equals(TipoOperazione.ADD)){
 				//				if(isInterfacciaAvanzata)
 				//					de.setType(DataElementType.TEXT);
@@ -4058,7 +4058,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 		boolean modificheAbilitate = false;
 		if( tipoOperazione.equals(TipoOperazione.ADD) ){
 			modificheAbilitate = true;
-		}else if(this.core.isShowGestioneWorkflowStatoDocumenti()==false){
+		}else if(this.isShowGestioneWorkflowStatoDocumenti()==false){
 			modificheAbilitate = true;
 		}else if(StatiAccordo.finale.toString().equals(oldStato)==false){
 			modificheAbilitate = true;
@@ -4729,7 +4729,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 				this.addFilterServiceBinding(filterTipoAccordo,false,false);
 			}
 			
-			if(this.core.isShowGestioneWorkflowStatoDocumenti()){
+			if(this.isShowGestioneWorkflowStatoDocumenti()){
 				if(this.core.isGestioneWorkflowStatoDocumenti_visualizzaStatoLista()) {
 					String filterStatoAccordo = SearchUtils.getFilter(ricerca, idLista, Filtri.FILTRO_STATO_ACCORDO);
 					this.addFilterStatoAccordo(filterStatoAccordo,false);
@@ -4788,7 +4788,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 				totEl++;
 			}
 
-			if(this.core.isShowGestioneWorkflowStatoDocumenti()) {
+			if(this.isShowGestioneWorkflowStatoDocumenti()) {
 				if(this.core.isGestioneWorkflowStatoDocumenti_visualizzaStatoLista()) {
 					totEl++;
 				}
@@ -4843,7 +4843,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 				index++;
 			}
 
-			if(this.core.isShowGestioneWorkflowStatoDocumenti()){
+			if(this.isShowGestioneWorkflowStatoDocumenti()){
 				if(this.core.isGestioneWorkflowStatoDocumenti_visualizzaStatoLista()) {
 					labels[index] = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_STATO_PACKAGE;
 					index++;
@@ -4950,7 +4950,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 						e.addElement(de);
 					}
 					
-					if(this.core.isShowGestioneWorkflowStatoDocumenti()){
+					if(this.isShowGestioneWorkflowStatoDocumenti()){
 						if(this.core.isGestioneWorkflowStatoDocumenti_visualizzaStatoLista()) {
 							de = new DataElement();
 							de.setValue(StatiAccordo.upper(accordoServizio.getStatoPackage()));
@@ -5267,7 +5267,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 
 			this.pd.setDati(dati);
 
-			if(this.core.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage())){
+			if(this.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage())){
 				this.pd.setAddButton(false);
 				this.pd.setRemoveButton(false);
 				this.pd.setSelect(false);
@@ -5435,7 +5435,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 
 			this.pd.setDati(dati);
 
-			if(this.core.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage())){
+			if(this.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage())){
 				this.pd.setAddButton(false);
 				this.pd.setRemoveButton(false);
 				this.pd.setSelect(false);
@@ -5869,7 +5869,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 
 			this.pd.setDati(dati);
 
-			if(this.core.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage())){
+			if(this.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage())){
 				this.pd.setAddButton(false);
 				this.pd.setRemoveButton(false);
 				this.pd.setSelect(false);
@@ -5896,7 +5896,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 			boolean modificheAbilitate = false;
 			if( tipoOperazione.equals(TipoOperazione.ADD) ){
 				modificheAbilitate = true;
-			}else if(this.core.isShowGestioneWorkflowStatoDocumenti()==false){
+			}else if(this.isShowGestioneWorkflowStatoDocumenti()==false){
 				modificheAbilitate = true;
 			}else if(StatiAccordo.finale.toString().equals(stato)==false){
 				modificheAbilitate = true;
@@ -6675,7 +6675,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 
 			this.pd.setDati(dati);
 
-			if(this.isModalitaStandard() || (this.core.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage()))){
+			if(this.isModalitaStandard() || (this.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage()))){
 				this.pd.setAddButton(false);
 				this.pd.setRemoveButton(false);
 				this.pd.setSelect(false);
@@ -6890,7 +6890,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 			
 			this.pd.setDati(dati);
 
-			if( this.isModalitaStandard() || (this.core.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage()))){
+			if( this.isModalitaStandard() || (this.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage()))){
 				this.pd.setAddButton(false);
 				this.pd.setRemoveButton(false);
 				this.pd.setSelect(false);
@@ -7054,7 +7054,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 			
 			this.pd.setDati(dati);
 
-			if( this.isModalitaStandard() || (this.core.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage()))){
+			if( this.isModalitaStandard() || (this.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage()))){
 				this.pd.setAddButton(false);
 				this.pd.setRemoveButton(false);
 				this.pd.setSelect(false);
@@ -7078,7 +7078,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 			boolean modificheAbilitate = false;
 			if( tipoOperazione.equals(TipoOperazione.ADD) ){
 				modificheAbilitate = true;
-			}else if(this.core.isShowGestioneWorkflowStatoDocumenti()==false){
+			}else if(this.isShowGestioneWorkflowStatoDocumenti()==false){
 				modificheAbilitate = true;
 			}else if(StatiAccordo.finale.toString().equals(stato)==false){
 				modificheAbilitate = true;
@@ -7250,7 +7250,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 			boolean modificheAbilitate = false;
 			if( tipoOperazione.equals(TipoOperazione.ADD) ){
 				modificheAbilitate = true;
-			}else if(this.core.isShowGestioneWorkflowStatoDocumenti()==false){
+			}else if(this.isShowGestioneWorkflowStatoDocumenti()==false){
 				modificheAbilitate = true;
 			}else if(StatiAccordo.finale.toString().equals(stato)==false){
 				modificheAbilitate = true;
@@ -7507,7 +7507,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 			
 			this.pd.setDati(dati);
 
-			if(this.core.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(stato)){
+			if(this.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(stato)){
 				this.pd.setAddButton(false);
 				this.pd.setRemoveButton(false);
 				this.pd.setSelect(false);
@@ -7591,7 +7591,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 			boolean modificheAbilitate = false;
 			if( tipoOperazione.equals(TipoOperazione.ADD) ){
 				modificheAbilitate = true;
-			}else if(this.core.isShowGestioneWorkflowStatoDocumenti()==false){
+			}else if(this.isShowGestioneWorkflowStatoDocumenti()==false){
 				modificheAbilitate = true;
 			}else if(StatiAccordo.finale.toString().equals(statoPackage)==false){
 				modificheAbilitate = true;
@@ -7719,7 +7719,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 			
 			this.pd.setDati(dati);
 
-			if(this.core.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(statoPackage)){
+			if(this.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(statoPackage)){
 				this.pd.setAddButton(false);
 				this.pd.setRemoveButton(false);
 				this.pd.setSelect(false);

@@ -284,7 +284,7 @@ public final class AccordiServizioParteComuneResourcesRepresentationChange exten
 						this.protocolFactory,serviceBinding, nomeRisorsa, isRequest, statusS, idRepInt, mediaType, nome, descr, messageType, tipo, tipoJson, nomeXml, namespaceXml, xmlType);
 				pd.setDati(dati);
 
-				if( apcHelper.isModalitaStandard() || (apcCore.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage()))){
+				if( apcHelper.isModalitaStandard() || (apcHelper.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage()))){
 					pd.disableEditMode();
 				}
 

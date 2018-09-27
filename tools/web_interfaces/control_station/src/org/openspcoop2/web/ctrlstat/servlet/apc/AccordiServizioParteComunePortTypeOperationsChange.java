@@ -476,7 +476,7 @@ public final class AccordiServizioParteComunePortTypeOperationsChange extends Ac
 
 				pd.setDati(dati);
 
-				if(apcCore.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage())){
+				if(apcHelper.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage())){
 					pd.disableEditMode();
 				}
 

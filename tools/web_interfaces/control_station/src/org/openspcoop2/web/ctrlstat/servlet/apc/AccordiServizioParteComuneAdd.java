@@ -483,7 +483,7 @@ public final class AccordiServizioParteComuneAdd extends Action {
 					}else{
 						this.isServizioComposto=false;
 					}
-					if(apcCore.isShowGestioneWorkflowStatoDocumenti()){
+					if(apcHelper.isShowGestioneWorkflowStatoDocumenti()){
 						if(this.statoPackage==null)
 							this.statoPackage=StatiAccordo.bozza.toString();
 					}else{
@@ -712,7 +712,7 @@ public final class AccordiServizioParteComuneAdd extends Action {
 
 
 			// Check stato
-			if(apcCore.isShowGestioneWorkflowStatoDocumenti()){
+			if(apcHelper.isShowGestioneWorkflowStatoDocumenti()){
 
 				try{
 					boolean utilizzoAzioniDiretteInAccordoAbilitato = apcCore.isShowAccordiColonnaAzioni();

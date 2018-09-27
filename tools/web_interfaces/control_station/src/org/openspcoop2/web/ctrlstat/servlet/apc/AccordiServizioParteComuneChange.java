@@ -562,7 +562,7 @@ public final class AccordiServizioParteComuneChange extends Action {
 
 				pd.setDati(dati);
 
-				if(apcCore.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage())){
+				if(apcHelper.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage())){
 					pd.disableEditMode();
 				}
 
@@ -802,7 +802,7 @@ public final class AccordiServizioParteComuneChange extends Action {
 		as.setStatoPackage(this.statoPackage);
 
 		// Check stato
-		if(apcCore.isShowGestioneWorkflowStatoDocumenti()){
+		if(apcHelper.isShowGestioneWorkflowStatoDocumenti()){
 
 			try{
 				boolean utilizzoAzioniDiretteInAccordoAbilitato = apcCore.isShowAccordiColonnaAzioni();
