@@ -73,6 +73,7 @@ import org.openspcoop2.web.ctrlstat.servlet.pdd.PddCore;
 import org.openspcoop2.web.ctrlstat.servlet.protocol_properties.ProtocolPropertiesCostanti;
 import org.openspcoop2.web.ctrlstat.servlet.protocol_properties.ProtocolPropertiesUtilities;
 import org.openspcoop2.web.ctrlstat.servlet.sa.ServiziApplicativiCore;
+import org.openspcoop2.web.ctrlstat.servlet.utenti.UtentiCore;
 import org.openspcoop2.web.lib.mvc.Costanti;
 import org.openspcoop2.web.lib.mvc.DataElement;
 import org.openspcoop2.web.lib.mvc.DataElementType;
@@ -172,7 +173,7 @@ public final class SoggettiChange extends Action {
 			soggettiHelper.makeMenu();
 
 			// Prendo i vecchi nome e tipo
-			String oldnomeprov = "", oldtipoprov = "";
+			String oldnomeprov = "", oldtipoprov = "", oldpdd = null;
 
 			Boolean contaListe = ServletUtils.getContaListeFromSession(session);
 			String userLogin = ServletUtils.getUserLoginFromSession(session);
@@ -189,6 +190,7 @@ public final class SoggettiChange extends Action {
 			PorteDelegateCore porteDelegateCore = new PorteDelegateCore(soggettiCore);
 			PorteApplicativeCore porteApplicativeCore = new PorteApplicativeCore(soggettiCore);
 			ServiziApplicativiCore saCore = new ServiziApplicativiCore(soggettiCore);
+			UtentiCore utentiCore = new UtentiCore(soggettiCore);
 
 			String nomePddGestioneLocale = null;
 			if(pddCore.isGestionePddAbilitata(soggettiHelper)==false){
@@ -209,6 +211,7 @@ public final class SoggettiChange extends Action {
 			if(soggettiCore.isRegistroServiziLocale()){
 				oldnomeprov = soggettoRegistry.getNome();
 				oldtipoprov = soggettoRegistry.getTipo();
+				oldpdd = soggettoRegistry.getPortaDominio();
 			}
 			else{
 				oldnomeprov = soggettoConfig.getNome();
@@ -773,9 +776,20 @@ public final class SoggettiChange extends Action {
 
 			// Fruitori nei servizi 
 			soggettoUpdateUtilities.checkFruitori();
-
+			
 			// eseguo l'aggiornamento
 			soggettiCore.performUpdateOperation(userLogin, soggettiHelper.smista(), soggettoUpdateUtilities.getOggettiDaAggiornare().toArray());
+
+			// sistemo utenze dopo l'aggiornamento
+			// se la pdd è diventata esterna o se sono cambiati i dati identificativi
+			IDSoggetto idSoggettoSelezionato = new IDSoggetto(oldtipoprov, oldnomeprov);
+			if(oldpdd!=null && !oldpdd.equals(this.pdd) && pddCore.isPddEsterna(this.pdd)) {
+				utentiCore.modificaSoggettoUtilizzatoConsole(idSoggettoSelezionato.toString(), null); // annullo selezione
+			}
+			else if(!this.tipoprov.equals(oldtipoprov) || !this.nomeprov.equals(oldnomeprov)) {
+				IDSoggetto idNuovoSoggettoSelezionato = new IDSoggetto(this.tipoprov, this.nomeprov);
+				utentiCore.modificaSoggettoUtilizzatoConsole(idSoggettoSelezionato.toString(), idNuovoSoggettoSelezionato.toString()); // modifico i dati
+			}
 			
 			// preparo lista
 			Search ricerca = (Search) ServletUtils.getSearchObjectFromSession(session, Search.class);
@@ -789,6 +803,12 @@ public final class SoggettiChange extends Action {
 				pd.setMessage(ConfigurazioneCostanti.LABEL_CONFIGURAZIONE_SOGGETTO_CON_SUCCESSO, Costanti.MESSAGE_TYPE_INFO);
 
 				pd.disableEditMode();
+				
+				//if(!pddCore.isPddEsterna(this.pdd)) {
+				// sempre, anche quando passo da operativo ad esterno
+				generalHelper = new GeneralHelper(session);
+				gd = generalHelper.initGeneralData(request); // re-inizializzo per ricalcolare il menu in alto a destra
+				//}
 				
 				ServletUtils.setGeneralAndPageDataIntoSession(session, gd, pd);
 
@@ -818,6 +838,12 @@ public final class SoggettiChange extends Action {
 					soggettiHelper.prepareSoggettiConfigList(listaSoggetti, ricerca);
 				}
 
+				//if(!pddCore.isPddEsterna(this.pdd)) {
+				// sempre, anche quando passo da operativo ad esterno
+				generalHelper = new GeneralHelper(session);
+				gd = generalHelper.initGeneralData(request); // re-inizializzo per ricalcolare il menu in alto a destra
+				//}
+				
 				ServletUtils.setGeneralAndPageDataIntoSession(session, gd, pd);
 
 				return ServletUtils.getStrutsForwardEditModeFinished(mapping, SoggettiCostanti.OBJECT_NAME_SOGGETTI, ForwardParams.CHANGE());

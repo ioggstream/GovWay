@@ -607,6 +607,9 @@ public final class ConfigurazioneGenerale extends Action {
 
 				pd.disableEditMode();
 				
+				generalHelper = new GeneralHelper(session);
+				gd = generalHelper.initGeneralData(request); // re-inizializzo per ricalcolare il menu in alto a destra
+				
 				ServletUtils.setGeneralAndPageDataIntoSession(session, gd, pd);
 
 				return ServletUtils.getStrutsForwardEditModeFinished(mapping,

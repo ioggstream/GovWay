@@ -349,6 +349,14 @@ public class ConsoleHelper {
 		return ServletUtils.getUserFromSession(this.session).getSoggettoSelezionatoPddConsole();
 	}
 	
+	/** Soggetto Selezionato da govwayMonitor */
+	public boolean isSoggettoMultitenantSelezionatoConsoleMonitoraggio() {
+		return this.core.isMultitenant() && StringUtils.isNotEmpty(this.getSoggettoMultitenantSelezionatoConsoleMonitoraggio());
+	}
+	public String getSoggettoMultitenantSelezionatoConsoleMonitoraggio() {
+		return ServletUtils.getUserFromSession(this.session).getSoggettoSelezionatoPddMonitor();
+	}
+	
 	private boolean errorInit = false;
 	private Exception eErrorInit;
 	

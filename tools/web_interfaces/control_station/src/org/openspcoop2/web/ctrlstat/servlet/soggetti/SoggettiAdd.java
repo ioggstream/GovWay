@@ -566,6 +566,10 @@ public final class SoggettiAdd extends Action {
 				soggettiHelper.prepareSoggettiConfigList(listaSoggettiConfig, ricerca);
 			}
 
+			if(!pddCore.isPddEsterna(this.pdd)) {
+				generalHelper = new GeneralHelper(session);
+				gd = generalHelper.initGeneralData(request); // re-inizializzo per ricalcolare il menu in alto a destra
+			}
 
 			ServletUtils.setGeneralAndPageDataIntoSession(session, gd, pd);
 

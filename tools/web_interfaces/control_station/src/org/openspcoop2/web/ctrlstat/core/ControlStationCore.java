@@ -5142,6 +5142,10 @@ public class ControlStationCore {
 		return this.soggettiRegistroList(null, s);
 	}
 	
+	public IDSoggetto convertSoggettoSelezionatoToID(String soggettoOperativoSelezionato) {
+		return new IDSoggetto(soggettoOperativoSelezionato.split("/")[0], soggettoOperativoSelezionato.split("/")[1]);
+	}
+	
 	public List<org.openspcoop2.core.registry.Soggetto> soggettiRegistroList(String superuser, ISearch ricerca) throws DriverRegistroServiziException {
 		Connection con = null;
 		String nomeMetodo = "soggettiRegistroList";

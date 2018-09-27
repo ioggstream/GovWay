@@ -74,6 +74,7 @@ import org.openspcoop2.core.registry.constants.CredenzialeTipo;
 import org.openspcoop2.core.registry.constants.PddTipologia;
 import org.openspcoop2.core.registry.constants.StatiAccordo;
 import org.openspcoop2.core.registry.constants.TipologiaServizio;
+import org.openspcoop2.core.registry.driver.DriverRegistroServiziNotFound;
 import org.openspcoop2.core.registry.driver.IDAccordoFactory;
 import org.openspcoop2.core.registry.driver.IDServizioFactory;
 import org.openspcoop2.core.registry.driver.ValidazioneStatoPackageException;
@@ -426,8 +427,6 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 				}
 			}
 			
-			boolean multitenant = apsCore.isMultitenant();
-			
 			PddTipologia pddTipologiaSoggettoAutenticati = null;
 			if(gestioneErogatori) {
 				pddTipologiaSoggettoAutenticati = PddTipologia.ESTERNO;
@@ -770,13 +769,19 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 			if(gestioneErogatori) {
 				searchSoggetti.addFilter(Liste.SOGGETTI, Filtri.FILTRO_DOMINIO, SoggettiCostanti.SOGGETTO_DOMINIO_OPERATIVO_VALUE);
 				if(apsHelper.isSoggettoMultitenantSelezionato()) {
-					searchSoggetti.addFilter(Liste.SOGGETTI, Filtri.FILTRO_SOGGETTO, apsHelper.getSoggettoMultitenantSelezionato());
+					IDSoggetto idSoggettoSelezionato = soggettiCore.convertSoggettoSelezionatoToID(apsHelper.getSoggettoMultitenantSelezionato());
+					list = new ArrayList<>();
+					try {
+						list.add(soggettiCore.getSoggettoRegistro(idSoggettoSelezionato));
+					}catch(DriverRegistroServiziNotFound notFound) {}
 				}
 			}
-			if(apsCore.isVisioneOggettiGlobale(userLogin)){
-				list = soggettiCore.soggettiRegistroList(null, searchSoggetti);
-			}else{
-				list = soggettiCore.soggettiRegistroList(userLogin, searchSoggetti);
+			if(list==null) {
+				if(apsCore.isVisioneOggettiGlobale(userLogin)){
+					list = soggettiCore.soggettiRegistroList(null, searchSoggetti);
+				}else{
+					list = soggettiCore.soggettiRegistroList(userLogin, searchSoggetti);
+				}
 			}
 			
 			if(list.size()<=0) {

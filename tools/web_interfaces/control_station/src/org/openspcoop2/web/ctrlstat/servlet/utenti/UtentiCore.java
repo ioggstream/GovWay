@@ -273,4 +273,26 @@ public class UtentiCore extends ControlStationCore {
 		}
 
 	}
+	
+	public void modificaSoggettoUtilizzatoConsole(String oldSoggetto,String newSoggetto) throws DriverUsersDBException {
+		Connection con = null;
+		String nomeMetodo = "modificaSoggettoUtilizzatoConsole";
+		DriverControlStationDB driver = null;
+
+		try {
+			// prendo una connessione
+			con = ControlStationCore.dbM.getConnection();
+			// istanzio il driver
+			driver = new DriverControlStationDB(con, null, this.tipoDB);
+
+			driver.getDriverUsersDB().modificaSoggettoUtilizzatoConsole(oldSoggetto, newSoggetto);
+
+		} catch (Exception e) {
+			ControlStationCore.log.error("[ControlStationCore::" + nomeMetodo + "] Error :" + e.getMessage(), e);
+			throw new DriverUsersDBException("[ControlStationCore::" + nomeMetodo + "] Error :" + e.getMessage(),e);
+		} finally {
+			ControlStationCore.dbM.releaseConnection(con);
+		}
+
+	}
 }

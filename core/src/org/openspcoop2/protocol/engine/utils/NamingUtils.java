@@ -116,7 +116,7 @@ public class NamingUtils {
 		if(labelSoggetto.contains("/")) {
 			String [] tmp = labelSoggetto.split("/");
 			tipo = tmp[0];
-			tipo = tmp[1];
+			nome = tmp[1];
 		}
 		else {
 			tipo = tipoSoggettoDefault;

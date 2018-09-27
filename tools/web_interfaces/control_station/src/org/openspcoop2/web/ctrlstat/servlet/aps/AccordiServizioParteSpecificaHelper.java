@@ -4187,8 +4187,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 
 		Boolean contaListe = ServletUtils.getContaListeFromSession(this.session);
 
-		boolean multitenant = this.core.isMultitenant();
-		
+
 		// accordo di servizio parte comune 
 
 		Boolean isAccordiCooperazione = user.getPermessi().isAccordiCooperazione();
@@ -4800,7 +4799,10 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 		//Sezione Soggetto Fruitore
 		if(gestioneFruitori) {
 			
-			boolean visualizzaSoggetto = false; // si e' deciso di non farlo vedere essendo solo uno
+			boolean showSoggettoFruitoreInFruizioni = this.core.isMultitenant() && 
+					!this.isSoggettoMultitenantSelezionato();
+			
+			boolean visualizzaSoggetto = showSoggettoFruitoreInFruizioni; // si e' deciso di non farlo vedere essendo solo uno a meno del multitenant
 			
 			if(visualizzaSoggetto) {
 				de = new DataElement();

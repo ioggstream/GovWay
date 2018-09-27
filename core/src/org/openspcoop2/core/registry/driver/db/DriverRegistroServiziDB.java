@@ -18415,21 +18415,12 @@ IDriverWS ,IMonitoraggioRisorsa{
 		
 		String filterStatoAccordo = SearchUtils.getFilter(ricerca, idLista, Filtri.FILTRO_STATO_ACCORDO);
 		
-		String filterSoggettoNome = SearchUtils.getFilter(ricerca, idLista,  Filtri.FILTRO_SOGGETTO);
-		List<String> filterSoggettoTipi = null;
-		if(filterSoggettoNome!=null && !"".equals(filterSoggettoNome)) {
-			filterSoggettoTipi = new ArrayList<>();
-			if(filterSoggettoNome.contains("/")) {
-				filterSoggettoTipi.add(filterSoggettoNome.split("/")[0]);
-				filterSoggettoNome = filterSoggettoNome.split("/")[1];
-			}
-			else {
-				try {
-					filterSoggettoTipi = Filtri.convertToTipiSoggettiDefault(filterProtocollo, filterProtocolli);
-				}catch(Exception e) {
-					throw new DriverRegistroServiziException(e.getMessage(),e);
-				}
-			}
+		String filterSoggettoTipoNome = SearchUtils.getFilter(ricerca, idLista,  Filtri.FILTRO_SOGGETTO);
+		String filterSoggettoTipo = null;
+		String filterSoggettoNome = null;
+		if(filterSoggettoTipoNome!=null && !"".equals(filterSoggettoTipoNome)) {
+			filterSoggettoTipo = filterSoggettoTipoNome.split("/")[0];
+			filterSoggettoNome = filterSoggettoTipoNome.split("/")[1];
 		}
 		
 		this.log.debug("search : " + search);
@@ -18439,7 +18430,7 @@ IDriverWS ,IMonitoraggioRisorsa{
 		this.log.debug("filterDominio : " + filterDominio);
 		this.log.debug("filterStatoAccordo : " + filterStatoAccordo);
 		this.log.debug("filterSoggettoNome : " + filterSoggettoNome);
-		this.log.debug("filterSoggettoTipi : " + filterSoggettoTipi);
+		this.log.debug("filterSoggettoTipo : " + filterSoggettoTipo);
 		
 		
 		if (this.atomica) {
@@ -18514,12 +18505,12 @@ IDriverWS ,IMonitoraggioRisorsa{
 				sqlQueryObject.addWhereCondition(CostantiDB.SERVIZI+".id_soggetto = "+CostantiDB.SOGGETTI+".id");
 				if(filterSoggettoNome!=null && !"".equals(filterSoggettoNome)) {
 					if(gestioneFruitori) {
+						sqlQueryObject.addWhereCondition(aliasSoggettiFruitori+".tipo_soggetto=?");
 						sqlQueryObject.addWhereCondition(aliasSoggettiFruitori+".nome_soggetto=?");
-						sqlQueryObject.addWhereINCondition(aliasSoggettiFruitori+".tipo_soggetto", true, filterSoggettoTipi.toArray(new String[1]));
 					}
 					else {
+						sqlQueryObject.addWhereCondition(CostantiDB.SOGGETTI+".tipo_soggetto=?");
 						sqlQueryObject.addWhereCondition(CostantiDB.SOGGETTI+".nome_soggetto=?");
-						sqlQueryObject.addWhereINCondition(CostantiDB.SOGGETTI+".tipo_soggetto", true, filterSoggettoTipi.toArray(new String[1]));
 					}
 				}
 				if(superuser!=null && (!"".equals(superuser)))
@@ -18581,12 +18572,12 @@ IDriverWS ,IMonitoraggioRisorsa{
 				sqlQueryObject.addWhereCondition(CostantiDB.SERVIZI+".id_soggetto = "+CostantiDB.SOGGETTI+".id");
 				if(filterSoggettoNome!=null && !"".equals(filterSoggettoNome)) {
 					if(gestioneFruitori) {
+						sqlQueryObject.addWhereCondition(aliasSoggettiFruitori+".tipo_soggetto=?");
 						sqlQueryObject.addWhereCondition(aliasSoggettiFruitori+".nome_soggetto=?");
-						sqlQueryObject.addWhereINCondition(aliasSoggettiFruitori+".tipo_soggetto", true, filterSoggettoTipi.toArray(new String[1]));
 					}
 					else {
+						sqlQueryObject.addWhereCondition(CostantiDB.SOGGETTI+".tipo_soggetto=?");
 						sqlQueryObject.addWhereCondition(CostantiDB.SOGGETTI+".nome_soggetto=?");
-						sqlQueryObject.addWhereINCondition(CostantiDB.SOGGETTI+".tipo_soggetto", true, filterSoggettoTipi.toArray(new String[1]));
 					}
 				}
 				if(superuser!=null && (!"".equals(superuser)))
@@ -18628,6 +18619,7 @@ IDriverWS ,IMonitoraggioRisorsa{
 			stmt = con.prepareStatement(queryString);
 			int index = 1;
 			if(filterSoggettoNome!=null && !"".equals(filterSoggettoNome)) {
+				stmt.setString(index++, filterSoggettoTipo);
 				stmt.setString(index++, filterSoggettoNome);
 			}
 			if(superuser!=null && (!"".equals(superuser)))
@@ -18685,12 +18677,12 @@ IDriverWS ,IMonitoraggioRisorsa{
 				sqlQueryObject.addWhereCondition(CostantiDB.SERVIZI+".id_soggetto = "+CostantiDB.SOGGETTI+".id");
 				if(filterSoggettoNome!=null && !"".equals(filterSoggettoNome)) {
 					if(gestioneFruitori) {
+						sqlQueryObject.addWhereCondition(aliasSoggettiFruitori+".tipo_soggetto=?");
 						sqlQueryObject.addWhereCondition(aliasSoggettiFruitori+".nome_soggetto=?");
-						sqlQueryObject.addWhereINCondition(aliasSoggettiFruitori+".tipo_soggetto", true, filterSoggettoTipi.toArray(new String[1]));
 					}
 					else {
+						sqlQueryObject.addWhereCondition(CostantiDB.SOGGETTI+".tipo_soggetto=?");
 						sqlQueryObject.addWhereCondition(CostantiDB.SOGGETTI+".nome_soggetto=?");
-						sqlQueryObject.addWhereINCondition(CostantiDB.SOGGETTI+".tipo_soggetto", true, filterSoggettoTipi.toArray(new String[1]));
 					}
 				}
 				if(superuser!=null && (!"".equals(superuser)))
@@ -18784,12 +18776,12 @@ IDriverWS ,IMonitoraggioRisorsa{
 				sqlQueryObject.addWhereCondition(CostantiDB.SERVIZI+".id_soggetto = "+CostantiDB.SOGGETTI+".id");
 				if(filterSoggettoNome!=null && !"".equals(filterSoggettoNome)) {
 					if(gestioneFruitori) {
+						sqlQueryObject.addWhereCondition(aliasSoggettiFruitori+".tipo_soggetto=?");
 						sqlQueryObject.addWhereCondition(aliasSoggettiFruitori+".nome_soggetto=?");
-						sqlQueryObject.addWhereINCondition(aliasSoggettiFruitori+".tipo_soggetto", true, filterSoggettoTipi.toArray(new String[1]));
 					}
 					else {
+						sqlQueryObject.addWhereCondition(CostantiDB.SOGGETTI+".tipo_soggetto=?");
 						sqlQueryObject.addWhereCondition(CostantiDB.SOGGETTI+".nome_soggetto=?");
-						sqlQueryObject.addWhereINCondition(CostantiDB.SOGGETTI+".tipo_soggetto", true, filterSoggettoTipi.toArray(new String[1]));
 					}
 				}
 				if(superuser!=null && (!"".equals(superuser)))
@@ -18848,6 +18840,7 @@ IDriverWS ,IMonitoraggioRisorsa{
 			stmt = con.prepareStatement(queryString);
 			index = 1;
 			if(filterSoggettoNome!=null && !"".equals(filterSoggettoNome)) {
+				stmt.setString(index++, filterSoggettoTipo);
 				stmt.setString(index++, filterSoggettoNome);
 			}
 			if(superuser!=null && (!"".equals(superuser)))

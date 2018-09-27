@@ -101,37 +101,6 @@ public final class Filtri
 		return tipoSoggettiProtocollo;
 	}
 	
-	public static List<String> convertToTipiSoggettiDefault(String filterProtocollo, String filterProtocolli) throws CoreException {
-		List<String> tipoSoggettiDefaultPerProtocollo = new ArrayList<>();
-		if(filterProtocollo!=null && !"".equals(filterProtocollo)) {
-			try {
-				List<String> tipi = ProtocolFactoryReflectionUtils.getOrganizationTypes(filterProtocollo);
-				tipoSoggettiDefaultPerProtocollo.add(tipi.get(0)); // default alla prima posizione
-			}catch(Exception e) {
-				throw new CoreException(e.getMessage(),e);
-			}
-		}
-		else if(filterProtocolli!=null && !"".equals(filterProtocolli)) {
-			List<String> protocolli = Filtri.convertToList(filterProtocolli);
-			if(protocolli!=null && protocolli.size()>0) {
-				for (String protocollo : protocolli) {
-					try {
-						List<String> tipi = ProtocolFactoryReflectionUtils.getOrganizationTypes(protocollo);
-						if(tipi!=null && tipi.size()>0) {
-							tipoSoggettiDefaultPerProtocollo.add(tipi.get(0)); // default alla prima posizione
-						}
-					}catch(Exception e) {
-						throw new CoreException(e.getMessage(),e);
-					}
-				}
-			}
-		}
-		if(tipoSoggettiDefaultPerProtocollo.size()<=0) {
-			tipoSoggettiDefaultPerProtocollo = null;
-		}
-		return tipoSoggettiDefaultPerProtocollo;
-	}
-	
 	public static List<String> convertToTipiServizi(String filterProtocollo, String filterProtocolli) throws CoreException {
 		List<String> tipoServiziProtocollo = null;
 		if(filterProtocollo!=null && !"".equals(filterProtocollo)) {

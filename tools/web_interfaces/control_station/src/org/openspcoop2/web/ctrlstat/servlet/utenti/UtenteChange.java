@@ -34,6 +34,7 @@ import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.openspcoop2.core.id.IDSoggetto;
 import org.openspcoop2.utils.crypt.Password;
 import org.openspcoop2.web.ctrlstat.core.ControlStationCore;
 import org.openspcoop2.web.ctrlstat.servlet.GeneralHelper;
@@ -125,7 +126,12 @@ public final class UtenteChange extends Action {
 					protocolloSelezionatoUtente  = tipoModalita;
 
 				// 	reset soggetto scelto se non ho scelto tutti e se ho cambiato modalita
-				if(!tipoModalita.equals(UtentiCostanti.VALORE_PARAMETRO_MODALITA_ALL) && !oldProtocolloSelezionatoUtente.equals(protocolloSelezionatoUtente) ) {
+				if(!tipoModalita.equals(UtentiCostanti.VALORE_PARAMETRO_MODALITA_ALL) && 
+						(oldProtocolloSelezionatoUtente==null || !oldProtocolloSelezionatoUtente.equals(protocolloSelezionatoUtente)) ) {
+					soggettoSelezionatoUtente = null;
+					updateSoggetto = true;
+				}
+				else {
 					soggettoSelezionatoUtente = null;
 					updateSoggetto = true;
 				}
@@ -294,9 +300,10 @@ public final class UtenteChange extends Action {
 				String pdMsg = "";
 				String pdMsgTitle= "Passaggio al "+UtentiCostanti.LABEL_PARAMETRO_SOGGETTO_OPERATIVO+" selezionato effettuato con successo.";
 				if(soggettoSelezionatoUtente == null) {
-					pdMsg = "<p>"+UtentiCostanti.LABEL_PARAMETRO_SOGGETTI_COMPACT+" disponibili:<p/>" + "Tutti";
+					pdMsg = "<p>"+UtentiCostanti.LABEL_PARAMETRO_SOGGETTI_COMPACT+" disponibili: " + "Tutti";
 				} else {
-					pdMsg = "<p>"+UtentiCostanti.LABEL_PARAMETRO_SOGGETTO_COMPACT+" attuale:<p/>" + soggettoSelezionatoUtente;
+					IDSoggetto idSoggettoOperativo = utentiCore.convertSoggettoSelezionatoToID(soggettoSelezionatoUtente);
+					pdMsg = "<p>"+UtentiCostanti.LABEL_PARAMETRO_SOGGETTO_COMPACT+" attuale: " + utentiHelper.getLabelNomeSoggetto(idSoggettoOperativo);
 				}
 				
 				pd.setMessage(pdMsg, pdMsgTitle, Costanti.MESSAGE_TYPE_INFO);

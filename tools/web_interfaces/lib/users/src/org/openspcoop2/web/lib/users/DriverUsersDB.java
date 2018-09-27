@@ -1952,6 +1952,95 @@ public class DriverUsersDB {
 	}
 	
 	/**
+	 * Aggiorna il soggetto utilizzato dall'utente <var>login</var>
+	 * 
+	 * @param login Identificatore di un utente
+	 * @param soggetto Soggetto
+	 *               
+	 */
+	public void modificaSoggettoUtilizzatoConsole(String oldSoggetto, String newSoggetto) throws DriverUsersDBException {
+		if (oldSoggetto == null) // || newSoggetto==null)
+			throw new DriverUsersDBException("[modificaSoggettoUtilizzatoConsole] Parametri Non Validi");
+
+		Connection connectionDB = null;
+		PreparedStatement stm = null;
+		ResultSet rs = null;
+		try {
+			// Get Connection
+			if(this.connection!=null)
+				connectionDB = this.connection;
+			else{
+				connectionDB = this.datasource.getConnection();
+				if(connectionDB==null)
+					throw new Exception("Connection non ottenuta dal datasource["+this.datasource+"]");
+			}
+			
+			List<String> users = new ArrayList<>();
+			ISQLQueryObject sqlQueryObject = SQLObjectFactory.createSQLQueryObject(this.tipoDatabase);
+			sqlQueryObject.addFromTable(CostantiDB.USERS);
+			sqlQueryObject.addWhereCondition("soggetto_pddconsole=?");
+			sqlQueryObject.setANDLogicOperator(true);
+			String sqlQuery = sqlQueryObject.createSQLQuery();
+			stm = connectionDB.prepareStatement(sqlQuery);
+			stm.setString(1, oldSoggetto);
+			rs = stm.executeQuery();
+			while(rs.next()) {
+				String login = rs.getString("login");
+				users.add(login);
+			}
+			rs.close();
+			stm.close();
+			if(!users.isEmpty()) {
+				for (String user : users) {
+					this.saveSoggettoUtilizzatoPddConsole(user, newSoggetto);
+				}
+			}
+			
+			users = new ArrayList<>();
+			sqlQueryObject = SQLObjectFactory.createSQLQueryObject(this.tipoDatabase);
+			sqlQueryObject.addFromTable(CostantiDB.USERS);
+			sqlQueryObject.addWhereCondition("soggetto_pddmonitor=?");
+			sqlQueryObject.setANDLogicOperator(true);
+			sqlQuery = sqlQueryObject.createSQLQuery();
+			stm = connectionDB.prepareStatement(sqlQuery);
+			stm.setString(1, oldSoggetto);
+			rs = stm.executeQuery();
+			while(rs.next()) {
+				String login = rs.getString("login");
+				users.add(login);
+			}
+			rs.close();
+			stm.close();
+			if(!users.isEmpty()) {
+				for (String user : users) {
+					this.saveSoggettoUtilizzatoPddMonitor(user, newSoggetto);
+				}
+			}
+
+
+		} catch (SQLException se) {
+			throw new DriverUsersDBException("[DriverUsersDB::saveSoggettoUtilizzatoPddMonitor] SqlException: " + se.getMessage(),se);
+		} catch (Exception ex) {
+			throw new DriverUsersDBException("[DriverUsersDB::saveSoggettoUtilizzatoPddMonitor] Exception: " + ex.getMessage(),ex);
+		} finally {
+			try {
+				rs.close();
+			} catch (Exception e) {
+				// ignore exception
+			}
+			try {
+				stm.close();
+			} catch (Exception e) {
+				// ignore exception
+			}
+			try{
+				if(this.connection==null)
+					connectionDB.close();
+			}catch(Exception eClose){}
+		}
+	}
+	
+	/**
 	 * Aggiorna lo stato identificato da <var>login</var> e da <var>nomeOggetto</var> 
 	 * 
 	 * @param login Identificatore di un utente
