@@ -30,6 +30,8 @@
 				<var name="packagesCompiled" value="${packagesCompiled},org.openspcoop2.core.monitor.rs.server.model" />	
 				<var name="packagesCompiled" value="${packagesCompiled},org.openspcoop2.core.monitor.rs.server.api" />	
 				<var name="packagesCompiled" value="${packagesCompiled},org.openspcoop2.core.monitor.rs.server.impl" />	
+				<var name="packagesCompiled" value="${packagesCompiled},org.openspcoop2.core.monitor.rs.server.config" />	
+				<var name="packagesCompiled" value="${packagesCompiled},org.openspcoop2.core.monitor.rs.server.filter" />	
 
 				<antcall target="compile_src_openspcoop2">
 					<param name="compile_src_openspcoop2.GITINFO" value="${jgit.jar.presente}"/>
