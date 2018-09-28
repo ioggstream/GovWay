@@ -42,6 +42,8 @@ import org.openspcoop2.core.commons.CoreException;
 import org.openspcoop2.core.commons.dao.DAOFactory;
 import org.openspcoop2.core.commons.search.IdSoggetto;
 import org.openspcoop2.core.commons.search.Soggetto;
+import org.openspcoop2.core.config.Configurazione;
+import org.openspcoop2.core.config.constants.StatoFunzionalita;
 import org.openspcoop2.core.id.IDServizio;
 import org.openspcoop2.core.id.IDSoggetto;
 import org.openspcoop2.protocol.engine.ProtocolFactoryManager;
@@ -329,6 +331,32 @@ public class Utility {
 		}
 
 		return null;
+	}
+	
+	public static Configurazione getConfigurazioneGenerale() {
+		LoginBean lb = getLoginBean();
+
+		if(lb!= null && lb.isLoggedIn()){
+			return lb.getConfigurazioneGenerale();
+		}
+
+		return null;
+	}
+	
+	public static boolean isMultitenantAbilitato() {
+		LoginBean lb = getLoginBean();
+
+		if(lb!= null && lb.isLoggedIn()){
+			Configurazione configurazioneGenerale = lb.getConfigurazioneGenerale();
+			
+			if(configurazioneGenerale.getMultitenant() != null) {
+				if(configurazioneGenerale.getMultitenant().getStato()!=null) {
+					return StatoFunzionalita.ABILITATO.equals(configurazioneGenerale.getMultitenant().getStato());
+				}
+			}
+		}
+
+		return false;
 	}
 
 	public static String fileSizeConverter(Number bytes) {

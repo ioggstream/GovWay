@@ -398,7 +398,7 @@ public class DynamicPdDBean<T,K,ServiceType extends IService> extends PdDBaseBea
 				nomeSoggetto = this.search.getSoggettoLocale();
 			}
 			else {
-				boolean multiTenant = Utility.getLoggedUtente().isPermitMultiTenant();
+				boolean multiTenant = Utility.isMultitenantAbilitato();
 				if(!multiTenant) {
 					List<Soggetto> lista = this.dynamicUtils.getListaSoggetti(tipoProtocollo, TipoPdD.OPERATIVO);
 					if(lista!=null && lista.size()==1) { // se maggiore di 1 e' saltato il multitenat
@@ -422,7 +422,7 @@ public class DynamicPdDBean<T,K,ServiceType extends IService> extends PdDBaseBea
 		List<SelectItem> listaSoggettiTmp = new ArrayList<>();
 		if(val==null || StringUtils.isEmpty((String)val)) {
 		}else{
-			boolean multiTenant = Utility.getLoggedUtente().isPermitMultiTenant();
+			boolean multiTenant = Utility.isMultitenantAbilitato();
 			listaSoggettiTmp = this._getSoggetti(false,!multiTenant, (String)val);
 		}
 		
@@ -440,7 +440,7 @@ public class DynamicPdDBean<T,K,ServiceType extends IService> extends PdDBaseBea
 	}
 
 	public List<SelectItem> getSoggetti()  throws Exception{
-		boolean multiTenant = Utility.getLoggedUtente().isPermitMultiTenant();
+		boolean multiTenant = Utility.isMultitenantAbilitato();
 		return _getSoggetti(false,!multiTenant,null);
 	}
 

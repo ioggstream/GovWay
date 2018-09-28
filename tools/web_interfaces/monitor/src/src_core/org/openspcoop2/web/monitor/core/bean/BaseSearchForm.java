@@ -758,11 +758,7 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 	}
 	
 	public boolean isMultitenant() {
-		User u = getUser();
-		if(u!=null) {
-			return u.isPermitMultiTenant();
-		}
-		return false;
+		return Utility.isMultitenantAbilitato();
 	}
 
 	public String getTipoTrafficoPerSoggetto() {

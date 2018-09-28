@@ -33,6 +33,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 import org.openspcoop2.core.commons.search.IdSoggetto;
 import org.openspcoop2.core.commons.search.Soggetto;
+import org.openspcoop2.core.config.Configurazione;
 import org.openspcoop2.core.id.IDSoggetto;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 import org.openspcoop2.generic_project.exception.ServiceException;
@@ -84,6 +85,8 @@ public class LoginBean extends AbstractLoginBean {
 	private String modalita = null;
 	private Boolean visualizzaMenuModalita = null;
 	private List<MenuModalitaItem> vociMenuModalita = null;
+	
+	private Configurazione configurazioneGenerale = null;
 
 	public LoginBean(boolean initDao){
 		super(initDao);
@@ -476,7 +479,7 @@ public class LoginBean extends AbstractLoginBean {
 				
 				listaInformazioniProtocollo.add(informazioniProtocollo);
 			}catch (Exception e) {
-				this.log.error("Impossibilie caricare le informazioni del protocollo ["+protocollo+"]: " + e.getMessage(),e);
+				this.log.error("Impossibile caricare le informazioni del protocollo ["+protocollo+"]: " + e.getMessage(),e);
 			}
 		}
 				
@@ -486,4 +489,14 @@ public class LoginBean extends AbstractLoginBean {
 	public void setListaInformazioniProtocollo(List<InformazioniProtocollo> listaInformazioniProtocollo) {
 	}
 
+	public Configurazione getConfigurazioneGenerale(){
+		if(this.configurazioneGenerale == null) {
+			try {
+				this.configurazioneGenerale = this.loginDao.readConfigurazioneGenerale();
+			} catch (ServiceException e) {
+				this.log.error("Impossibile caricare la configurazione generale: " + e.getMessage(),e);
+			}
+		}
+		return this.configurazioneGenerale;
+	}
 }
