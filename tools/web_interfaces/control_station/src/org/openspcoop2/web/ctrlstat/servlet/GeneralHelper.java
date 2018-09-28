@@ -28,7 +28,9 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
@@ -305,11 +307,15 @@ public class GeneralHelper {
 						glProt.setLabel(labelProt);
 	//					String iconProt = protocolloSelezionato == null ? LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED : (protocolloDisponibile.equals(protocolloSelezionato) ? LoginCostanti.ICONA_MENU_UTENTE_CHECKED : LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED);
 	//					glProt.setIcon(iconProt);
-						glProt.setUrl(UtentiCostanti.SERVLET_NAME_UTENTE_CHANGE,
+						if(protocolloSelezionato != null && protocolloSelezionato.equals(protocolloDisponibile)) {
+							glProt.setUrl("");
+						} else {
+							glProt.setUrl(UtentiCostanti.SERVLET_NAME_UTENTE_CHANGE,
 								new Parameter(UtentiCostanti.PARAMETRO_UTENTE_TIPO_MODALITA, protocolloDisponibile),
 								new Parameter(Costanti.DATA_ELEMENT_EDIT_MODE_NAME,Costanti.DATA_ELEMENT_EDIT_MODE_VALUE_EDIT_END),
 								new Parameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_MODALITA,Costanti.CHECK_BOX_ENABLED)
 								);
+						}
 						glProt.setLabelWidth(this.core.getFontWidth(labelProt, 14)); 
 						link.addElement(glProt);
 					}
@@ -318,11 +324,15 @@ public class GeneralHelper {
 					GeneralLink glAll = new GeneralLink();
 					glAll.setLabel(UtentiCostanti.LABEL_PARAMETRO_MODALITA_ALL);
 	//				glAll.setIcon((protocolloSelezionato == null) ? LoginCostanti.ICONA_MENU_UTENTE_CHECKED : LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED);
-					glAll.setUrl(UtentiCostanti.SERVLET_NAME_UTENTE_CHANGE,
+					if((protocolloSelezionato == null)) {
+						glAll.setUrl("");
+					} else {
+						glAll.setUrl(UtentiCostanti.SERVLET_NAME_UTENTE_CHANGE,
 							new Parameter(UtentiCostanti.PARAMETRO_UTENTE_TIPO_MODALITA, UtentiCostanti.VALORE_PARAMETRO_MODALITA_ALL),
 							new Parameter(Costanti.DATA_ELEMENT_EDIT_MODE_NAME,Costanti.DATA_ELEMENT_EDIT_MODE_VALUE_EDIT_END),
 							new Parameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_MODALITA,Costanti.CHECK_BOX_ENABLED)
 							);
+					}
 					glAll.setLabelWidth(this.core.getFontWidth(UtentiCostanti.LABEL_PARAMETRO_MODALITA_ALL, 14));
 					link.addElement(glAll);
 				}
@@ -379,11 +389,13 @@ public class GeneralHelper {
 					
 					if(soggettiOperativi.size()>1) {
 						List<String> listaLabel = new ArrayList<>();
+						Map<String, IDSoggetto> mapLabelIds = new HashMap<>();
 						for (Soggetto soggetto : soggettiOperativi) {
 							IDSoggetto idSoggetto = new IDSoggetto(soggetto.getTipo(), soggetto.getNome()); 
 							String labelSoggetto = ConsoleHelper._getLabelNomeSoggetto(idSoggetto);
 							if(!listaLabel.contains(labelSoggetto)) {
 								listaLabel.add(labelSoggetto);
+								mapLabelIds.put(labelSoggetto, idSoggetto);
 							}
 						}
 						
@@ -402,11 +414,15 @@ public class GeneralHelper {
 	//						String iconProt = labelSelezionato == null ? LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED :
 	//							(label.equals(labelSelezionato) ? LoginCostanti.ICONA_MENU_UTENTE_CHECKED : LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED);
 	//						glSoggetto.setIcon(iconProt);
-							glSoggetto.setUrl(UtentiCostanti.SERVLET_NAME_UTENTE_CHANGE,
-									new Parameter(UtentiCostanti.PARAMETRO_UTENTE_ID_SOGGETTO, NamingUtils.getSoggettoFromLabel(protocolloSelezionato, label).toString()),
-									new Parameter(Costanti.DATA_ELEMENT_EDIT_MODE_NAME,Costanti.DATA_ELEMENT_EDIT_MODE_VALUE_EDIT_END),
-									new Parameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_SOGGETTO,Costanti.CHECK_BOX_ENABLED)
-									);
+							if(soggettoOperativoSelezionato != null && mapLabelIds.get(label).toString().equals(idSoggettoOperativo.toString())) {
+								glSoggetto.setUrl("");
+							} else {
+								glSoggetto.setUrl(UtentiCostanti.SERVLET_NAME_UTENTE_CHANGE,
+										new Parameter(UtentiCostanti.PARAMETRO_UTENTE_ID_SOGGETTO, NamingUtils.getSoggettoFromLabel(protocolloSelezionato, label).toString()),
+										new Parameter(Costanti.DATA_ELEMENT_EDIT_MODE_NAME,Costanti.DATA_ELEMENT_EDIT_MODE_VALUE_EDIT_END),
+										new Parameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_SOGGETTO,Costanti.CHECK_BOX_ENABLED)
+										);
+							}
 							glSoggetto.setLabelWidth(this.core.getFontWidth(label, 14)); 
 							link.addElement(glSoggetto);
 						}
@@ -416,11 +432,15 @@ public class GeneralHelper {
 						GeneralLink glAll = new GeneralLink();
 						glAll.setLabel(UtentiCostanti.LABEL_PARAMETRO_MODALITA_ALL);
 	//					glAll.setIcon((labelSelezionato == null) ? LoginCostanti.ICONA_MENU_UTENTE_CHECKED : LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED);
-						glAll.setUrl(UtentiCostanti.SERVLET_NAME_UTENTE_CHANGE,
-								new Parameter(UtentiCostanti.PARAMETRO_UTENTE_ID_SOGGETTO, UtentiCostanti.VALORE_PARAMETRO_MODALITA_ALL),
-								new Parameter(Costanti.DATA_ELEMENT_EDIT_MODE_NAME,Costanti.DATA_ELEMENT_EDIT_MODE_VALUE_EDIT_END),
-								new Parameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_SOGGETTO,Costanti.CHECK_BOX_ENABLED)
-								);
+						if((soggettoOperativoSelezionato == null)) {
+							glAll.setUrl("");
+						} else {
+							glAll.setUrl(UtentiCostanti.SERVLET_NAME_UTENTE_CHANGE,
+									new Parameter(UtentiCostanti.PARAMETRO_UTENTE_ID_SOGGETTO, UtentiCostanti.VALORE_PARAMETRO_MODALITA_ALL),
+									new Parameter(Costanti.DATA_ELEMENT_EDIT_MODE_NAME,Costanti.DATA_ELEMENT_EDIT_MODE_VALUE_EDIT_END),
+									new Parameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_SOGGETTO,Costanti.CHECK_BOX_ENABLED)
+									);
+						}
 						glAll.setLabelWidth(this.core.getFontWidth(UtentiCostanti.LABEL_PARAMETRO_MODALITA_ALL, 14));
 						link.addElement(glAll);
 					}
