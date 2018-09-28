@@ -88,7 +88,7 @@ public final class UtenteChange extends Action {
 			String changeModalita = utentiHelper.getParameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_MODALITA);
 			String tipoModalita = utentiHelper.getParameter(UtentiCostanti.PARAMETRO_UTENTE_TIPO_MODALITA);
 			String changeSoggetto = utentiHelper.getParameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_SOGGETTO);
-			String labelSoggetto = utentiHelper.getParameter(UtentiCostanti.PARAMETRO_UTENTE_LABEL_SOGGETTO);
+			String idSoggetto = utentiHelper.getParameter(UtentiCostanti.PARAMETRO_UTENTE_ID_SOGGETTO);
 			
 			UtentiCore utentiCore = new UtentiCore();
 			
@@ -104,13 +104,13 @@ public final class UtenteChange extends Action {
 			
 			String soggettoSelezionatoUtente = null;
 			
-			if(labelSoggetto == null) {
+			if(idSoggetto == null) {
 				// prelevo il vecchio valore del protocollo
 				soggettoSelezionatoUtente = user.getSoggettoSelezionatoPddConsole();
 			} else {
-				// il caso all viene gestito impostando il valore del protocollo selezionato = null;
-				if(!labelSoggetto.equals(UtentiCostanti.VALORE_PARAMETRO_MODALITA_ALL))
-					soggettoSelezionatoUtente  = labelSoggetto;
+				// il caso all viene gestito impostando il valore del soggetto selezionato = null;
+				if(!idSoggetto.equals(UtentiCostanti.VALORE_PARAMETRO_MODALITA_ALL))
+					soggettoSelezionatoUtente  = idSoggetto;
 			}
 			
 			String protocolloSelezionatoUtente = null;
@@ -125,16 +125,16 @@ public final class UtenteChange extends Action {
 				if(!tipoModalita.equals(UtentiCostanti.VALORE_PARAMETRO_MODALITA_ALL)) 
 					protocolloSelezionatoUtente  = tipoModalita;
 
-				// 	reset soggetto scelto se non ho scelto tutti e se ho cambiato modalita
-				if(!tipoModalita.equals(UtentiCostanti.VALORE_PARAMETRO_MODALITA_ALL) && 
-						(oldProtocolloSelezionatoUtente==null || !oldProtocolloSelezionatoUtente.equals(protocolloSelezionatoUtente)) ) {
+				// 	reset soggetto scelto se cambia il protocollo
+				// 1. se ho messo tutti oppure se ho cambiato modalita'
+				if((protocolloSelezionatoUtente == null) || !(protocolloSelezionatoUtente.equals(oldProtocolloSelezionatoUtente))) {
 					soggettoSelezionatoUtente = null;
 					updateSoggetto = true;
 				}
-				else {
-					soggettoSelezionatoUtente = null;
-					updateSoggetto = true;
-				}
+//				else {
+//					soggettoSelezionatoUtente = null;
+//					updateSoggetto = true;
+//				}
 			}
 			
 			// Preparo il menu
