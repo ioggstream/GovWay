@@ -157,7 +157,7 @@ public class InitListener implements ServletContextListener {
 		}
 		
 		
-		InitListener.log.info("Inizializzazione resources govwayConsole in corso...");
+		InitListener.log.info("Inizializzazione resources (properties) govwayConsole in corso...");
 		ConsoleProperties consoleProperties = null;
 		try{
 		
@@ -181,15 +181,11 @@ public class InitListener implements ServletContextListener {
 					throw new Exception("QueueProperties not initialized");
 				}
 			}
-			
-			Connettori.initialize(InitListener.log);
-			
-			DriverControlStationDB_LIB.initialize(InitListener.log);
 						
 		}catch(Exception e){
 			throw new RuntimeException(e.getMessage(),e);
 		}
-		InitListener.log.info("Inizializzazione resources govwayConsole effettuata con successo.");
+		InitListener.log.info("Inizializzazione resources (properties) govwayConsole effettuata con successo.");
 
 		
 		InitListener.log.info("Inizializzazione ExtendedInfoManager in corso...");
@@ -202,6 +198,18 @@ public class InitListener implements ServletContextListener {
 			throw new RuntimeException(e.getMessage(),e);
 		}
 		InitListener.log.info("Inizializzazione ExtendedInfoManager effettuata con successo");
+		
+		InitListener.log.info("Inizializzazione resources govwayConsole in corso...");
+		try{
+		
+			Connettori.initialize(InitListener.log);
+			
+			DriverControlStationDB_LIB.initialize(InitListener.log);
+						
+		}catch(Exception e){
+			throw new RuntimeException(e.getMessage(),e);
+		}
+		InitListener.log.info("Inizializzazione resources govwayConsole effettuata con successo.");
 		
 		InitListener.log.info("Inizializzazione XMLDiff in corso...");
 		try{

@@ -485,7 +485,12 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 					pd.setMessage("Non risultano registrate API", Costanti.MESSAGE_TYPE_INFO);
 				}
 				else {
-					pd.setMessage("Non risultano registrati soggetti", Costanti.MESSAGE_TYPE_INFO);
+					if(gestioneFruitori) {
+						pd.setMessage("Non risultano registrati soggetti che possano erogare API", Costanti.MESSAGE_TYPE_INFO);
+					}
+					else {
+						pd.setMessage("Non risultano registrati soggetti", Costanti.MESSAGE_TYPE_INFO);
+					}
 				}
 				pd.disableEditMode();
 
@@ -547,17 +552,17 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 			searchAccordi.addFilter(Liste.ACCORDI, Filtri.FILTRO_PROTOCOLLO, this.tipoProtocollo);
 			List<AccordoServizioParteComune> listaTmp =  
 					AccordiServizioParteComuneUtilities.accordiListFromPermessiUtente(apcCore, userLogin, searchAccordi, permessi);
-			List<AccordoServizioParteComune> lista = null;
+			List<AccordoServizioParteComune> listaAPI = null;
 			if(apsHelper.isModalitaCompleta()) {
-				lista = listaTmp;
+				listaAPI = listaTmp;
 			}
 			else {
 				// filtro accordi senza risorse o senza pt/operation
-				lista = new ArrayList<AccordoServizioParteComune>();
+				listaAPI = new ArrayList<AccordoServizioParteComune>();
 				for (AccordoServizioParteComune accordoServizioParteComune : listaTmp) {
 					if(org.openspcoop2.core.registry.constants.ServiceBinding.REST.equals(accordoServizioParteComune.getServiceBinding())) {
 						if(accordoServizioParteComune.sizeResourceList()>0) {
-							lista.add(accordoServizioParteComune);	
+							listaAPI.add(accordoServizioParteComune);	
 						}
 					}
 					else {
@@ -569,7 +574,7 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 							}
 						}
 						if(ptValido) {
-							lista.add(accordoServizioParteComune);	
+							listaAPI.add(accordoServizioParteComune);	
 						}
 					}
 				}
@@ -577,11 +582,11 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 
 			int accordoPrimoAccesso = -1;
 
-			if (lista.size() > 0) {
-				accordiList = new String[lista.size()];
-				accordiListLabel = new String[lista.size()];
+			if (listaAPI.size() > 0) {
+				accordiList = new String[listaAPI.size()];
+				accordiListLabel = new String[listaAPI.size()];
 				int i = 0;
-				for (AccordoServizioParteComune as : lista) {
+				for (AccordoServizioParteComune as : listaAPI) {
 					accordiList[i] = as.getId().toString();
 					soggettoReferente = null;
 					idReferente = -1;
@@ -608,7 +613,7 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 			}
 
 			// se ancora non ho scelto l'accordo da mostrare quando entro
-			if(accordoPrimoAccesso == -1 && lista.size() > 0){
+			if(accordoPrimoAccesso == -1 && listaAPI.size() > 0){
 				// Se entro in questo caso significa che tutti gli accordi di servizio parte comune esistente s
 				// possiedono come soggetto referente un tipo di protocollo differente da quello di default.
 				// in questo caso prendo il primo che trovo
@@ -760,33 +765,55 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 			boolean erogazioneIsSupportatoAutenticazioneSoggetti = soggettiCore.isSupportatoAutenticazioneSoggetti(this.tipoProtocollo);
 
 			// calcolo soggetti compatibili con accordi
-			List<Soggetto> list = null;
+			List<Soggetto> listSoggetti = null;
 			Search searchSoggetti = new Search(true);
 			searchSoggetti.addFilter(Liste.SOGGETTI, Filtri.FILTRO_PROTOCOLLO, this.tipoProtocollo);
+			boolean gestioneFruitori_soggettiErogatori_escludiSoggettoFruitore = false;
 			if(gestioneFruitori) {
-				searchSoggetti.addFilter(Liste.SOGGETTI, Filtri.FILTRO_DOMINIO, SoggettiCostanti.SOGGETTO_DOMINIO_ESTERNO_VALUE);
+				boolean filtraSoloEsterni = true;
+				if(apsCore.isMultitenant() && apsCore.getMultitenantSoggettiFruizioni()!=null) {
+					switch (apsCore.getMultitenantSoggettiFruizioni()) {
+					case SOLO_SOGGETTI_ESTERNI:
+						filtraSoloEsterni = true;
+						break;
+					case ESCLUDI_SOGGETTO_FRUITORE:
+						filtraSoloEsterni = false;
+						gestioneFruitori_soggettiErogatori_escludiSoggettoFruitore = true;
+						break;
+					case TUTTI:
+						filtraSoloEsterni = false;
+						break;
+					}
+				}
+				if(filtraSoloEsterni) {
+					searchSoggetti.addFilter(Liste.SOGGETTI, Filtri.FILTRO_DOMINIO, SoggettiCostanti.SOGGETTO_DOMINIO_ESTERNO_VALUE);
+				}
 			}
 			if(gestioneErogatori) {
 				searchSoggetti.addFilter(Liste.SOGGETTI, Filtri.FILTRO_DOMINIO, SoggettiCostanti.SOGGETTO_DOMINIO_OPERATIVO_VALUE);
 				if(apsHelper.isSoggettoMultitenantSelezionato()) {
 					IDSoggetto idSoggettoSelezionato = soggettiCore.convertSoggettoSelezionatoToID(apsHelper.getSoggettoMultitenantSelezionato());
-					list = new ArrayList<>();
+					listSoggetti = new ArrayList<>();
 					try {
-						list.add(soggettiCore.getSoggettoRegistro(idSoggettoSelezionato));
+						listSoggetti.add(soggettiCore.getSoggettoRegistro(idSoggettoSelezionato));
 					}catch(DriverRegistroServiziNotFound notFound) {}
 				}
 			}
-			if(list==null) {
+			if(listSoggetti==null) {
 				if(apsCore.isVisioneOggettiGlobale(userLogin)){
-					list = soggettiCore.soggettiRegistroList(null, searchSoggetti);
+					listSoggetti = soggettiCore.soggettiRegistroList(null, searchSoggetti);
 				}else{
-					list = soggettiCore.soggettiRegistroList(userLogin, searchSoggetti);
+					listSoggetti = soggettiCore.soggettiRegistroList(userLogin, searchSoggetti);
 				}
 			}
 			
-			if(list.size()<=0) {
-				
-				pd.setMessage("Non risultano registrati soggetti", Costanti.MESSAGE_TYPE_INFO);
+			if(listSoggetti.size()<=0) {
+				if(gestioneFruitori) {
+					pd.setMessage("Non risultano registrati soggetti che possano erogare API", Costanti.MESSAGE_TYPE_INFO);
+				}
+				else {
+					pd.setMessage("Non risultano registrati soggetti", Costanti.MESSAGE_TYPE_INFO);
+				}
 				
 				pd.disableEditMode();
 
@@ -802,23 +829,24 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 						ForwardParams.ADD());
 			}
 
-			if (list.size() > 0) {
+			boolean existsAPCCompatibili = false;
+			if (listSoggetti.size() > 0) {
 				List<String> soggettiListTmp = new ArrayList<String>();
 				List<String> soggettiListLabelTmp = new ArrayList<String>();
-				for (Soggetto soggetto : list) {
+				for (Soggetto soggetto : listSoggetti) {
 					soggettiListTmp.add(soggetto.getId().toString());
 					soggettiListLabelTmp.add(apsHelper.getLabelNomeSoggetto(this.tipoProtocollo, soggetto.getTipo() , soggetto.getNome()));
 				}
 
-				boolean existsAPCCompatibili = lista!=null && lista.size()>0;
+				existsAPCCompatibili = listaAPI!=null && listaAPI.size()>0;
 
 				if(soggettiListTmp.size()>0 && existsAPCCompatibili){
 					soggettiList = soggettiListTmp.toArray(new String[1]);
 					soggettiListLabel = soggettiListLabelTmp.toArray(new String[1]);
 				}
 				else{
-					if(lista.size()<=0){
-						pd.setMessage("Non esistono accordi di servizio parte comune", Costanti.MESSAGE_TYPE_INFO);
+					if(listaAPI.size()<=0){
+						pd.setMessage("Non risultano registrate API", Costanti.MESSAGE_TYPE_INFO);
 						pd.disableEditMode();
 
 						Vector<DataElement> dati = new Vector<DataElement>();
@@ -841,96 +869,28 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 					searchSoggetti = new Search(true);
 					searchSoggetti.addFilter(Liste.SOGGETTI, Filtri.FILTRO_PROTOCOLLO, this.tipoProtocollo);
 					if(apsCore.isVisioneOggettiGlobale(userLogin)){
-						list = soggettiCore.soggettiRegistroList(null, searchSoggetti);
+						listSoggetti = soggettiCore.soggettiRegistroList(null, searchSoggetti);
 					}else{
-						list = soggettiCore.soggettiRegistroList(userLogin, searchSoggetti);
+						listSoggetti = soggettiCore.soggettiRegistroList(userLogin, searchSoggetti);
 					}
 					
-					for (Soggetto soggetto : list) {
+					for (Soggetto soggetto : listSoggetti) {
 						soggettiListTmp.add(soggetto.getId().toString());
 						soggettiListLabelTmp.add(apsHelper.getLabelNomeSoggetto(this.tipoProtocollo, soggetto.getTipo() , soggetto.getNome()));
 					}
 					soggettiList = soggettiListTmp.toArray(new String[1]);
 					soggettiListLabel = soggettiListLabelTmp.toArray(new String[1]);
 
-					if(lista.size()>0){
-						this.accordo = lista.get(0).getId()+"";
-					}
-				}
-			}
-
-			//String profiloSoggettoErogatore = null;
-			if ((this.provider != null) && !this.provider.equals("")) {
-				long idErogatore = Long.parseLong(this.provider);
-				Soggetto soggetto = soggettiCore.getSoggettoRegistro(idErogatore);
-				this.nomeSoggettoErogatore = soggetto.getNome();
-				this.tipoSoggettoErogatore = soggetto.getTipo();
-				//profiloSoggettoErogatore = soggetto.getVersioneProtocollo();
-			} else {
-				if(soggettoReferente != null ){
-					Soggetto soggetto = soggettiCore.getSoggettoRegistro(soggettoReferente);
-					for (Soggetto soggettoCheck : list) {
-						if(soggettoCheck.getTipo().equals(soggetto.getTipo()) && soggettoCheck.getNome().equals(soggetto.getNome())) {
-							this.provider = soggetto.getId() + "";
-							this.nomeSoggettoErogatore = soggetto.getNome();
-							this.tipoSoggettoErogatore = soggetto.getTipo();
-							break;
-						}
-					}
-				}
-				// Se ancora non l'ho trovato prendo il primo della lista nel caso di gestione erogazione
-				if ((this.provider == null) || this.provider.equals("")) {
-					if( (gestioneErogatori || gestioneFruitori) && list!=null && list.size()>0) {
-						Soggetto soggetto = list.get(0);
-						this.provider = soggetto.getId() + "";
-						this.nomeSoggettoErogatore = soggetto.getNome();
-						this.tipoSoggettoErogatore = soggetto.getTipo();
+					if(listaAPI.size()>0){
+						this.accordo = listaAPI.get(0).getId()+"";
 					}
 				}
 			}
 			
 			
-			if(this.tiposervizio == null){
-				this.tiposervizio = apsCore.getTipoServizioDefaultProtocollo(this.tipoProtocollo,this.serviceBinding);
-			}
-
-
-			// Lista dei servizi applicativi per la creazione automatica
-			String [] saSoggetti = null;	
-			if ((this.provider != null) && !this.provider.equals("")) {
-				int idErogatore = Integer.parseInt(this.provider);
-
-				List<ServizioApplicativo> listaSA = saCore.getServiziApplicativiByIdErogatore(Long.valueOf(idErogatore));
-
-				// rif bug #45
-				// I servizi applicativi da visualizzare sono quelli che hanno
-				// -Integration Manager (getMessage abilitato)
-				// -connettore != disabilitato
-				ArrayList<ServizioApplicativo> validSA = new ArrayList<ServizioApplicativo>();
-				for (ServizioApplicativo sa : listaSA) {
-					InvocazioneServizio invServizio = sa.getInvocazioneServizio();
-					org.openspcoop2.core.config.Connettore connettore = invServizio != null ? invServizio.getConnettore() : null;
-					StatoFunzionalita getMessage = invServizio != null ? invServizio.getGetMessage() : null;
-
-					if ((connettore != null && !TipiConnettore.DISABILITATO.getNome().equals(connettore.getTipo())) || CostantiConfigurazione.ABILITATO.equals(getMessage)) {
-						// il connettore non e' disabilitato oppure il get
-						// message e' abilitato
-						// Lo aggiungo solo se gia' non esiste tra quelli
-						// aggiunti
-						validSA.add(sa);
-					}
-				}
-
-				// Prendo la lista di servizioApplicativo associati al soggetto
-				// e la metto in un array
-				saSoggetti = new String[validSA.size()+1];
-				saSoggetti[0] = "-"; // elemento nullo di default
-				for (int i = 0; i < validSA.size(); i++) {
-					ServizioApplicativo sa = validSA.get(i);
-					saSoggetti[i+1] = sa.getNome();
-				}
-			}
 			
+			
+
 			// calcolo soggetti fruitori
 			List<Soggetto> listFruitori = null;
 			if(gestioneFruitori) {
@@ -998,6 +958,128 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 					this.tipoSoggettoFruitore = soggetto.getTipo();
 				}
 			}
+			
+			if(gestioneFruitori_soggettiErogatori_escludiSoggettoFruitore) {
+				boolean found = false;
+				for (int i = 0; i < listSoggetti.size(); i++) {
+					Soggetto soggettoCheck = listSoggetti.get(i);
+					if(soggettoCheck.getTipo().equals(this.tipoSoggettoFruitore) && soggettoCheck.getNome().equals(this.nomeSoggettoFruitore)) {
+						listSoggetti.remove(i);
+						found = true;
+						break;
+					}
+				}
+				if(found) {
+					if(listSoggetti.size()<=0) {
+						if(gestioneFruitori) {
+							pd.setMessage("Non risultano registrati soggetti che possano erogare API", Costanti.MESSAGE_TYPE_INFO);
+						}
+						else {
+							pd.setMessage("Non risultano registrati soggetti", Costanti.MESSAGE_TYPE_INFO);
+						}
+						
+						pd.disableEditMode();
+	
+						Vector<DataElement> dati = new Vector<DataElement>();
+	
+						dati.addElement(ServletUtils.getDataElementForEditModeFinished());
+	
+						pd.setDati(dati);
+	
+						ServletUtils.setGeneralAndPageDataIntoSession(session, gd, pd);
+	
+						return ServletUtils.getStrutsForwardEditModeCheckError(mapping, AccordiServizioParteSpecificaCostanti.OBJECT_NAME_APS, 
+								ForwardParams.ADD());
+					}
+					
+					// aggiorno soggetti
+					List<String> soggettiListTmp = new ArrayList<String>();
+					List<String> soggettiListLabelTmp = new ArrayList<String>();
+					for (Soggetto soggetto : listSoggetti) {
+						soggettiListTmp.add(soggetto.getId().toString());
+						soggettiListLabelTmp.add(apsHelper.getLabelNomeSoggetto(this.tipoProtocollo, soggetto.getTipo() , soggetto.getNome()));
+					}
+					soggettiList = soggettiListTmp.toArray(new String[1]);
+					soggettiListLabel = soggettiListLabelTmp.toArray(new String[1]);
+	
+				}
+			}
+			
+			
+			
+
+			//String profiloSoggettoErogatore = null;
+			if ((this.provider != null) && !this.provider.equals("")) {
+				long idErogatore = Long.parseLong(this.provider);
+				Soggetto soggetto = soggettiCore.getSoggettoRegistro(idErogatore);
+				this.nomeSoggettoErogatore = soggetto.getNome();
+				this.tipoSoggettoErogatore = soggetto.getTipo();
+				//profiloSoggettoErogatore = soggetto.getVersioneProtocollo();
+			} else {
+				if(soggettoReferente != null ){
+					Soggetto soggetto = soggettiCore.getSoggettoRegistro(soggettoReferente);
+					for (Soggetto soggettoCheck : listSoggetti) {
+						if(soggettoCheck.getTipo().equals(soggetto.getTipo()) && soggettoCheck.getNome().equals(soggetto.getNome())) {
+							this.provider = soggetto.getId() + "";
+							this.nomeSoggettoErogatore = soggetto.getNome();
+							this.tipoSoggettoErogatore = soggetto.getTipo();
+							break;
+						}
+					}
+				}
+				// Se ancora non l'ho trovato prendo il primo della lista nel caso di gestione erogazione
+				if ((this.provider == null) || this.provider.equals("")) {
+					if( (gestioneErogatori || gestioneFruitori) && listSoggetti!=null && listSoggetti.size()>0) {
+						Soggetto soggetto = listSoggetti.get(0);
+						this.provider = soggetto.getId() + "";
+						this.nomeSoggettoErogatore = soggetto.getNome();
+						this.tipoSoggettoErogatore = soggetto.getTipo();
+					}
+				}
+			}
+			
+			
+			if(this.tiposervizio == null){
+				this.tiposervizio = apsCore.getTipoServizioDefaultProtocollo(this.tipoProtocollo,this.serviceBinding);
+			}
+
+
+			// Lista dei servizi applicativi per la creazione automatica
+			String [] saSoggetti = null;	
+			if ((this.provider != null) && !this.provider.equals("")) {
+				int idErogatore = Integer.parseInt(this.provider);
+
+				List<ServizioApplicativo> listaSA = saCore.getServiziApplicativiByIdErogatore(Long.valueOf(idErogatore));
+
+				// rif bug #45
+				// I servizi applicativi da visualizzare sono quelli che hanno
+				// -Integration Manager (getMessage abilitato)
+				// -connettore != disabilitato
+				ArrayList<ServizioApplicativo> validSA = new ArrayList<ServizioApplicativo>();
+				for (ServizioApplicativo sa : listaSA) {
+					InvocazioneServizio invServizio = sa.getInvocazioneServizio();
+					org.openspcoop2.core.config.Connettore connettore = invServizio != null ? invServizio.getConnettore() : null;
+					StatoFunzionalita getMessage = invServizio != null ? invServizio.getGetMessage() : null;
+
+					if ((connettore != null && !TipiConnettore.DISABILITATO.getNome().equals(connettore.getTipo())) || CostantiConfigurazione.ABILITATO.equals(getMessage)) {
+						// il connettore non e' disabilitato oppure il get
+						// message e' abilitato
+						// Lo aggiungo solo se gia' non esiste tra quelli
+						// aggiunti
+						validSA.add(sa);
+					}
+				}
+
+				// Prendo la lista di servizioApplicativo associati al soggetto
+				// e la metto in un array
+				saSoggetti = new String[validSA.size()+1];
+				saSoggetti[0] = "-"; // elemento nullo di default
+				for (int i = 0; i < validSA.size(); i++) {
+					ServizioApplicativo sa = validSA.get(i);
+					saSoggetti[i+1] = sa.getNome();
+				}
+			}
+			
 			
 			// ServiziApplicativi
 			List<String> saFruitoriList = new ArrayList<String>();
@@ -1607,33 +1689,78 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 			long idProv = Long.parseLong(this.provider);
 			long idAcc = Long.parseLong(this.accordo);
 
-			AccordoServizioParteSpecifica asps = new AccordoServizioParteSpecifica();
-			asps.setNome(this.nomeservizio);
-			asps.setTipo(this.tiposervizio);
-			asps.setDescrizione(this.descrizione);
-			asps.setIdAccordo(idAcc);
+			// Fix per versione
+			AccordoServizioParteSpecifica asps = null;
+			boolean alreadyExists = false;
+			if(gestioneFruitori || gestioneErogatori) {
+				if(apsCore.existsAccordoServizioParteSpecifica(idAps)) {
+					asps = apsCore.getServizio(idAps);
+					alreadyExists = true;
+				}
+				else {
+					asps = new AccordoServizioParteSpecifica();
+				}
+			}
+			else {
+				asps = new AccordoServizioParteSpecifica();
+			}
+			
 			// nome accordo
 			as = apcCore.getAccordoServizio(idAcc);
-			asps.setAccordoServizioParteComune(idAccordoFactory.getUriFromAccordo(as));
-			asps.setIdSoggetto(idProv);
-			asps.setNomeSoggettoErogatore(this.nomeSoggettoErogatore);
-			asps.setTipoSoggettoErogatore(this.tipoSoggettoErogatore);
-			asps.setTipologiaServizio(((this.servcorr != null) && this.servcorr.equals(Costanti.CHECK_BOX_ENABLED)) ? TipologiaServizio.CORRELATO : TipologiaServizio.NORMALE);
-			asps.setSuperUser(ServletUtils.getUserLoginFromSession(session));
-			if ("-".equals(this.profilo) == false)
-				asps.setVersioneProtocollo(this.profilo);
-			else
-				asps.setVersioneProtocollo(null);
-
-			asps.setPrivato(this.privato);
-
-			String wsdlimplerS = this.wsdlimpler.getValue() != null ? new String(this.wsdlimpler.getValue()) : null; 
-			asps.setByteWsdlImplementativoErogatore(((wsdlimplerS != null) && !wsdlimplerS.trim().replaceAll("\n", "").equals("")) ? wsdlimplerS.trim().getBytes() : null);
-			String wsdlimplfruS = this.wsdlimplfru.getValue() != null ? new String(this.wsdlimplfru.getValue()) : null; 
-			asps.setByteWsdlImplementativoFruitore(((wsdlimplfruS != null) && !wsdlimplfruS.trim().replaceAll("\n", "").equals("")) ? wsdlimplfruS.trim().getBytes() : null);
 			
-			if (this.portType != null && !"".equals(this.portType) && !"-".equals(this.portType))
-				asps.setPortType(this.portType);
+			if(!alreadyExists) {
+				asps.setNome(this.nomeservizio);
+				asps.setTipo(this.tiposervizio);
+				asps.setDescrizione(this.descrizione);
+				
+				// Che i seguenti valori siano identici vengono controllati nel check
+				asps.setIdAccordo(idAcc);
+				asps.setAccordoServizioParteComune(idAccordoFactory.getUriFromAccordo(as));
+				
+				asps.setIdSoggetto(idProv);
+				asps.setNomeSoggettoErogatore(this.nomeSoggettoErogatore);
+				asps.setTipoSoggettoErogatore(this.tipoSoggettoErogatore);
+				
+				// Tipologia di Servizio
+				asps.setTipologiaServizio(((this.servcorr != null) && this.servcorr.equals(Costanti.CHECK_BOX_ENABLED)) ? TipologiaServizio.CORRELATO : TipologiaServizio.NORMALE);
+				
+				// Utente
+				asps.setSuperUser(ServletUtils.getUserLoginFromSession(session));
+				
+				// Versione Protocollo
+				if ("-".equals(this.profilo) == false)
+					asps.setVersioneProtocollo(this.profilo);
+				else
+					asps.setVersioneProtocollo(null);
+
+				// Privato
+				asps.setPrivato(this.privato);
+
+				// Wsdl
+				String wsdlimplerS = this.wsdlimpler.getValue() != null ? new String(this.wsdlimpler.getValue()) : null; 
+				asps.setByteWsdlImplementativoErogatore(((wsdlimplerS != null) && !wsdlimplerS.trim().replaceAll("\n", "").equals("")) ? wsdlimplerS.trim().getBytes() : null);
+				String wsdlimplfruS = this.wsdlimplfru.getValue() != null ? new String(this.wsdlimplfru.getValue()) : null; 
+				asps.setByteWsdlImplementativoFruitore(((wsdlimplfruS != null) && !wsdlimplfruS.trim().replaceAll("\n", "").equals("")) ? wsdlimplfruS.trim().getBytes() : null);
+				
+				// PortType
+				if (this.portType != null && !"".equals(this.portType) && !"-".equals(this.portType))
+					asps.setPortType(this.portType);
+				
+				// Versione
+				if(apsCore.isSupportatoVersionamentoAccordiServizioParteSpecifica(this.tipoProtocollo)){
+					if(this.versione!=null && !"".equals(this.versione))
+						asps.setVersione(Integer.parseInt(this.versione));
+					else
+						asps.setVersione(1);
+				}else{
+					asps.setVersione(1);
+				}
+
+				// stato
+				asps.setStatoPackage(this.statoPackage);
+			}
+
+			
 
 			// Connettore
 			Connettore connettore = null;
@@ -1668,19 +1795,6 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 			if(apsHelper.isModalitaCompleta() || (!generaPortaApplicativa && !gestioneFruitori)) {
 				asps.getConfigurazioneServizio().setConnettore(connettore);
 			}
-
-			// Versione
-			if(apsCore.isSupportatoVersionamentoAccordiServizioParteSpecifica(this.tipoProtocollo)){
-				if(this.versione!=null && !"".equals(this.versione))
-					asps.setVersione(Integer.parseInt(this.versione));
-				else
-					asps.setVersione(1);
-			}else{
-				asps.setVersione(1);
-			}
-
-			// stato
-			asps.setStatoPackage(this.statoPackage);
 
 			if(gestioneFruitori) {
 				Fruitore fruitore = new Fruitore();
@@ -1798,7 +1912,9 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 			}
 
 			List<Object> listaOggettiDaCreare = new ArrayList<Object>();
-			listaOggettiDaCreare.add(asps);
+			if(!alreadyExists) {
+				listaOggettiDaCreare.add(asps);
+			}
 
 
 			// Creo Porta Applicativa (opzione??)
@@ -1913,8 +2029,13 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 			}
 
 			//imposto properties custom
-			asps.setProtocolPropertyList(ProtocolPropertiesUtils.toProtocolProperties(this.protocolProperties, this.consoleOperationType,null));
+			if(!alreadyExists) {
+				asps.setProtocolPropertyList(ProtocolPropertiesUtils.toProtocolProperties(this.protocolProperties, this.consoleOperationType,null));
+			}
 
+			if(alreadyExists) {
+				apsCore.performUpdateOperation(asps.getSuperUser(), apsHelper.smista(), asps); // aggiorno aps
+			}
 			apsCore.performCreateOperation(asps.getSuperUser(), apsHelper.smista(), listaOggettiDaCreare.toArray());
 
 			// cancello i file temporanei
@@ -1924,9 +2045,9 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 			Search ricerca = (Search) ServletUtils.getSearchObjectFromSession(session, Search.class);
 			List<AccordoServizioParteSpecifica> listaAccordi = null;
 			if(apsCore.isVisioneOggettiGlobale(userLogin)){
-				listaAccordi = apsCore.soggettiServizioList(null, ricerca,permessi, gestioneFruitori);
+				listaAccordi = apsCore.soggettiServizioList(null, ricerca,permessi, gestioneFruitori, gestioneErogatori);
 			}else{
-				listaAccordi = apsCore.soggettiServizioList(userLogin, ricerca, permessi, gestioneFruitori);
+				listaAccordi = apsCore.soggettiServizioList(userLogin, ricerca, permessi, gestioneFruitori, gestioneErogatori);
 			}
 			
 			if(vistaErogazioni != null && vistaErogazioni.booleanValue()) {

@@ -935,7 +935,7 @@ public final class ServiziApplicativiEndPointInvocazioneServizio extends Action 
 						int idServizio = Integer.parseInt(idAsps);
 						AccordiServizioParteSpecificaCore apsCore = new AccordiServizioParteSpecificaCore(saCore);
 						AccordoServizioParteSpecifica asps = apsCore.getAccordoServizioParteSpecifica(idServizio);
-						erogazioniHelper.prepareErogazioneChange(TipoOperazione.CHANGE, asps);
+						erogazioniHelper.prepareErogazioneChange(TipoOperazione.CHANGE, asps, null);
 						ServletUtils.setGeneralAndPageDataIntoSession(session, gd, pd);
 						return ServletUtils.getStrutsForwardEditModeFinished(mapping, ErogazioniCostanti.OBJECT_NAME_ASPS_EROGAZIONI, ForwardParams.CHANGE());
 					}

@@ -18376,7 +18376,8 @@ IDriverWS ,IMonitoraggioRisorsa{
 	 * @return lista di accordi di servizio parte specifica
 	 * @throws DriverRegistroServiziException
 	 */
-	public List<AccordoServizioParteSpecifica> soggettiServizioList(String superuser, ISearch ricerca,boolean [] permessiUtente, boolean gestioneFruitori) throws DriverRegistroServiziException {
+	public List<AccordoServizioParteSpecifica> soggettiServizioList(String superuser, ISearch ricerca,boolean [] permessiUtente, 
+			boolean gestioneFruitori, boolean gestioneErogatori) throws DriverRegistroServiziException {
 		String nomeMetodo = "soggettiServizioList";
 		int idLista = Liste.SERVIZI;
 		int offset;
@@ -18496,10 +18497,18 @@ IDriverWS ,IMonitoraggioRisorsa{
 					sqlQueryObject.addWhereCondition(CostantiDB.SERVIZI+".id_accordo="+CostantiDB.ACCORDI+".id");
 				}
 				if(gestioneFruitori) {
+					sqlQueryObject.addFromTable(CostantiDB.MAPPING_FRUIZIONE_PD);
 					sqlQueryObject.addFromTable(CostantiDB.SERVIZI_FRUITORI);
 					sqlQueryObject.addFromTable(CostantiDB.SOGGETTI, aliasSoggettiFruitori);
+					sqlQueryObject.addWhereCondition(CostantiDB.MAPPING_FRUIZIONE_PD+".id_fruizione="+CostantiDB.SERVIZI_FRUITORI+".id");
+					sqlQueryObject.addWhereCondition(CostantiDB.MAPPING_FRUIZIONE_PD+".is_default=1");
 					sqlQueryObject.addWhereCondition(CostantiDB.SERVIZI_FRUITORI+".id_servizio="+CostantiDB.SERVIZI+".id");
 					sqlQueryObject.addWhereCondition(CostantiDB.SERVIZI_FRUITORI+".id_soggetto="+aliasSoggettiFruitori+".id");
+				}
+				if(gestioneErogatori) {
+					sqlQueryObject.addFromTable(CostantiDB.MAPPING_EROGAZIONE_PA);
+					sqlQueryObject.addWhereCondition(CostantiDB.MAPPING_EROGAZIONE_PA+".id_erogazione="+CostantiDB.SERVIZI+".id");
+					sqlQueryObject.addWhereCondition(CostantiDB.MAPPING_EROGAZIONE_PA+".is_default=1");
 				}
 				sqlQueryObject.addSelectCountField("*", "cont");
 				sqlQueryObject.addWhereCondition(CostantiDB.SERVIZI+".id_soggetto = "+CostantiDB.SOGGETTI+".id");
@@ -18563,10 +18572,18 @@ IDriverWS ,IMonitoraggioRisorsa{
 					sqlQueryObject.addWhereCondition(CostantiDB.SERVIZI+".id_accordo="+CostantiDB.ACCORDI+".id");
 				}
 				if(gestioneFruitori) {
+					sqlQueryObject.addFromTable(CostantiDB.MAPPING_FRUIZIONE_PD);
 					sqlQueryObject.addFromTable(CostantiDB.SERVIZI_FRUITORI);
 					sqlQueryObject.addFromTable(CostantiDB.SOGGETTI, aliasSoggettiFruitori);
+					sqlQueryObject.addWhereCondition(CostantiDB.MAPPING_FRUIZIONE_PD+".id_fruizione="+CostantiDB.SERVIZI_FRUITORI+".id");
+					sqlQueryObject.addWhereCondition(CostantiDB.MAPPING_FRUIZIONE_PD+".is_default=1");
 					sqlQueryObject.addWhereCondition(CostantiDB.SERVIZI_FRUITORI+".id_servizio="+CostantiDB.SERVIZI+".id");
 					sqlQueryObject.addWhereCondition(CostantiDB.SERVIZI_FRUITORI+".id_soggetto="+aliasSoggettiFruitori+".id");
+				}
+				if(gestioneErogatori) {
+					sqlQueryObject.addFromTable(CostantiDB.MAPPING_EROGAZIONE_PA);
+					sqlQueryObject.addWhereCondition(CostantiDB.MAPPING_EROGAZIONE_PA+".id_erogazione="+CostantiDB.SERVIZI+".id");
+					sqlQueryObject.addWhereCondition(CostantiDB.MAPPING_EROGAZIONE_PA+".is_default=1");
 				}
 				sqlQueryObject.addSelectCountField("*", "cont");
 				sqlQueryObject.addWhereCondition(CostantiDB.SERVIZI+".id_soggetto = "+CostantiDB.SOGGETTI+".id");
@@ -18651,10 +18668,18 @@ IDriverWS ,IMonitoraggioRisorsa{
 					sqlQueryObject.addWhereCondition(CostantiDB.SERVIZI+".id_accordo="+CostantiDB.ACCORDI+".id");
 				}
 				if(gestioneFruitori) {
+					sqlQueryObject.addFromTable(CostantiDB.MAPPING_FRUIZIONE_PD);
 					sqlQueryObject.addFromTable(CostantiDB.SERVIZI_FRUITORI);
 					sqlQueryObject.addFromTable(CostantiDB.SOGGETTI, aliasSoggettiFruitori);
+					sqlQueryObject.addWhereCondition(CostantiDB.MAPPING_FRUIZIONE_PD+".id_fruizione="+CostantiDB.SERVIZI_FRUITORI+".id");
+					sqlQueryObject.addWhereCondition(CostantiDB.MAPPING_FRUIZIONE_PD+".is_default=1");
 					sqlQueryObject.addWhereCondition(CostantiDB.SERVIZI_FRUITORI+".id_servizio="+CostantiDB.SERVIZI+".id");
 					sqlQueryObject.addWhereCondition(CostantiDB.SERVIZI_FRUITORI+".id_soggetto="+aliasSoggettiFruitori+".id");
+				}
+				if(gestioneErogatori) {
+					sqlQueryObject.addFromTable(CostantiDB.MAPPING_EROGAZIONE_PA);
+					sqlQueryObject.addWhereCondition(CostantiDB.MAPPING_EROGAZIONE_PA+".id_erogazione="+CostantiDB.SERVIZI+".id");
+					sqlQueryObject.addWhereCondition(CostantiDB.MAPPING_EROGAZIONE_PA+".is_default=1");
 				}
 				sqlQueryObject.addSelectField(CostantiDB.SERVIZI+".id");
 				sqlQueryObject.addSelectField("nome_servizio");
@@ -18750,10 +18775,18 @@ IDriverWS ,IMonitoraggioRisorsa{
 					sqlQueryObject.addWhereCondition(CostantiDB.SERVIZI+".id_accordo="+CostantiDB.ACCORDI+".id");
 				}
 				if(gestioneFruitori) {
+					sqlQueryObject.addFromTable(CostantiDB.MAPPING_FRUIZIONE_PD);
 					sqlQueryObject.addFromTable(CostantiDB.SERVIZI_FRUITORI);
 					sqlQueryObject.addFromTable(CostantiDB.SOGGETTI, aliasSoggettiFruitori);
+					sqlQueryObject.addWhereCondition(CostantiDB.MAPPING_FRUIZIONE_PD+".id_fruizione="+CostantiDB.SERVIZI_FRUITORI+".id");
+					sqlQueryObject.addWhereCondition(CostantiDB.MAPPING_FRUIZIONE_PD+".is_default=1");
 					sqlQueryObject.addWhereCondition(CostantiDB.SERVIZI_FRUITORI+".id_servizio="+CostantiDB.SERVIZI+".id");
 					sqlQueryObject.addWhereCondition(CostantiDB.SERVIZI_FRUITORI+".id_soggetto="+aliasSoggettiFruitori+".id");
+				}
+				if(gestioneErogatori) {
+					sqlQueryObject.addFromTable(CostantiDB.MAPPING_EROGAZIONE_PA);
+					sqlQueryObject.addWhereCondition(CostantiDB.MAPPING_EROGAZIONE_PA+".id_erogazione="+CostantiDB.SERVIZI+".id");
+					sqlQueryObject.addWhereCondition(CostantiDB.MAPPING_EROGAZIONE_PA+".is_default=1");
 				}
 				sqlQueryObject.addSelectField(CostantiDB.SERVIZI+".id");
 				sqlQueryObject.addSelectField("nome_servizio");

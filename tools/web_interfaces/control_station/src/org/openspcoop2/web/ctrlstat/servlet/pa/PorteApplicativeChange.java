@@ -1285,7 +1285,7 @@ public final class PorteApplicativeChange extends Action {
 				if(datiInvocazione) {
 					if(vistaErogazioni != null && vistaErogazioni.booleanValue()) {
 						ErogazioniHelper erogazioniHelper = new ErogazioniHelper(request, pd, session);
-						erogazioniHelper.prepareErogazioneChange(TipoOperazione.CHANGE, asps);
+						erogazioniHelper.prepareErogazioneChange(TipoOperazione.CHANGE, asps, null);
 						ServletUtils.setGeneralAndPageDataIntoSession(session, gd, pd);
 						return ServletUtils.getStrutsForwardEditModeFinished(mapping, ErogazioniCostanti.OBJECT_NAME_ASPS_EROGAZIONI, ForwardParams.CHANGE());
 					}

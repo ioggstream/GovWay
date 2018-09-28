@@ -1937,10 +1937,11 @@ public class ConsoleHelper {
 	
 	public Vector<DataElement> addHiddenFieldsToDati(TipoOperazione tipoOp, String id, String idsogg, String idPorta, String idAsps,
 			Vector<DataElement> dati) {
-		return addHiddenFieldsToDati(tipoOp, id, idsogg, idPorta, idAsps, null, dati);
+		return addHiddenFieldsToDati(tipoOp, id, idsogg, idPorta, idAsps, null, null, null, dati);
 	}
 
-	public Vector<DataElement> addHiddenFieldsToDati(TipoOperazione tipoOp, String id, String idsogg, String idPorta, String idAsps, String idFruizione,
+	public Vector<DataElement> addHiddenFieldsToDati(TipoOperazione tipoOp, String id, String idsogg, String idPorta, String idAsps, 
+			String idFruizione, String tipoSoggettoFruitore, String nomeSoggettoFruitore,
 			Vector<DataElement> dati) {
 
 		DataElement de = new DataElement();
@@ -1983,6 +1984,22 @@ public class ConsoleHelper {
 			de.setValue(idFruizione);
 			de.setType(DataElementType.HIDDEN);
 			de.setName(CostantiControlStation.PARAMETRO_ID_FRUIZIONE);
+			dati.addElement(de);
+		}
+		
+		if(tipoSoggettoFruitore != null){
+			de = new DataElement();
+			de.setValue(tipoSoggettoFruitore);
+			de.setType(DataElementType.HIDDEN);
+			de.setName(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_TIPO_SOGGETTO_FRUITORE);
+			dati.addElement(de);
+		}
+		
+		if(nomeSoggettoFruitore != null){
+			de = new DataElement();
+			de.setValue(nomeSoggettoFruitore);
+			de.setType(DataElementType.HIDDEN);
+			de.setName(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_NOME_SOGGETTO_FRUITORE);
 			dati.addElement(de);
 		}
 
@@ -5199,10 +5216,41 @@ public class ConsoleHelper {
 	public String getLabelIdServizio(String protocollo, IDServizio idServizio) throws Exception{
 		return NamingUtils.getLabelAccordoServizioParteSpecifica(protocollo, idServizio);
 	}
+	public String getLabelIdServizioSenzaErogatore(String protocollo, IDServizio idServizio) throws Exception{
+		return NamingUtils.getLabelAccordoServizioParteSpecificaSenzaErogatore(protocollo, idServizio);
+	}
 	public String getLabelIdServizioSenzaErogatore(IDServizio idServizio) throws Exception{
 		return NamingUtils.getLabelAccordoServizioParteSpecificaSenzaErogatore(idServizio);
 	}
-	
+	public String getLabelServizioFruizione(String protocollo, IDSoggetto idSoggettoFruitore, AccordoServizioParteSpecifica asps) throws Exception{
+		return this.getLabelServizioFruizione(protocollo, idSoggettoFruitore, this.idServizioFactory.getIDServizioFromAccordo(asps));
+	}
+	public String getLabelServizioFruizione(String protocollo, IDSoggetto idSoggettoFruitore, IDServizio idServizio) throws Exception{
+		String labelServizio = this.getLabelIdServizio(protocollo, idServizio);
+		boolean showSoggettoFruitoreInFruizioni = this.core.isMultitenant() && 
+				!this.isSoggettoMultitenantSelezionato();
+		if(showSoggettoFruitoreInFruizioni) {
+			String labelFruitore = this.getLabelNomeSoggetto(protocollo, idSoggettoFruitore);
+			return labelFruitore + " -> " + labelServizio;
+		}
+		else {
+			return labelServizio;
+		}
+	}
+	public String getLabelServizioErogazione(String protocollo, AccordoServizioParteSpecifica asps) throws Exception{
+		return this.getLabelServizioErogazione(protocollo, this.idServizioFactory.getIDServizioFromAccordo(asps));
+	}
+	public String getLabelServizioErogazione(String protocollo, IDServizio idServizio) throws Exception{
+		boolean showSoggettoErogatoreInErogazioni = this.core.isMultitenant() && 
+				!this.isSoggettoMultitenantSelezionato();
+		if(showSoggettoErogatoreInErogazioni) {
+			return this.getLabelIdServizio(protocollo, idServizio);
+		}
+		else {
+			return this.getLabelIdServizioSenzaErogatore(protocollo, idServizio);
+		}
+		
+	}
 	
 	// LABEL ACCORDI COOPERAZIONE
 	

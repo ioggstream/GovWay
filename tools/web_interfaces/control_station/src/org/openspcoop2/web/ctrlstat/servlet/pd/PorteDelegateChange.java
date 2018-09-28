@@ -923,7 +923,8 @@ public final class PorteDelegateChange extends Action {
 						autorizzazione_tokenOptions,
 						autorizzazioneScope,numScope, autorizzazioneScopeMatch,allegatoXacmlPolicy);
 
-				dati = porteDelegateHelper.addHiddenFieldsToDati(TipoOperazione.CHANGE, null, null, null, idAsps, idFruizione, dati);
+				dati = porteDelegateHelper.addHiddenFieldsToDati(TipoOperazione.CHANGE, null, null, null, idAsps, 
+						idFruizione, pde.getTipoSoggettoProprietario(), pde.getNomeSoggettoProprietario(), dati);
 				
 				pd.setDati(dati);
 
@@ -1084,7 +1085,8 @@ public final class PorteDelegateChange extends Action {
 						autorizzazione_tokenOptions,
 						autorizzazioneScope,numScope, autorizzazioneScopeMatch,allegatoXacmlPolicy);
 				
-				dati = porteDelegateHelper.addHiddenFieldsToDati(TipoOperazione.CHANGE, null, null, null, idAsps, idFruizione, dati);
+				dati = porteDelegateHelper.addHiddenFieldsToDati(TipoOperazione.CHANGE, null, null, null, idAsps, 
+						idFruizione, pde.getTipoSoggettoProprietario(), pde.getNomeSoggettoProprietario(), dati);
 
 				pd.setDati(dati);
 
@@ -1298,7 +1300,8 @@ public final class PorteDelegateChange extends Action {
 				if(datiInvocazione) {
 					if(vistaErogazioni != null && vistaErogazioni.booleanValue()) {
 						ErogazioniHelper erogazioniHelper = new ErogazioniHelper(request, pd, session);
-						erogazioniHelper.prepareErogazioneChange(TipoOperazione.CHANGE, asps);
+						erogazioniHelper.prepareErogazioneChange(TipoOperazione.CHANGE, asps, 
+								new IDSoggetto(portaDelegata.getTipoSoggettoProprietario(), portaDelegata.getNomeSoggettoProprietario()));
 						ServletUtils.setGeneralAndPageDataIntoSession(session, gd, pd);
 						return ServletUtils.getStrutsForwardEditModeFinished(mapping, ErogazioniCostanti.OBJECT_NAME_ASPS_EROGAZIONI, ForwardParams.CHANGE());
 					}
@@ -1325,9 +1328,9 @@ public final class PorteDelegateChange extends Action {
 						permessi[1] = pu.isAccordiCooperazione();
 						List<AccordoServizioParteSpecifica> lista2 = null;
 						if(apsCore.isVisioneOggettiGlobale(superUser)){
-							lista2 = apsCore.soggettiServizioList(null, ricerca,permessi, gestioneFruitori);
+							lista2 = apsCore.soggettiServizioList(null, ricerca,permessi, gestioneFruitori, false);
 						}else{
-							lista2 = apsCore.soggettiServizioList(superUser, ricerca, permessi, gestioneFruitori);
+							lista2 = apsCore.soggettiServizioList(superUser, ricerca, permessi, gestioneFruitori, false);
 						}
 
 						apsHelper.prepareServiziList(ricerca, lista2);
@@ -1348,7 +1351,7 @@ public final class PorteDelegateChange extends Action {
 					ricerca = porteDelegateHelper.checkSearchParameters(idLista, ricerca);
 					
 					List<MappingFruizionePortaDelegata> listaMapping = apsCore.serviziFruitoriMappingList((long) Integer.parseInt(idFruizione), idSoggettoFruitore, idServizio2, ricerca);
-					apsHelper.serviziFruitoriMappingList(listaMapping, idAsps, idsogg, idFruizione, ricerca); 
+					apsHelper.serviziFruitoriMappingList(listaMapping, idAsps, idsogg, idSoggettoFruitore, idFruizione, ricerca); 
 				}
 				
 				break;

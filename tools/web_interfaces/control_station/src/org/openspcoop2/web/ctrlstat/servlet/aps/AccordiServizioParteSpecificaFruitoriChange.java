@@ -284,9 +284,13 @@ public final class AccordiServizioParteSpecificaFruitoriChange extends Action {
 			
 			String tipologia = ServletUtils.getObjectFromSession(session, String.class, AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_TIPO_EROGAZIONE);
 			boolean gestioneFruitori = false;
+			boolean gestioneErogatori = false;
 			if(tipologia!=null) {
 				if(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_TIPO_EROGAZIONE_VALUE_FRUIZIONE.equals(tipologia)) {
 					gestioneFruitori = true;
+				}
+				else if(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_TIPO_EROGAZIONE_VALUE_EROGAZIONE.equals(tipologia)) {
+					gestioneErogatori = true;
 				}
 			}
 			//boolean connettoreOnly = gestioneFruitori;
@@ -1294,7 +1298,7 @@ public final class AccordiServizioParteSpecificaFruitoriChange extends Action {
 				if(vistaErogazioni != null && vistaErogazioni.booleanValue()) {
 					ErogazioniHelper erogazioniHelper = new ErogazioniHelper(request, pd, session);
 					asps = apsCore.getAccordoServizioParteSpecifica(idServizioInt);
-					erogazioniHelper.prepareErogazioneChange(TipoOperazione.CHANGE, asps);
+					erogazioniHelper.prepareErogazioneChange(TipoOperazione.CHANGE, asps, new IDSoggetto(fruitore.getTipo(), fruitore.getNome()));
 					ServletUtils.setGeneralAndPageDataIntoSession(session, gd, pd);
 					return ServletUtils.getStrutsForwardEditModeFinished(mapping, ErogazioniCostanti.OBJECT_NAME_ASPS_EROGAZIONI, ForwardParams.CHANGE());
 				}
@@ -1311,9 +1315,9 @@ public final class AccordiServizioParteSpecificaFruitoriChange extends Action {
 				permessi[1] = pu.isAccordiCooperazione();
 				List<AccordoServizioParteSpecifica> lista2 = null;
 				if(apsCore.isVisioneOggettiGlobale(superUser)){
-					lista2 = apsCore.soggettiServizioList(null, ricerca,permessi, gestioneFruitori);
+					lista2 = apsCore.soggettiServizioList(null, ricerca,permessi, gestioneFruitori, gestioneErogatori);
 				}else{
-					lista2 = apsCore.soggettiServizioList(superUser, ricerca, permessi, gestioneFruitori);
+					lista2 = apsCore.soggettiServizioList(superUser, ricerca, permessi, gestioneFruitori, gestioneErogatori);
 				}
 
 				apsHelper.prepareServiziList(ricerca, lista2);
@@ -1338,7 +1342,7 @@ public final class AccordiServizioParteSpecificaFruitoriChange extends Action {
 				idSoggettoFruitoreObj.setTipo(tipoSoggettoFruitore);
 				idSoggettoFruitoreObj.setNome(nomeSoggettoFruitore);
 				List<MappingFruizionePortaDelegata> lista = apsCore.serviziFruitoriMappingList(idServizioFruitoreInt, idSoggettoFruitoreObj , idServizioFromAccordo, ricerca);
-				apsHelper.serviziFruitoriMappingList(lista, idServizio, idSoggettoFruitore, idServizioFruitore, ricerca);
+				apsHelper.serviziFruitoriMappingList(lista, idServizio, idSoggettoFruitore, idSoggettoFruitoreObj, idServizioFruitore, ricerca);
 			} 
 			else{
 				int idLista = Liste.SERVIZI_FRUITORI;

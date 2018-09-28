@@ -198,7 +198,10 @@ public class NamingUtils {
 	}
 	public static String getLabelAccordoServizioParteSpecificaSenzaErogatore(IDServizio idServizio) throws Exception{
 		ProtocolFactoryManager protocolFactoryManager = ProtocolFactoryManager.getInstance();
-		String protocollo = protocolFactoryManager.getProtocolByOrganizationType(idServizio.getSoggettoErogatore().getTipo());
+		String protocollo = protocolFactoryManager.getProtocolByServiceType(idServizio.getTipo());
+		return getLabelAccordoServizioParteSpecificaSenzaErogatore(protocollo, idServizio);
+	}
+	public static String getLabelAccordoServizioParteSpecificaSenzaErogatore(String protocollo, IDServizio idServizio) throws Exception{
 		return getLabelAccordoServizioParteSpecificaSenzaErogatore(protocollo, idServizio.getTipo(), idServizio.getNome(), idServizio.getVersione());
 	}
 	public static String getLabelAccordoServizioParteSpecifica(String protocollo, IDServizio idServizio) throws Exception{

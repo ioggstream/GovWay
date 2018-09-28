@@ -58,7 +58,7 @@ public class ErogazioniCostanti extends AccordiServizioParteSpecificaCostanti {
 	public final static String LABEL_ASPS_FRUIZIONI = "Fruizioni";
 	public final static String LABEL_ASPS_FRUIZIONE = "Fruizione";
 	public final static String LABEL_ASPS_RIEPILOGO = "Riepilogo";
-	public final static String LABEL_ASPS_MODIFICA_SERVIZIO = "Servizio";
+	public final static String LABEL_ASPS_MODIFICA_SERVIZIO = "Nome";
 	public final static String LABEL_ASPS_PORTE_DELEGATE_MODIFICA_DATI_INVOCAZIONE = PorteDelegateCostanti.LABEL_PARAMETRO_TITOLO_PORTE_DELEGATE_DATI_INVOCAZIONE;
 	public final static String LABEL_ASPS_PORTE_DELEGATE_MODIFICA_CONNETTORE = PorteDelegateCostanti.LABEL_PARAMETRO_PORTE_DELEGATE_CONNETTORE;
 	public final static String LABEL_ASPS_PORTE_APPLICATIVE_MODIFICA_DATI_INVOCAZIONE = PorteApplicativeCostanti.LABEL_PARAMETRO_TITOLO_PORTE_APPLICATIVE_DATI_INVOCAZIONE;

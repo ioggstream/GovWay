@@ -216,7 +216,8 @@ public class PorteDelegateConnettoreRidefinito  extends Action {
 				Vector<DataElement> dati = new Vector<DataElement>();
 				dati.addElement(ServletUtils.getDataElementForEditModeFinished());
 				
-				dati = porteDelegateHelper.addHiddenFieldsToDati(TipoOperazione.OTHER,id, idSoggFruitore, null,idAsps, idFruizione, dati);
+				dati = porteDelegateHelper.addHiddenFieldsToDati(TipoOperazione.OTHER,id, idSoggFruitore, null,idAsps, 
+						idFruizione, portaDelegata.getTipoSoggettoProprietario(), portaDelegata.getNomeSoggettoProprietario(), dati);
 				
 				dati = porteDelegateHelper.addConnettoreDefaultRidefinitoToDati(dati,TipoOperazione.OTHER, modalita, modalitaValues,modalitaLabels,true,servletConnettore,parametriServletConnettore);
 				
@@ -241,7 +242,8 @@ public class PorteDelegateConnettoreRidefinito  extends Action {
 
 				dati.addElement(ServletUtils.getDataElementForEditModeFinished());
 				
-				dati = porteDelegateHelper.addHiddenFieldsToDati(TipoOperazione.OTHER,id, idSoggFruitore, null,idAsps, idFruizione, dati);
+				dati = porteDelegateHelper.addHiddenFieldsToDati(TipoOperazione.OTHER,id, idSoggFruitore, null,idAsps, 
+						idFruizione, portaDelegata.getTipoSoggettoProprietario(), portaDelegata.getNomeSoggettoProprietario(), dati);
 				
 				dati = porteDelegateHelper.addConnettoreDefaultRidefinitoToDati(dati,TipoOperazione.OTHER, modalita, modalitaValues,modalitaLabels,false,servletConnettore,parametriServletConnettore);
 				
@@ -304,9 +306,9 @@ public class PorteDelegateConnettoreRidefinito  extends Action {
 						permessi[1] = pu.isAccordiCooperazione();
 						List<AccordoServizioParteSpecifica> lista2 = null;
 						if(apsCore.isVisioneOggettiGlobale(superUser)){
-							lista2 = apsCore.soggettiServizioList(null, ricerca,permessi, gestioneFruitori);
+							lista2 = apsCore.soggettiServizioList(null, ricerca,permessi, gestioneFruitori, false);
 						}else{
-							lista2 = apsCore.soggettiServizioList(superUser, ricerca, permessi, gestioneFruitori);
+							lista2 = apsCore.soggettiServizioList(superUser, ricerca, permessi, gestioneFruitori, false);
 						}
 
 						apsHelper.prepareServiziList(ricerca, lista2);
@@ -327,7 +329,7 @@ public class PorteDelegateConnettoreRidefinito  extends Action {
 					ricerca = porteDelegateHelper.checkSearchParameters(idLista, ricerca);
 					
 					List<MappingFruizionePortaDelegata> listaMapping = apsCore.serviziFruitoriMappingList((long) Integer.parseInt(idFruizione), idSoggettoFruitore, idServizio, ricerca);
-					apsHelper.serviziFruitoriMappingList(listaMapping, idAsps, idSoggFruitore, idFruizione, ricerca); 
+					apsHelper.serviziFruitoriMappingList(listaMapping, idAsps, idSoggFruitore, idSoggettoFruitore, idFruizione, ricerca); 
 				}
 				
 				break;

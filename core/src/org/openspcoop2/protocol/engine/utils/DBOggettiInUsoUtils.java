@@ -1988,7 +1988,7 @@ public class DBOggettiInUsoUtils  {
 
 	private static boolean isAccordoServizioParteSpecificaInUso(Connection con, String tipoDB, long idAccordoServizioParteSpecifica, 
 			Map<ErrorsHandlerCostant,List<String>> whereIsInUso, String nomeMetodo,
-			List<IDPortaApplicativa> nomePAGenerateAutomaticamente, boolean normalizeObjectIds) throws UtilsException {
+			List<IDPortaDelegata> nomePDGenerateAutomaticamente, List<IDPortaApplicativa> nomePAGenerateAutomaticamente, boolean normalizeObjectIds) throws UtilsException {
 		
 		PreparedStatement stmt = null;
 		ResultSet risultato = null;
@@ -2143,14 +2143,18 @@ public class DBOggettiInUsoUtils  {
 			risultato = stmt.executeQuery();
 			while (risultato.next()) {			
 				String nomePorta = risultato.getString("nome_porta");
-				ResultPorta resultPorta = formatPortaDelegata(nomePorta, tipoDB, con, normalizeObjectIds);
-				if(resultPorta.mapping) {
-					mappingFruizionePD_list.add(resultPorta.label);
+				IDPortaDelegata idPD = new IDPortaDelegata();
+				idPD.setNome(nomePorta);
+				if(nomePDGenerateAutomaticamente!=null && !nomePDGenerateAutomaticamente.contains(idPD)) {
+					ResultPorta resultPorta = formatPortaDelegata(nomePorta, tipoDB, con, normalizeObjectIds);
+					if(resultPorta.mapping) {
+						mappingFruizionePD_list.add(resultPorta.label);
+					}
+					else {
+						porteDelegate_list.add(resultPorta.label);
+					}
+					isInUso=true;
 				}
-				else {
-					porteDelegate_list.add(resultPorta.label);
-				}
-				isInUso=true;
 			}
 			risultato.close();
 			stmt.close();
@@ -2227,6 +2231,7 @@ public class DBOggettiInUsoUtils  {
 			sqlQueryObject.addWhereCondition(CostantiDB.SOGGETTI + ".id = " + CostantiDB.SERVIZI_FRUITORI + ".id_soggetto");
 			sqlQueryObject.addWhereCondition(CostantiDB.SERVIZI_FRUITORI + ".id_servizio = ?");
 			sqlQueryObject.addWhereCondition(CostantiDB.MAPPING_FRUIZIONE_PD+".id_fruizione = "+CostantiDB.SERVIZI_FRUITORI + ".id");
+			sqlQueryObject.addWhereCondition(CostantiDB.MAPPING_FRUIZIONE_PD+".id_porta = "+CostantiDB.PORTE_DELEGATE + ".id");
 			sqlQueryObject.setANDLogicOperator(true);
 			queryString = sqlQueryObject.createSQLQuery();
 			stmt = con.prepareStatement(queryString);
@@ -2236,21 +2241,25 @@ public class DBOggettiInUsoUtils  {
 				//String tipo_soggetto = risultato.getString("tipo_soggetto");
 				//String nome_soggetto = risultato.getString("nome_soggetto");
 				String nomePorta = risultato.getString("nome_porta");
-				ResultPorta resultPorta = formatPortaDelegata(nomePorta, tipoDB, con, normalizeObjectIds);
-				if(resultPorta.mapping) {
-					String l = resultPorta.label;
-					if(mappingFruizionePD_list.contains(l)==false) { 
-						mappingFruizionePD_list.add(l);
+				IDPortaDelegata idPD = new IDPortaDelegata();
+				idPD.setNome(nomePorta);
+				if(nomePDGenerateAutomaticamente!=null && !nomePDGenerateAutomaticamente.contains(idPD)) {
+					ResultPorta resultPorta = formatPortaDelegata(nomePorta, tipoDB, con, normalizeObjectIds);
+					if(resultPorta.mapping) {
+						String l = resultPorta.label;
+						if(mappingFruizionePD_list.contains(l)==false) { 
+							mappingFruizionePD_list.add(l);
+						}
 					}
-				}
-				else {
-					// ?? e' gia' un mapping
-					String l = resultPorta.label;
-					if(porteDelegate_list.contains(l)==false) { 
-						porteDelegate_list.add(l);
+					else {
+						// ?? e' gia' un mapping
+						String l = resultPorta.label;
+						if(porteDelegate_list.contains(l)==false) { 
+							porteDelegate_list.add(l);
+						}
 					}
+					isInUso=true;
 				}
-				isInUso=true;
 			}
 			risultato.close();
 			stmt.close();
@@ -2275,15 +2284,31 @@ public class DBOggettiInUsoUtils  {
 				stmt.setLong(1, idAccordoServizioParteSpecifica);
 				risultato = stmt.executeQuery();
 				while (risultato.next()) {
-					isInUso=true;
-					
+										
 					String tipoSoggettoFruitore = risultato.getString("tipo_soggetto");
 					String nomeSoggettoFruitore = risultato.getString("nome_soggetto");
-					if(normalizeObjectIds) {
-						fruitori_list.add(NamingUtils.getLabelSoggetto(new IDSoggetto(tipoSoggettoFruitore, nomeSoggettoFruitore)));
+					
+					boolean usedForPD = false;
+					if(nomePDGenerateAutomaticamente!=null) {
+						for (IDPortaDelegata idPD : nomePDGenerateAutomaticamente) {
+							if(idPD.getIdentificativiFruizione()!=null && idPD.getIdentificativiFruizione().getSoggettoFruitore()!=null) {
+								IDSoggetto soggettoFruitore = new IDSoggetto(tipoSoggettoFruitore, nomeSoggettoFruitore);
+								if(soggettoFruitore.equals(idPD.getIdentificativiFruizione().getSoggettoFruitore())) {
+									usedForPD = true;
+									break;
+								}
+							}
+						}
 					}
-					else {
-						fruitori_list.add(tipoSoggettoFruitore+"/"+nomeSoggettoFruitore);
+					
+					if(!usedForPD) {
+						if(normalizeObjectIds) {
+							fruitori_list.add(NamingUtils.getLabelSoggetto(new IDSoggetto(tipoSoggettoFruitore, nomeSoggettoFruitore)));
+						}
+						else {
+							fruitori_list.add(tipoSoggettoFruitore+"/"+nomeSoggettoFruitore);
+						}
+						isInUso=true;
 					}
 				}
 				risultato.close();
@@ -2539,7 +2564,7 @@ public class DBOggettiInUsoUtils  {
 	
 	public static boolean isAccordoServizioParteSpecificaInUso(Connection con, String tipoDB, IDServizio idServizio, 
 			Map<ErrorsHandlerCostant,List<String>> whereIsInUso,
-			List<IDPortaApplicativa> nomePAGenerateAutomaticamente, boolean normalizeObjectIds) throws UtilsException {
+			List<IDPortaDelegata> nomePDGenerateAutomaticamente, List<IDPortaApplicativa> nomePAGenerateAutomaticamente, boolean normalizeObjectIds) throws UtilsException {
 		String nomeMetodo = "isAccordoServizioParteSpecificaInUso(IDServizio)";
 		long idAccordoServizioParteSpecifica = -1;
 		try {
@@ -2550,7 +2575,8 @@ public class DBOggettiInUsoUtils  {
 		}catch (Exception se) {
 			throw new UtilsException("[DBOggettiInUsoUtils::" + nomeMetodo + "] Exception: " + se.getMessage(),se);
 		}
-		return isAccordoServizioParteSpecificaInUso(con, tipoDB, idAccordoServizioParteSpecifica, whereIsInUso,nomeMetodo,nomePAGenerateAutomaticamente, normalizeObjectIds);
+		return isAccordoServizioParteSpecificaInUso(con, tipoDB, idAccordoServizioParteSpecifica, whereIsInUso,nomeMetodo,
+				nomePDGenerateAutomaticamente, nomePAGenerateAutomaticamente, normalizeObjectIds);
 	}
 	public static String toString(IDServizio idServizio, Map<ErrorsHandlerCostant, List<String>> whereIsInUso, boolean prefix, String separator, 
 			boolean normalizeObjectIds, String oggetto){
