@@ -594,7 +594,7 @@ public class UtentiHelper extends ConsoleHelper {
 		else {
 			de.setType(DataElementType.TEXT);
 		}
-		de.setName(UtentiCostanti.PARAMETRO_UTENTE_LABEL_SOGGETTO_LIST);
+		de.setName(UtentiCostanti.PARAMETRO_UTENTE_ID_SOGGETTO_LIST);
 		de.setValue(soggettiDisponibili);
 		dati.addElement(de);
 		

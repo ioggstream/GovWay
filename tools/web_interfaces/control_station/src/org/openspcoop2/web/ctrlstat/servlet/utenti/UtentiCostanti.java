@@ -152,8 +152,8 @@ public class UtentiCostanti {
 	public final static String PARAMETRO_UTENTI_SOGGETTO = "soggetto";
 	public final static String PARAMETRO_UTENTI_SERVIZIO = "servizio";
 	public final static String PARAMETRO_UTENTE_CHANGE_SOGGETTO = "change_sog";
-	public final static String PARAMETRO_UTENTE_LABEL_SOGGETTO = "label_sog";
-	public final static String PARAMETRO_UTENTE_LABEL_SOGGETTO_LIST = "label_sog_list";
+	public final static String PARAMETRO_UTENTE_ID_SOGGETTO = "id_sog";
+	public final static String PARAMETRO_UTENTE_ID_SOGGETTO_LIST = "label_id_list";
 	
 	/* LABEL PARAMETRI */
 	

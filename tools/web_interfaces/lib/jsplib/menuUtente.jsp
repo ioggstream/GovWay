@@ -40,7 +40,8 @@ Vector<GeneralLink> v = gd.getHeaderLinks();
 
 Vector<GeneralLink> modalitaLinks = gd.getModalitaLinks();
 Vector<GeneralLink> soggettoLinks = gd.getSoggettiLinks();
-	if(v!= null && v.size() > 1) {
+
+if(v!= null && v.size() > 1) {
 		
 %>
 
@@ -110,54 +111,77 @@ $(document).ready(function(){
 		window.location = destinazione;
 	});
 	
-<% if(modalitaLinks!= null && modalitaLinks.size() > 1) { 
+	var paddLabelLeft = $(".item-label").css('padding-left');
+	var paddLabelRight = $(".item-label").css('padding-right');
+	
+<% if(modalitaLinks!= null && modalitaLinks.size() > 0) { 
 	GeneralLink modalitaTitoloLink = modalitaLinks.get(0);
-	int widthLabel = 12 + modalitaTitoloLink.getLabelWidth();
-%>
-		var oldModalitaWidthLabel = $('#menuModalita').css('min-width');
-		var newModalitaWidthLabel = <%=widthLabel %>;
+	if(modalitaLinks.size() == 1 && modalitaTitoloLink.getUrl().equals("")) {
+		%>
+		$('#menuModalita').css('cursor', 'default');
+		<%
+	}
 		
-		var oldModalitaShiftLeft = $('#menuModalita_menu').css('left');
-		var newModalitaShiftLeft = parseInt(oldModalitaShiftLeft) - (parseInt(oldModalitaWidthLabel) - newModalitaWidthLabel);
+	// visualizzo la tendina solo se ho piu' di due link (titolo + voci)
+	if(modalitaLinks.size() > 1) { 
 		
-		// menu modalita
-		$('#menuModalita').hover(
-		        function () {
-		            //mostra sottomenu
-		            // $('ul', this).stop(true, true).delay(50).slideDown(100); versione jquery > 1.3
-		            //.animate({top: 0}, 50)
-		            $('#menuModalita_menu', this).stop(true, true).delay(50).slideDown(100);
-		        }, 
-		        function () {
-		            //nascondi sottomenu
-		            $('#menuModalita_menu', this).stop(true, true).delay(150).slideUp(200);        
-		        }
-		    );
+		int max = 0;
+		// calcolo la lughezza massima della label
+		for(int i = 1; i < modalitaLinks.size(); i++){
+			if(modalitaLinks.get(i).getLabelWidth() > max)
+				max = modalitaLinks.get(i).getLabelWidth();
+		}
 		
-		$('#menuModalita_menu span[class*="icon-check"]').click(function() {
-			var destinazione = $( this ).parent().children('span[class*="label"]').children().attr('href');
-			window.location = destinazione;
-		});
+			%>
 		
-		$('#menuModalita').css('min-width', newModalitaWidthLabel +'px');
-		$('#menuModalita_menu').css('left', newModalitaShiftLeft +'px');
-<% } %>
+			var newItemWidth = <%=max %> + parseInt(paddLabelLeft) + parseInt(paddLabelRight);
+			
+			// menu modalita
+			$('#menuModalita').hover(
+			        function () {
+			            //mostra sottomenu
+			            // $('ul', this).stop(true, true).delay(50).slideDown(100); versione jquery > 1.3
+			            //.animate({top: 0}, 50)
+			            $('#menuModalita_menu', this).stop(true, true).delay(50).slideDown(100);
+			        }, 
+			        function () {
+			            //nascondi sottomenu
+			            $('#menuModalita_menu', this).stop(true, true).delay(150).slideUp(200);        
+			        }
+			    );
+			
+			$('#menuModalita_menu span[class*="icon-check"]').click(function() {
+				var destinazione = $( this ).parent().children('span[class*="label"]').children().attr('href');
+				window.location = destinazione;
+			});
+			
+			
+			$('#menuModalita_menu').css('width', newItemWidth +'px');
+		<% 	
+	}
+}%>
 
 <% 
 if(soggettoLinks!= null && soggettoLinks.size() > 0) {
 	GeneralLink soggettoTitoloLink = soggettoLinks.get(0);
-	int widthLabelSoggetto = 12 + soggettoTitoloLink.getLabelWidth();
-	
-	%>
-		var oldSoggettoWidthLabel = $('#menuSoggetto').css('min-width');
-		var newSoggettoWidthLabel = <%=widthLabelSoggetto %>;
-		$('#menuSoggetto').css('min-width', newSoggettoWidthLabel+'px');
-	<%
-
-	if(soggettoLinks!= null && soggettoLinks.size() > 1) { 
+	if(soggettoLinks.size() == 1 && soggettoTitoloLink.getUrl().equals("")) {
 		%>
-			var oldSoggettoShiftLeft = $('#menuSoggetto_menu').css('left');
-			var newSoggettoShiftLeft = parseInt(oldSoggettoShiftLeft) - (parseInt(oldSoggettoWidthLabel) - newSoggettoWidthLabel);
+		$('#menuSoggetto').css('cursor', 'default');
+		<%
+	}
+	
+	// visualizzo la tendina solo se ho piu' di due link (titolo + voci)
+	if(soggettoLinks.size() > 1) { 
+		
+		int max = 0;
+		// calcolo la lughezza massima della label
+		for(int i = 1; i < soggettoLinks.size(); i++){
+			if(soggettoLinks.get(i).getLabelWidth() > max)
+				max = soggettoLinks.get(i).getLabelWidth();
+		}
+		%>	
+
+			var newItemSoggettoWidth = <%=max %> + parseInt(paddLabelLeft) + parseInt(paddLabelRight);
 			
 			// menu soggetto
 			$('#menuSoggetto').hover(
@@ -178,7 +202,7 @@ if(soggettoLinks!= null && soggettoLinks.size() > 0) {
 				window.location = destinazione;
 			});
 			
-			$('#menuSoggetto_menu').css('left', newSoggettoShiftLeft+'px');
+			$('#menuSoggetto_menu').css('width', newItemSoggettoWidth +'px');
 		<% 
 	}
 } %>

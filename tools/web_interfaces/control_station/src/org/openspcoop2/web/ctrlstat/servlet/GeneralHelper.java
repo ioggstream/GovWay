@@ -296,24 +296,24 @@ public class GeneralHelper {
 				glModalitaCorrente.setLabelWidth(this.core.getFontWidth(labelSelezionatoCompleta,  Font.BOLD, 16)); 
 				link.addElement(glModalitaCorrente);
 
-				// popolo la tendina con i protocolli disponibili
-				for (String protocolloDisponibile : ProtocolUtils.orderProtocolli(protocolliDispondibili)) {
-					GeneralLink glProt = new GeneralLink();
-					
-					String labelProt = ConsoleHelper._getLabelProtocollo(protocolloDisponibile);
-					glProt.setLabel(labelProt);
-//					String iconProt = protocolloSelezionato == null ? LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED : (protocolloDisponibile.equals(protocolloSelezionato) ? LoginCostanti.ICONA_MENU_UTENTE_CHECKED : LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED);
-//					glProt.setIcon(iconProt);
-					glProt.setUrl(UtentiCostanti.SERVLET_NAME_UTENTE_CHANGE,
-							new Parameter(UtentiCostanti.PARAMETRO_UTENTE_TIPO_MODALITA, protocolloDisponibile),
-							new Parameter(Costanti.DATA_ELEMENT_EDIT_MODE_NAME,Costanti.DATA_ELEMENT_EDIT_MODE_VALUE_EDIT_END),
-							new Parameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_MODALITA,Costanti.CHECK_BOX_ENABLED)
-							);
-					
-					link.addElement(glProt);
-				}
-	
 				if(protocolliDispondibili.size()>1) {
+					// popolo la tendina con i protocolli disponibili
+					for (String protocolloDisponibile : ProtocolUtils.orderProtocolli(protocolliDispondibili)) {
+						GeneralLink glProt = new GeneralLink();
+						
+						String labelProt = ConsoleHelper._getLabelProtocollo(protocolloDisponibile);
+						glProt.setLabel(labelProt);
+	//					String iconProt = protocolloSelezionato == null ? LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED : (protocolloDisponibile.equals(protocolloSelezionato) ? LoginCostanti.ICONA_MENU_UTENTE_CHECKED : LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED);
+	//					glProt.setIcon(iconProt);
+						glProt.setUrl(UtentiCostanti.SERVLET_NAME_UTENTE_CHANGE,
+								new Parameter(UtentiCostanti.PARAMETRO_UTENTE_TIPO_MODALITA, protocolloDisponibile),
+								new Parameter(Costanti.DATA_ELEMENT_EDIT_MODE_NAME,Costanti.DATA_ELEMENT_EDIT_MODE_VALUE_EDIT_END),
+								new Parameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_MODALITA,Costanti.CHECK_BOX_ENABLED)
+								);
+						glProt.setLabelWidth(this.core.getFontWidth(labelProt, 14)); 
+						link.addElement(glProt);
+					}
+				
 					// seleziona tutti 
 					GeneralLink glAll = new GeneralLink();
 					glAll.setLabel(UtentiCostanti.LABEL_PARAMETRO_MODALITA_ALL);
@@ -323,6 +323,7 @@ public class GeneralHelper {
 							new Parameter(Costanti.DATA_ELEMENT_EDIT_MODE_NAME,Costanti.DATA_ELEMENT_EDIT_MODE_VALUE_EDIT_END),
 							new Parameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_MODALITA,Costanti.CHECK_BOX_ENABLED)
 							);
+					glAll.setLabelWidth(this.core.getFontWidth(UtentiCostanti.LABEL_PARAMETRO_MODALITA_ALL, 14));
 					link.addElement(glAll);
 				}
 				
@@ -350,6 +351,7 @@ public class GeneralHelper {
 			
 			List<Soggetto> soggettiOperativi = this.soggettiCore.getSoggettiOperativi(protocolloSelezionato);
 			
+			// visualizzo il menu' soggetti solo se e' stato selezionato un protocollo 
 			if(protocolloSelezionato!=null && !"".equals(protocolloSelezionato) &&
 					soggettiOperativi != null && !soggettiOperativi.isEmpty()) {
 				
@@ -375,49 +377,51 @@ public class GeneralHelper {
 				
 				if(soggettiOperativi.size() < numeroMassimoSoggettiSelectListSoggettiOperatiti) {
 					
-					List<String> listaLabel = new ArrayList<>();
-					for (Soggetto soggetto : soggettiOperativi) {
-						IDSoggetto idSoggetto = new IDSoggetto(soggetto.getTipo(), soggetto.getNome()); 
-						String labelSoggetto = ConsoleHelper._getLabelNomeSoggetto(idSoggetto);
-						if(!listaLabel.contains(labelSoggetto)) {
-							listaLabel.add(labelSoggetto);
-						}
-					}
-					
-					// Per ordinare in maniera case insensistive
-					Collections.sort(listaLabel, new Comparator<String>() {
-						 @Override
-						public int compare(String o1, String o2) {
-					           return o1.toLowerCase().compareTo(o2.toLowerCase());
-					        }
-						});
-					
-					for (String label : listaLabel) {
-						GeneralLink glSoggetto = new GeneralLink();
-						
-						glSoggetto.setLabel(label);
-//						String iconProt = labelSelezionato == null ? LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED :
-//							(label.equals(labelSelezionato) ? LoginCostanti.ICONA_MENU_UTENTE_CHECKED : LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED);
-//						glSoggetto.setIcon(iconProt);
-						glSoggetto.setUrl(UtentiCostanti.SERVLET_NAME_UTENTE_CHANGE,
-								new Parameter(UtentiCostanti.PARAMETRO_UTENTE_LABEL_SOGGETTO, NamingUtils.getSoggettoFromLabel(protocolloSelezionato, label).toString()),
-								new Parameter(Costanti.DATA_ELEMENT_EDIT_MODE_NAME,Costanti.DATA_ELEMENT_EDIT_MODE_VALUE_EDIT_END),
-								new Parameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_SOGGETTO,Costanti.CHECK_BOX_ENABLED)
-								);
-						
-						link.addElement(glSoggetto);
-					}
-					
 					if(soggettiOperativi.size()>1) {
+						List<String> listaLabel = new ArrayList<>();
+						for (Soggetto soggetto : soggettiOperativi) {
+							IDSoggetto idSoggetto = new IDSoggetto(soggetto.getTipo(), soggetto.getNome()); 
+							String labelSoggetto = ConsoleHelper._getLabelNomeSoggetto(idSoggetto);
+							if(!listaLabel.contains(labelSoggetto)) {
+								listaLabel.add(labelSoggetto);
+							}
+						}
+						
+						// Per ordinare in maniera case insensistive
+						Collections.sort(listaLabel, new Comparator<String>() {
+							 @Override
+							public int compare(String o1, String o2) {
+						           return o1.toLowerCase().compareTo(o2.toLowerCase());
+						        }
+							});
+						
+						for (String label : listaLabel) {
+							GeneralLink glSoggetto = new GeneralLink();
+							
+							glSoggetto.setLabel(label);
+	//						String iconProt = labelSelezionato == null ? LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED :
+	//							(label.equals(labelSelezionato) ? LoginCostanti.ICONA_MENU_UTENTE_CHECKED : LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED);
+	//						glSoggetto.setIcon(iconProt);
+							glSoggetto.setUrl(UtentiCostanti.SERVLET_NAME_UTENTE_CHANGE,
+									new Parameter(UtentiCostanti.PARAMETRO_UTENTE_ID_SOGGETTO, NamingUtils.getSoggettoFromLabel(protocolloSelezionato, label).toString()),
+									new Parameter(Costanti.DATA_ELEMENT_EDIT_MODE_NAME,Costanti.DATA_ELEMENT_EDIT_MODE_VALUE_EDIT_END),
+									new Parameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_SOGGETTO,Costanti.CHECK_BOX_ENABLED)
+									);
+							glSoggetto.setLabelWidth(this.core.getFontWidth(label, 14)); 
+							link.addElement(glSoggetto);
+						}
+					
+					
 						// seleziona tutti 
 						GeneralLink glAll = new GeneralLink();
 						glAll.setLabel(UtentiCostanti.LABEL_PARAMETRO_MODALITA_ALL);
 	//					glAll.setIcon((labelSelezionato == null) ? LoginCostanti.ICONA_MENU_UTENTE_CHECKED : LoginCostanti.ICONA_MENU_UTENTE_UNCHECKED);
 						glAll.setUrl(UtentiCostanti.SERVLET_NAME_UTENTE_CHANGE,
-								new Parameter(UtentiCostanti.PARAMETRO_UTENTE_LABEL_SOGGETTO, UtentiCostanti.VALORE_PARAMETRO_MODALITA_ALL),
+								new Parameter(UtentiCostanti.PARAMETRO_UTENTE_ID_SOGGETTO, UtentiCostanti.VALORE_PARAMETRO_MODALITA_ALL),
 								new Parameter(Costanti.DATA_ELEMENT_EDIT_MODE_NAME,Costanti.DATA_ELEMENT_EDIT_MODE_VALUE_EDIT_END),
 								new Parameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_SOGGETTO,Costanti.CHECK_BOX_ENABLED)
 								);
+						glAll.setLabelWidth(this.core.getFontWidth(UtentiCostanti.LABEL_PARAMETRO_MODALITA_ALL, 14));
 						link.addElement(glAll);
 					}
 					
