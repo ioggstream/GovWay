@@ -252,12 +252,12 @@ public class DataElement {
 		return this.url;
 	}
 
-	public void setTarget(String s) {
+	public void setTarget(TargetType s) {
 		this.target.clear();
-		this.target.add(s);
+		this.target.add(s.toString());
 	}
-	public void addTarget(String s) {
-		this.target.add(s);
+	public void addTarget(TargetType s) {
+		this.target.add(s.toString());
 	}
 	public String getTarget() {
 		if(this.target.isEmpty())

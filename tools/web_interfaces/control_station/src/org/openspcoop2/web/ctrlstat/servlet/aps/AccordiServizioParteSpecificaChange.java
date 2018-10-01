@@ -56,6 +56,7 @@ import org.openspcoop2.core.constants.CostantiDB;
 import org.openspcoop2.core.constants.TipiConnettore;
 import org.openspcoop2.core.constants.TransferLengthModes;
 import org.openspcoop2.core.controllo_traffico.ConfigurazioneGenerale;
+import org.openspcoop2.core.id.IDAccordo;
 import org.openspcoop2.core.id.IDPortaApplicativa;
 import org.openspcoop2.core.id.IDPortaDelegata;
 import org.openspcoop2.core.id.IDServizio;
@@ -522,7 +523,6 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 				soggettiListLabel = soggettiListLabelTmp.toArray(new String[1]);
 			}
 
-
 			// if (provider != null && !provider.equals(""))
 			// {
 			// long idErogatore = Long.parseLong(provider);
@@ -623,7 +623,7 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 			this.consoleDynamicConfiguration =  this.protocolFactory.createDynamicConfigurationConsole();
 			this.registryReader = soggettiCore.getRegistryReader(this.protocolFactory); 
 			this.configRegistryReader = soggettiCore.getConfigIntegrationReader(this.protocolFactory);
-			IDServizio idAps = apsHelper.getIDServizioFromValues(tiposervizio, nomeservizio, tipoSoggettoErogatore,nomeSoggettoErogatore, versione);
+			IDServizio idAps = apsHelper.getIDServizioFromValues(oldtiposervizio, oldnomeservizio, oldtiposoggetto,oldnomesoggetto, oldversioneaccordo);
 			this.consoleConfiguration = this.consoleDynamicConfiguration.getDynamicConfigAccordoServizioParteSpecifica(this.consoleOperationType, this.consoleInterfaceType, 
 					this.registryReader, this.configRegistryReader, idAps );
 			this.protocolProperties = apsHelper.estraiProtocolPropertiesDaRequest(this.consoleConfiguration, this.consoleOperationType);
@@ -643,6 +643,25 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 			propertiesProprietario.setProperty(ProtocolPropertiesCostanti.PARAMETRO_PP_PROTOCOLLO, tipoProtocollo);
 			propertiesProprietario.setProperty(ProtocolPropertiesCostanti.PARAMETRO_PP_TIPO_ACCORDO, "");
 			
+			
+			
+			// verifico versione change
+			String postBackElementName = apsHelper.getPostBackElementName();
+			if(postBackElementName != null ){
+				if(postBackElementName.equalsIgnoreCase(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_ACCORDO)){
+					// ho modificato l'accordo (la versione)
+					// verifico se la versione precedente della API era uguale alla versione attuale del servizio, modifico anche la versione del servizio se sono in standard.
+					// se non esiste gia' una nuova versione del servizio
+					IDAccordo oldIDAccodo = IDAccordoFactory.getInstance().getIDAccordoFromUri(asps.getAccordoServizioParteComune());
+					if(oldIDAccodo.getVersione().intValue() == asps.getVersione().intValue()) {
+						String tmpNewVersion = as.getVersione().intValue()+"";
+						IDServizio idApsCheck = apsHelper.getIDServizioFromValues(oldtiposervizio, oldnomeservizio, oldtiposoggetto,oldnomesoggetto, tmpNewVersion);
+						if(apsCore.existsAccordoServizioParteSpecifica(idApsCheck)==false) {
+							versione = tmpNewVersion;
+						}
+					}
+				}
+			}
 			
 			
 			// setto la barra del titolo

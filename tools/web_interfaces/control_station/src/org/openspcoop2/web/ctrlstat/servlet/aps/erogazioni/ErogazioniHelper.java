@@ -94,6 +94,7 @@ import org.openspcoop2.web.lib.mvc.DataElementType;
 import org.openspcoop2.web.lib.mvc.PageData;
 import org.openspcoop2.web.lib.mvc.Parameter;
 import org.openspcoop2.web.lib.mvc.ServletUtils;
+import org.openspcoop2.web.lib.mvc.TargetType;
 import org.openspcoop2.web.lib.mvc.TipoOperazione;
 
 /**
@@ -375,7 +376,7 @@ public class ErogazioniHelper extends AccordiServizioParteSpecificaHelper{
 					String labelProtocollo =this.getLabelProtocollo(protocollo); 
 					de.setValue(MessageFormat.format(ErogazioniCostanti.MESSAGE_METADATI_SERVIZIO_EROGAZIONI_CON_PROFILO, labelServiceBinding, labelAPI, labelProtocollo));
 				} else {
-					de.setValue(MessageFormat.format(ErogazioniCostanti.MESSAGE_METADATI_SERVIZIO_EROGAZIONI, labelServiceBinding, labelAPI));
+					de.setValue(MessageFormat.format(ErogazioniCostanti.MESSAGE_METADATI_SERVIZIO_EROGAZIONI_LIST, labelServiceBinding, labelAPI));
 				}
 				de.setType(DataElementType.SUBTITLE);
 				e.addElement(de);
@@ -970,6 +971,7 @@ public class ErogazioniHelper extends AccordiServizioParteSpecificaHelper{
 			listParametersServizio.add(pTipoSoggettoFruitore);
 			listParametersServizio.add(pNomeSoggettoFruitore);
 		}
+		listParametersServizio.add(new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_MODIFICA_API, "false")); // lasciare come ultimo! Si leva e si riaggiunge dopo
 		de.setUrl(
 				AccordiServizioParteSpecificaCostanti.SERVLET_NAME_APS_CHANGE,
 				listParametersServizio.toArray(new Parameter[1]));
@@ -1003,25 +1005,37 @@ public class ErogazioniHelper extends AccordiServizioParteSpecificaHelper{
 			break;
 		}
 		de.setLabel(AccordiServizioParteSpecificaCostanti.LABEL_PARAMETRO_APS_ACCORDO); 
-		de.setValue(MessageFormat.format(ErogazioniCostanti.MESSAGE_METADATI_SERVIZIO_EROGAZIONI, labelServiceBinding, labelAPI));
+		de.setValue(MessageFormat.format(ErogazioniCostanti.MESSAGE_METADATI_SERVIZIO_EROGAZIONI_EDIT, labelServiceBinding, labelAPI));
 		de.setType(DataElementType.TEXT);
+		
+		// Lista di Accordi Compatibili
+		List<AccordoServizioParteComune> asParteComuneCompatibili = null;
+		try{
+			asParteComuneCompatibili = this.apsCore.findAccordiParteComuneBySoggettoAndNome(as.getNome(), 
+					new IDSoggetto(as.getSoggettoReferente().getTipo(), as.getSoggettoReferente().getNome()));
+		}catch(Exception e){
+			ControlStationCore.logError("Errore durante la ricerca degli accordi parte comune compatibili", e);
+		}
 		
 		// lista icone a dx 
 		// n.b. iniziare ad aggiungerle da quella che deve stare piu' a dx perche' la regola css float right le allinea al contrario
-		de.setUrl(AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_CHANGE, 
-				new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_ID, asps.getIdAccordo() + ""),
-				new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_NOME, as.getNome()), pTipoAccordo);
-		de.setToolTip(MessageFormat.format(ErogazioniCostanti.ASPS_EROGAZIONI_ICONA_MODIFICA_CONFIGURAZIONE_TOOLTIP_CON_PARAMETRO, AccordiServizioParteSpecificaCostanti.LABEL_APC_COMPOSTO_SOLO_PARTE_COMUNE));
-		de.setIcon(ErogazioniCostanti.ASPS_EROGAZIONI_ICONA_MODIFICA_CONFIGURAZIONE);
-		de.setTarget("_blank"); 
+		if(asParteComuneCompatibili!=null && asParteComuneCompatibili.size()>1) {
+			listParametersServizio.remove(listParametersServizio.size()-1);
+			listParametersServizio.add(new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_MODIFICA_API, "true"));
+			de.addUrl(
+					AccordiServizioParteSpecificaCostanti.SERVLET_NAME_APS_CHANGE,
+					listParametersServizio.toArray(new Parameter[1]));
+			de.addToolTip(MessageFormat.format(ErogazioniCostanti.ASPS_EROGAZIONI_ICONA_MODIFICA_CONFIGURAZIONE_TOOLTIP_CON_PARAMETRO, AccordiServizioParteSpecificaCostanti.LABEL_APC_COMPOSTO_SOLO_PARTE_COMUNE));
+			de.addIcon(ErogazioniCostanti.ASPS_EROGAZIONI_ICONA_MODIFICA_CONFIGURAZIONE);
+			de.addTarget(TargetType.SELF);
+		}
 		
 		de.addUrl(AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_CHANGE, 
 				new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_ID, asps.getIdAccordo() + ""),
 				new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_NOME, as.getNome()), pTipoAccordo);
 		de.addToolTip(MessageFormat.format(ErogazioniCostanti.ASPS_EROGAZIONI_ICONA_VISUALIZZA_TOOLTIP_CON_PARAMETRO, AccordiServizioParteSpecificaCostanti.LABEL_APC_COMPOSTO_SOLO_PARTE_COMUNE));
 		de.addIcon(ErogazioniCostanti.ASPS_EROGAZIONI_ICONA_VISUALIZZA);
-		// TODO Poli se non vuoi che si apra una nuova finestra aggiungere comunque una stringa vuota!
-		de.addTarget("_blank"); 
+		de.addTarget(TargetType.BLANK); 
 		
 		dati.addElement(de);
 

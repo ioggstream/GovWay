@@ -95,6 +95,8 @@ public final class AccordiServizioParteSpecificaAllegatiAdd extends Action {
 			String ruolo = apsHelper.getParameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_RUOLO  );
 			String tipoFile = apsHelper.getParameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_TIPO_FILE  );
 
+			String modificaAPI = apsHelper.getParameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_MODIFICA_API);
+					
 			FormFile ff = fileUpload.getTheFile();
 
 			AccordiServizioParteSpecificaCore apsCore = new AccordiServizioParteSpecificaCore();
@@ -180,6 +182,10 @@ public final class AccordiServizioParteSpecificaAllegatiAdd extends Action {
 					listErogazioniChange.add(pNomeSoggettoFruitore);
 					listErogazioniChange.add(pTipoSoggettoFruitore);
 				}
+				if(modificaAPI!=null) {
+					Parameter pModificaAPI = new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_MODIFICA_API, modificaAPI);
+					listErogazioniChange.add(pModificaAPI);
+				}
 				
 				lstParam.add(new Parameter(tmpTitle, ErogazioniCostanti.SERVLET_NAME_ASPS_EROGAZIONI_CHANGE, 
 						listErogazioniChange.toArray(new Parameter[1])));
@@ -218,7 +224,7 @@ public final class AccordiServizioParteSpecificaAllegatiAdd extends Action {
 				dati = apsHelper.addHiddenFieldsToDati(TipoOperazione.ADD, idServizio, null, null, null, null, tipoSoggettoFruitore, nomeSoggettoFruitore, dati);
 
 				dati = apsHelper. addTipiAllegatiToDati(TipoOperazione.ADD, idServizio, ruolo, ruoli, tipiAmmessi,
-						tipiAmmessiLabel, dati);
+						tipiAmmessiLabel, dati, modificaAPI);
 
 				pd.setDati(dati);
 
@@ -263,7 +269,7 @@ public final class AccordiServizioParteSpecificaAllegatiAdd extends Action {
 				dati = apsHelper.addHiddenFieldsToDati(TipoOperazione.ADD, idServizio, null, null, dati);
 
 				dati = apsHelper. addTipiAllegatiToDati(TipoOperazione.ADD, idServizio, ruolo, ruoli, tipiAmmessi,
-						tipiAmmessiLabel, dati);
+						tipiAmmessiLabel, dati, modificaAPI);
 
 				pd.setDati(dati);
 

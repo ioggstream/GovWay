@@ -89,6 +89,8 @@ public final class AccordiServizioParteSpecificaAllegatiView extends Action {
 			int idAllegatoInt = Integer.parseInt(idAllegato);
 			int idServizioInt = Integer.parseInt(idServizio);
 
+			String modificaAPI = apsHelper.getParameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_MODIFICA_API);
+			
 			AccordiServizioParteSpecificaCore apsCore = new AccordiServizioParteSpecificaCore();
 			ArchiviCore archiviCore = new ArchiviCore(apsCore);
 
@@ -153,6 +155,10 @@ public final class AccordiServizioParteSpecificaAllegatiView extends Action {
 					listErogazioniChange.add(pNomeSoggettoFruitore);
 					listErogazioniChange.add(pTipoSoggettoFruitore);
 				}
+				if(modificaAPI!=null) {
+					Parameter pModificaAPI = new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_MODIFICA_API, modificaAPI);
+					listErogazioniChange.add(pModificaAPI);
+				}
 				
 				lstParam.add(new Parameter(tmpTitle, ErogazioniCostanti.SERVLET_NAME_ASPS_EROGAZIONI_CHANGE,
 						listErogazioniChange.toArray(new Parameter[1])));
@@ -186,7 +192,7 @@ public final class AccordiServizioParteSpecificaAllegatiView extends Action {
 			dati = apsHelper.addHiddenFieldsToDati(TipoOperazione.OTHER, idServizio, null, null, null, null, tipoSoggettoFruitore, nomeSoggettoFruitore, dati);
 
 			dati = apsHelper.addViewAllegatiToDati(TipoOperazione.OTHER, idAllegato, idServizio, doc, contenutoAllegato, errore,
-					dati);
+					dati, modificaAPI);
 
 			pd.setMode(Costanti.DATA_ELEMENT_EDIT_MODE_DISABLE_NAME);
 			pd.setDati(dati);
