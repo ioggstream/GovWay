@@ -258,6 +258,7 @@ public class AccordiServizioParteSpecificaCostanti {
 	public final static String PARAMETRO_APS_PROTOCOLLO = CostantiControlStation.PARAMETRO_PROTOCOLLO;
 	public final static String PARAMETRO_APS_GESTIONE_GRUPPI = "gestioneGruppi";
 	public final static String PARAMETRO_APS_GESTIONE_CONFIGURAZIONI = "gestioneConfigurazioni";
+	public final static String PARAMETRO_APS_MODIFICA_API = "modificaAPI";
 	
 	/* ATTRIBUTI SESSIONE */
 	

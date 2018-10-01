@@ -672,7 +672,7 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 				lstParm.add(new Parameter(tmpTitle, ErogazioniCostanti.SERVLET_NAME_ASPS_EROGAZIONI_CHANGE, 
 						listParametersErogazioniChange.toArray(new Parameter[1])));
 				
-				lstParm.add(new Parameter(ErogazioniCostanti.LABEL_ASPS_MODIFICA_SERVIZIO, null));
+				lstParm.add(new Parameter(ErogazioniCostanti.LABEL_ASPS_MODIFICA_SERVIZIO_INFO_GENERALI, null));
 				
 			} else {
 				if(gestioneFruitori) {

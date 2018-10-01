@@ -958,7 +958,7 @@ public class ErogazioniHelper extends AccordiServizioParteSpecificaHelper{
 		DataElement de = new DataElement();
 		IDServizio idServizio = IDServizioFactory.getInstance().getIDServizioFromAccordo(asps);
 		String labelServizio = gestioneFruitori ? this.getLabelIdServizioSenzaErogatore(idServizio) :  this.getLabelIdServizioSenzaErogatore(idServizio);
-		de.setLabel(ErogazioniCostanti.LABEL_ASPS_MODIFICA_SERVIZIO);
+		de.setLabel(ErogazioniCostanti.LABEL_ASPS_MODIFICA_SERVIZIO_NOME);
 		de.setValue(labelServizio);
 		de.setType(DataElementType.TEXT);
 		List<Parameter> listParametersServizio = new ArrayList<>();
@@ -974,7 +974,7 @@ public class ErogazioniHelper extends AccordiServizioParteSpecificaHelper{
 				AccordiServizioParteSpecificaCostanti.SERVLET_NAME_APS_CHANGE,
 				listParametersServizio.toArray(new Parameter[1]));
 		de.setToolTip(MessageFormat.format(ErogazioniCostanti.ASPS_EROGAZIONI_ICONA_MODIFICA_CONFIGURAZIONE_TOOLTIP_CON_PARAMETRO,
-				""));
+				AccordiServizioParteSpecificaCostanti.LABEL_APS_INFO_GENERALI));
 				//AccordiServizioParteSpecificaCostanti.LABEL_APS_SERVIZIO));
 		de.setLabelRight(ErogazioniCostanti.ASPS_EROGAZIONI_ICONA_MODIFICA_CONFIGURAZIONE);
 		dati.addElement(de);

@@ -157,7 +157,7 @@ public final class AccordiServizioParteSpecificaAllegatiView extends Action {
 				lstParam.add(new Parameter(tmpTitle, ErogazioniCostanti.SERVLET_NAME_ASPS_EROGAZIONI_CHANGE,
 						listErogazioniChange.toArray(new Parameter[1])));
 				
-				lstParam.add(new Parameter(ErogazioniCostanti.LABEL_ASPS_MODIFICA_SERVIZIO, AccordiServizioParteSpecificaCostanti.SERVLET_NAME_APS_CHANGE, 
+				lstParam.add(new Parameter(ErogazioniCostanti.LABEL_ASPS_MODIFICA_SERVIZIO_INFO_GENERALI, AccordiServizioParteSpecificaCostanti.SERVLET_NAME_APS_CHANGE, 
 						listErogazioniChange.toArray(new Parameter[1])));
 				
 				lstParam.add(new Parameter(AccordiServizioParteSpecificaCostanti.LABEL_APS_ALLEGATI,AccordiServizioParteSpecificaCostanti.SERVLET_NAME_APS_ALLEGATI_LIST, 
