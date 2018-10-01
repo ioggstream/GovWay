@@ -1025,7 +1025,8 @@ public class ErogazioniHelper extends AccordiServizioParteSpecificaHelper{
 			de.addUrl(
 					AccordiServizioParteSpecificaCostanti.SERVLET_NAME_APS_CHANGE,
 					listParametersServizio.toArray(new Parameter[1]));
-			de.addToolTip(MessageFormat.format(ErogazioniCostanti.ASPS_EROGAZIONI_ICONA_MODIFICA_CONFIGURAZIONE_TOOLTIP_CON_PARAMETRO, AccordiServizioParteSpecificaCostanti.LABEL_APC_COMPOSTO_SOLO_PARTE_COMUNE));
+			de.addToolTip(MessageFormat.format(ErogazioniCostanti.ASPS_EROGAZIONI_ICONA_MODIFICA_CONFIGURAZIONE_TOOLTIP_CON_PARAMETRO, 
+					"Versione "+AccordiServizioParteSpecificaCostanti.LABEL_APC_COMPOSTO_SOLO_PARTE_COMUNE));
 			de.addIcon(ErogazioniCostanti.ASPS_EROGAZIONI_ICONA_MODIFICA_CONFIGURAZIONE);
 			de.addTarget(TargetType.SELF);
 		}

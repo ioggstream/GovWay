@@ -1484,7 +1484,7 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 						gestioneTokenValidazioneInput, gestioneTokenIntrospection, gestioneTokenUserInfo, gestioneTokenTokenForward,
 						autenticazioneTokenIssuer, autenticazioneTokenClientId, autenticazioneTokenSubject, autenticazioneTokenUsername, autenticazioneTokenEMail,
 						autorizzazione_tokenOptions,
-						autorizzazioneScope,scope,autorizzazioneScopeMatch,allegatoXacmlPolicy);
+						autorizzazioneScope,scope,autorizzazioneScopeMatch,allegatoXacmlPolicy,false);
 
 				// Controllo se richiedere il connettore
 				
@@ -1643,7 +1643,7 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 						gestioneTokenValidazioneInput, gestioneTokenIntrospection, gestioneTokenUserInfo, gestioneTokenTokenForward,
 						autenticazioneTokenIssuer, autenticazioneTokenClientId, autenticazioneTokenSubject, autenticazioneTokenUsername, autenticazioneTokenEMail,
 						autorizzazione_tokenOptions,
-						autorizzazioneScope,scope,autorizzazioneScopeMatch,allegatoXacmlPolicy);
+						autorizzazioneScope,scope,autorizzazioneScopeMatch,allegatoXacmlPolicy,false);
 
 				if(!connettoreStatic) {
 					boolean forceEnableConnettore = false;
@@ -1864,7 +1864,7 @@ public final class AccordiServizioParteSpecificaAdd extends Action {
 							gestioneTokenValidazioneInput, gestioneTokenIntrospection, gestioneTokenUserInfo, gestioneTokenTokenForward,
 							autenticazioneTokenIssuer, autenticazioneTokenClientId, autenticazioneTokenSubject, autenticazioneTokenUsername, autenticazioneTokenEMail,
 							autorizzazione_tokenOptions,
-							autorizzazioneScope,scope,autorizzazioneScopeMatch,allegatoXacmlPolicy);
+							autorizzazioneScope,scope,autorizzazioneScopeMatch,allegatoXacmlPolicy,false);
 
 					if(!connettoreStatic) {
 					

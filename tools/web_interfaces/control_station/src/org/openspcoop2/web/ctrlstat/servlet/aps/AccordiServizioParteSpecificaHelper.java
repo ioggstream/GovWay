@@ -4272,7 +4272,8 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 			String gestioneTokenValidazioneInput, String gestioneTokenIntrospection, String gestioneTokenUserInfo, String gestioneTokenForward,
 			String autenticazioneTokenIssuer,String autenticazioneTokenClientId,String autenticazioneTokenSubject,String autenticazioneTokenUsername,String autenticazioneTokenEMail,
 			String autorizzazione_tokenOptions,
-			String autorizzazioneScope,  String scope, String autorizzazioneScopeMatch,BinaryParameter allegatoXacmlPolicy) throws Exception{
+			String autorizzazioneScope,  String scope, String autorizzazioneScopeMatch,BinaryParameter allegatoXacmlPolicy,
+			boolean moreThenOneImplementation) throws Exception{
 
 		String tipologia = ServletUtils.getObjectFromSession(this.session, String.class, AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_TIPO_EROGAZIONE);
 		boolean gestioneFruitori = false;
@@ -4283,6 +4284,22 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 			}
 			else if(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_TIPO_EROGAZIONE_VALUE_EROGAZIONE.equals(tipologia)) {
 				gestioneErogatori = true;
+			}
+		}
+		
+		boolean confirmInProgress = false;
+		if(moreThenOneImplementation) {
+			DataElement de = new DataElement();
+			de.setName(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_CONFERMA_MODIFICA_DATI_SERVIZIO);
+			de.setValue("true");
+			de.setType(DataElementType.HIDDEN);
+			dati.addElement(de);
+			
+			if(this.getPostBackElementName()==null || "".equals(this.getPostBackElementName())) {
+				String tmp = this.getParameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_CONFERMA_MODIFICA_DATI_SERVIZIO);
+				if(tmp!=null && !"".equals(tmp)) {
+					confirmInProgress = true;
+				}
 			}
 		}
 		
@@ -4566,14 +4583,31 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 				}
 				de.setName(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_ACCORDO);
 				if(showModificaAPIErogazioniFruizioniView==null || showModificaAPIErogazioniFruizioniView) {
-					de.setType(DataElementType.SELECT);
-					de.setValues(accordiCompatibiliList);
-					de.setLabels(accordiCompatibiliLabelList);
-					//if(showModificaAPIErogazioniFruizioniView==null) {
-					// Lasciare il postback, l'evento serve ad allineare la versione dell'API con la versione del servizio in automatico
-					de.setPostBack(true);
-					//}
-					de.setSelected(accordo);
+					if(confirmInProgress) {
+						de.setType(DataElementType.HIDDEN);
+						
+						DataElement deLabel = new DataElement();
+						deLabel.setLabel(AccordiServizioParteSpecificaCostanti.LABEL_PARAMETRO_APS_ACCORDO_PARTE_COMUNE_VERSIONE);
+						deLabel.setName(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_ACCORDO+"__LABEL");
+						deLabel.setType(DataElementType.TEXT);
+						for (int i = 0; i < accordiCompatibiliList.length; i++) {
+							if(accordo.equals(accordiCompatibiliList[i])) {
+								deLabel.setValue(accordiCompatibiliLabelList[i]);
+								break;
+							}
+						}
+						dati.addElement(deLabel);
+					}
+					else {
+						de.setType(DataElementType.SELECT);
+						de.setValues(accordiCompatibiliList);
+						de.setLabels(accordiCompatibiliLabelList);
+						//if(showModificaAPIErogazioniFruizioniView==null) {
+						// Lasciare il postback, l'evento serve ad allineare la versione dell'API con la versione del servizio in automatico
+						de.setPostBack(true);
+						//}
+						de.setSelected(accordo);
+					}
 				}
 				else {
 					de.setType(DataElementType.HIDDEN);

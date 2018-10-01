@@ -294,8 +294,11 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 			String versione = apsHelper.getParameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_VERSIONE);
 			
 			String backToStato = apsHelper.getParameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_RIPRISTINA_STATO);
+			String backToConfermaModificaDatiServizio = apsHelper.getParameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_CONFERMA_MODIFICA_DATI_SERVIZIO);
 			String actionConfirm = apsHelper.getParameter(Costanti.PARAMETRO_ACTION_CONFIRM);
 
+			String tmpModificaAPI = apsHelper.getParameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_MODIFICA_API);
+			
 			boolean validazioneDocumenti = true;
 			String tmpValidazioneDocumenti = apsHelper.getParameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_VALIDAZIONE_DOCUMENTI);
 			if(ServletUtils.isEditModeInProgress(this.editMode)){
@@ -502,6 +505,35 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 			tipiSoggettiCompatibiliAccordo = soggettiCore.getTipiSoggettiGestitiProtocollo(tipoProtocollo);
 			tipiServizioCompatibiliAccordo = apsCore.getTipiServiziGestitiProtocollo(tipoProtocollo,serviceBinding);
 
+			// verifico implementazioni del servizio utilizzate nelle fruizioni e/o nelle erogazioni
+			boolean moreThenOneImplementation = false;
+			List<IDPortaDelegata> listMappingPD = new ArrayList<>();
+			List<IDPortaApplicativa> listMappingPA = new ArrayList<>();
+			if( (gestioneFruitori || gestioneErogatori) && tmpModificaAPI!=null && !"".equals(tmpModificaAPI)) {
+			
+				IDServizio idServizio = IDServizioFactory.getInstance().getIDServizioFromAccordo(asps);
+				
+				// Fruizioni
+				for (Fruitore fruitore : asps.getFruitoreList()) {
+					IDSoggetto idSoggettoFr = new IDSoggetto(fruitore.getTipo(), fruitore.getNome());
+					Soggetto soggetto = soggettiCore.getSoggettoRegistro(idSoggettoFr);
+					if(!pddCore.isPddEsterna(soggetto.getPortaDominio())){
+						IDPortaDelegata idPD = porteDelegateCore.getIDPortaDelegataAssociataDefault(idServizio, idSoggettoFr);
+						if(idPD!=null) {
+							listMappingPD.add(idPD);
+						}
+					}	
+				}
+				
+				// Erogazioni
+				IDPortaApplicativa idPA = porteApplicativeCore.getIDPortaApplicativaAssociataDefault(idServizio);
+				if(idPA!=null) {
+					listMappingPA.add(idPA);
+				}
+				
+				moreThenOneImplementation = (listMappingPD.size()+listMappingPA.size()) > 1;
+			}
+			
 			// calcolo soggetti compatibili con accordi
 			List<Soggetto> list = null;
 			if(apsCore.isVisioneOggettiGlobale(userLogin)){
@@ -648,6 +680,7 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 			// verifico versione change
 			String postBackElementName = apsHelper.getPostBackElementName();
 			if(postBackElementName != null ){
+			
 				if(postBackElementName.equalsIgnoreCase(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_ACCORDO)){
 					// ho modificato l'accordo (la versione)
 					// verifico se la versione precedente della API era uguale alla versione attuale del servizio, modifico anche la versione del servizio se sono in standard.
@@ -661,6 +694,8 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 						}
 					}
 				}
+				
+				backToConfermaModificaDatiServizio = null; // non ho ancora cliccato su salva configurazione
 			}
 			
 			
@@ -1027,7 +1062,7 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 					this.wsdlimplfru.setValue(asps.getByteWsdlImplementativoFruitore());
 				}
 
-				if(backToStato == null){
+				if(backToStato == null && backToConfermaModificaDatiServizio==null){
 					// preparo i campi
 					Vector<DataElement> dati = new Vector<DataElement>();
 					dati.addElement(ServletUtils.getDataElementForEditModeFinished());
@@ -1054,7 +1089,7 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 							null,null,null,null,null,null,null,null,null,null,
 							null,null,null,null,null,
 							null,
-							null,null,null,null);
+							null,null,null,null,moreThenOneImplementation);
 
 					if(apsHelper.isModalitaCompleta() || (!soggettoOperativo && !gestioneFruitori)) {
 					
@@ -1221,7 +1256,7 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 						null,null,null,null,null,null,null,null,null,null,
 						null,null,null,null,null,
 						null,
-						null,null,null,null);
+						null,null,null,null,moreThenOneImplementation);
 
 				if(apsHelper.isModalitaCompleta() || (!soggettoOperativo && !gestioneFruitori)) {
 				
@@ -1288,7 +1323,7 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 
 			// I dati dell'utente sono validi, se ha scelto di modificare lo stato da finale ad operativo visualizzo la schermata di conferma
 			if( actionConfirm == null){
-				if(  backToStato != null){
+				if(  backToStato != null || backToConfermaModificaDatiServizio!=null){
 					// setto la barra del titolo
 					ServletUtils.setPageDataTitle(pd, lstParm );
 
@@ -1321,7 +1356,7 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 							null,null,null,null,null,null,null,null,null,null,
 							null,null,null,null,null,
 							null,
-							null,null,null,null);
+							null,null,null,null,moreThenOneImplementation);
 
 					if(apsHelper.isModalitaCompleta() || (!soggettoOperativo && !gestioneFruitori)) {
 						boolean forceEnableConnettore = false;
@@ -1383,6 +1418,15 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 						de.setName(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_RIPRISTINA_STATO);
 						dati.addElement(de);
 					}
+					if(backToConfermaModificaDatiServizio != null) {
+						// backtostato per chiudere la modifica dopo la conferma
+						DataElement de = new DataElement();
+						de.setLabel(CostantiControlStation.LABEL_PARAMETRO_NOME);
+						de.setValue(backToConfermaModificaDatiServizio);
+						de.setType(DataElementType.HIDDEN);
+						de.setName(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_CONFERMA_MODIFICA_DATI_SERVIZIO);
+						dati.addElement(de);
+					}
 					
 					// aggiunta campi custom
 					dati = apsHelper.addProtocolPropertiesToDati(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
@@ -1390,7 +1434,45 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 					// aggiunta campi custom come hidden, quelli sopra vengono bruciati dal no-edit
 					dati = apsHelper.addProtocolPropertiesToDatiAsHidden(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
 					
-					String msg = "&Egrave; stato richiesto di ripristinare lo stato dell''accordo [{0}] in operativo. Tale operazione permetter&agrave; successive modifiche all''accordo. Vuoi procedere?";
+					String msg = null;
+					if(backToStato != null) {
+						msg = "&Egrave; stato richiesto di ripristinare lo stato dell''accordo [{0}] in operativo. Tale operazione permetter&agrave; successive modifiche all''accordo. Vuoi procedere?";
+					}
+					else if(backToConfermaModificaDatiServizio != null) {
+						msg = "La modifica dei dati dell&#39;API impatta su altre configurazioni, oltre a quella selezionata.";
+						msg+="<BR/>Di seguito vengono elencate tutte le configurazioni coinvolte dalla modifica. Vuoi procedere?";
+						msg+="<BR/>";
+						if(listMappingPD.size()>0) {
+							msg+="<BR/>";
+							if(listMappingPD.size()==1) {
+								msg+="La fruizione:";
+							}
+							else if(listMappingPD.size()>1) {
+								msg+="Le "+listMappingPD.size()+" fruizioni:";
+							}
+							msg+="<BR/>";
+							for (IDPortaDelegata idPortaDelegata : listMappingPD) {
+								msg+="- ";
+								msg+=apsHelper.getLabelServizioFruizione(tipoProtocollo, idPortaDelegata.getIdentificativiFruizione().getSoggettoFruitore(), idPortaDelegata.getIdentificativiFruizione().getIdServizio());
+								msg+="<BR/>";
+							}
+						}
+						if(listMappingPA.size()>0) {
+							msg+="<BR/>";
+							if(listMappingPA.size()==1) {
+								msg+="L&#39;erogazione:";
+							}
+							else if(listMappingPA.size()>1) {
+								msg+=listMappingPA.size()+" erogazioni:";
+							}
+							msg+="<BR/>";
+							for (IDPortaApplicativa idPortaApplicativa : listMappingPA) {
+								msg+="- ";
+								msg+=apsHelper.getLabelServizioErogazione(tipoProtocollo, idPortaApplicativa.getIdentificativiErogazione().getIdServizio());
+								msg+="<BR/>";
+							}
+						}
+					}
 					
 					String pre = Costanti.HTML_MODAL_SPAN_PREFIX;
 					String post = Costanti.HTML_MODAL_SPAN_SUFFIX;
@@ -1419,6 +1501,41 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 							ForwardParams.CHANGE());
 				}
 			}
+			
+			// Esco immediatamente nel caso di modifica API non confermata
+			// Il caso invece del ripristina viene gestito differentemente
+			if(moreThenOneImplementation && actionConfirm != null && actionConfirm.equals(Costanti.PARAMETRO_ACTION_CONFIRM_VALUE_NO)){
+				
+				String superUser = ServletUtils.getUserLoginFromSession(session);
+				
+				Search ricerca = (Search) ServletUtils.getSearchObjectFromSession(session, Search.class);
+
+				//				PermessiUtente pu = ServletUtils.getUserFromSession(session).getPermessi();
+				//				
+				//				boolean [] permessi = new boolean[2];
+				//				permessi[0] = pu.isServizi();
+				//				permessi[1] = pu.isAccordiCooperazione();
+
+				List<AccordoServizioParteSpecifica> listaServizi = null;
+				if(apsCore.isVisioneOggettiGlobale(superUser)){
+					listaServizi = apsCore.soggettiServizioList(null, ricerca,permessi, gestioneFruitori, gestioneErogatori);
+				}else{
+					listaServizi = apsCore.soggettiServizioList(superUser, ricerca,permessi, gestioneFruitori, gestioneErogatori);
+				}
+
+				apsHelper.prepareServiziList(ricerca, listaServizi);
+
+				ServletUtils.setGeneralAndPageDataIntoSession(session, gd, pd);
+				
+				if(vistaErogazioni != null && vistaErogazioni.booleanValue()) {
+					ErogazioniHelper erogazioniHelper = new ErogazioniHelper(request, pd, session);
+					erogazioniHelper.prepareErogazioneChange(TipoOperazione.CHANGE, asps, idSoggettoFruitore);
+					return ServletUtils.getStrutsForwardEditModeFinished(mapping, ErogazioniCostanti.OBJECT_NAME_ASPS_EROGAZIONI, ForwardParams.CHANGE());
+				}
+				return ServletUtils.getStrutsForwardEditModeFinished(mapping, AccordiServizioParteSpecificaCostanti.OBJECT_NAME_APS,
+						ForwardParams.CHANGE());
+			} 
+			
 
 			// Modifico i dati del servizio nel db
 
@@ -1556,7 +1673,7 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 							null,null,null,null,null,null,null,null,null,null,
 							null,null,null,null,null,
 							null,
-							null,null,null,null);
+							null,null,null,null,moreThenOneImplementation);
 
 					if(apsHelper.isModalitaCompleta() || (!soggettoOperativo && !gestioneFruitori)) {
 					
