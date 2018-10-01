@@ -546,6 +546,7 @@ public class ControlStationCore {
 	private boolean enableAutoMappingWsdlIntoAccordo_estrazioneSchemiInWsdlTypes = false;
 	private boolean showMTOMVisualizzazioneCompleta = false;
 	private int portaCorrelazioneApplicativaMaxLength = 255;
+	private boolean showPortaDelegataLocalForward = false;
 	private boolean isElenchiSA_asincroniNonSupportati_VisualizzaRispostaAsincrona = false;
 	private boolean showConfigurazioneTracciamentoDiagnostica = true;
 	private String tokenPolicyForceId = null;
@@ -615,6 +616,9 @@ public class ControlStationCore {
 	}
 	public int getPortaCorrelazioneApplicativaMaxLength() {
 		return this.portaCorrelazioneApplicativaMaxLength;
+	}
+	public boolean isShowPortaDelegataLocalForward() {
+		return this.showPortaDelegataLocalForward;
 	}
 	public boolean isElenchiSA_asincroniNonSupportati_VisualizzaRispostaAsincrona() {
 		return this.isElenchiSA_asincroniNonSupportati_VisualizzaRispostaAsincrona;
@@ -1520,6 +1524,7 @@ public class ControlStationCore {
 		this.enableAutoMappingWsdlIntoAccordo_estrazioneSchemiInWsdlTypes = core.enableAutoMappingWsdlIntoAccordo_estrazioneSchemiInWsdlTypes;
 		this.showMTOMVisualizzazioneCompleta = core.showMTOMVisualizzazioneCompleta;
 		this.portaCorrelazioneApplicativaMaxLength = core.portaCorrelazioneApplicativaMaxLength;
+		this.showPortaDelegataLocalForward = core.showPortaDelegataLocalForward;
 		this.isElenchiSA_asincroniNonSupportati_VisualizzaRispostaAsincrona = core.isElenchiSA_asincroniNonSupportati_VisualizzaRispostaAsincrona;
 		this.showConfigurazioneTracciamentoDiagnostica = core.showConfigurazioneTracciamentoDiagnostica;
 		this.tokenPolicyForceId = core.tokenPolicyForceId;
@@ -1793,6 +1798,7 @@ public class ControlStationCore {
 			this.enableAutoMappingWsdlIntoAccordo_estrazioneSchemiInWsdlTypes = consoleProperties.isEnableAutoMappingWsdlIntoAccordo_estrazioneSchemiInWsdlTypes();
 			this.showMTOMVisualizzazioneCompleta = consoleProperties.isMenuMTOMVisualizzazioneCompleta();
 			this.portaCorrelazioneApplicativaMaxLength = consoleProperties.getPortaCorrelazioneApplicativaMaxLength();
+			this.showPortaDelegataLocalForward = consoleProperties.isMenuPortaDelegataLocalForward();
 			this.isElenchiSA_asincroniNonSupportati_VisualizzaRispostaAsincrona = consoleProperties.isElenchiSA_asincroniNonSupportati_VisualizzaRispostaAsincrona();
 			this.showConfigurazioneTracciamentoDiagnostica = consoleProperties.isMenuConfigurazioneVisualizzazioneDiagnosticaTracciatura();
 			this.tokenPolicyForceId = consoleProperties.getTokenPolicyForceId();

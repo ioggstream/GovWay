@@ -1546,7 +1546,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 
 				Fruitore fruitore = null;
 				if(showConfigurazionePD) {
-					fruitore = asps.getFruitore(0);
+					fruitore = asps.getFruitore(0); // NOTA: il metodo 'soggettiServizioList' ritorna un unico fruitore in caso di gestioneFruitori abiltata per ogni entry. Crea cioè un accordo con fruitore per ogni fruitore esistente
 				}
 				
 				String protocollo = protocolli.get(i);
@@ -3533,6 +3533,9 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 			String protocollo = this.soggettiCore.getProtocolloAssociatoTipoSoggetto(soggFruitore.getTipo());
 			
 			String servizioTmpTile = this.getLabelIdServizio(asps);
+			if(gestioneFruitori) {
+				servizioTmpTile = this.getLabelServizioFruizione(protocollo, idSoggettoFruitore, asps);
+			}
 			Parameter pIdServizio = new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_ID, idServizio+ "");
 			Parameter pIdAsps = new Parameter(PorteDelegateCostanti.PARAMETRO_PORTE_DELEGATE_ID_ASPS, idServizio);
 			Parameter pIdSoggettoErogatore = new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_ID_SOGGETTO_EROGATORE, asps.getIdSoggetto()+"");
@@ -3541,7 +3544,13 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 		
 			Fruitore fru = null;
 			if(gestioneFruitori) {
-				fru = asps.getFruitore(0);
+				for (Fruitore fruCheck : asps.getFruitoreList()) {
+					if(fruCheck.getTipo().equals(idSoggettoFruitore.getTipo()) &&
+							fruCheck.getNome().equals(idSoggettoFruitore.getNome())) {
+						fru = fruCheck;
+						break;
+					}
+				}
 			}
 			else {
 				for (Fruitore fruCheck : asps.getFruitoreList()) {

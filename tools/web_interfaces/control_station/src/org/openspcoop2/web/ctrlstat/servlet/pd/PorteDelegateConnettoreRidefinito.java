@@ -170,7 +170,13 @@ public class PorteDelegateConnettoreRidefinito  extends Action {
 			Soggetto soggFruitore = soggettiCore.getSoggettoRegistro(Integer.parseInt(idSoggFruitore));
 			Fruitore fru = null;
 			if(gestioneFruitori) {
-				fru = asps.getFruitore(0);
+				for (Fruitore fruCheck : asps.getFruitoreList()) {
+					if(fruCheck.getTipo().equals(idSoggettoFruitore.getTipo()) &&
+							fruCheck.getNome().equals(idSoggettoFruitore.getNome())) {
+						fru = fruCheck;
+						break;
+					}
+				}
 			}
 			else {
 				for (Fruitore fruCheck : asps.getFruitoreList()) {
