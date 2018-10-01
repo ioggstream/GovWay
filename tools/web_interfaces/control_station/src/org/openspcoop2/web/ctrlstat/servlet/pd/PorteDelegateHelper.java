@@ -404,6 +404,8 @@ public class PorteDelegateHelper extends ConnettoriHelper {
 			}
 		}
 		
+		boolean disableSaveButtonForDatiInvocazione = true;
+		
 		if(!isConfigurazione || datiInvocazione) {
 			de = new DataElement();
 			if(datiInvocazione) {
@@ -467,6 +469,8 @@ public class PorteDelegateHelper extends ConnettoriHelper {
 				de.setLabels(tipoModeAzioneLabel); 
 				de.setSelected(modeaz);
 				de.setPostBack(true);
+				
+				disableSaveButtonForDatiInvocazione = false;
 			}
 		} else {
 			de.setType(DataElementType.HIDDEN);
@@ -504,6 +508,9 @@ public class PorteDelegateHelper extends ConnettoriHelper {
 					de.setLabels(azioniListLabel);
 					de.setSelected(azid);
 					dati.addElement(de);
+					
+					disableSaveButtonForDatiInvocazione = false;
+					
 				} else {
 		
 					de = new DataElement();
@@ -539,6 +546,7 @@ public class PorteDelegateHelper extends ConnettoriHelper {
 							else {
 								de.setType(DataElementType.TEXT_EDIT);
 							}
+							disableSaveButtonForDatiInvocazione = false;
 						}
 					}else
 						de.setType(DataElementType.HIDDEN);
@@ -572,6 +580,7 @@ public class PorteDelegateHelper extends ConnettoriHelper {
 						if( ServletUtils.isCheckBoxEnabled(forceWsdlBased) || CostantiRegistroServizi.ABILITATO.equals(forceWsdlBased) ){
 							de.setSelected(true);
 						}
+						disableSaveButtonForDatiInvocazione = false;
 					}
 				}
 				else{
@@ -711,7 +720,9 @@ public class PorteDelegateHelper extends ConnettoriHelper {
 			
 		}
 		
-		
+		if(datiInvocazione && disableSaveButtonForDatiInvocazione) {
+			this.pd.disableEditMode();
+		}
 		
 		
 		
@@ -1013,7 +1024,7 @@ public class PorteDelegateHelper extends ConnettoriHelper {
 		
 		boolean supportoAsincroni = this.core.isProfiloDiCollaborazioneAsincronoSupportatoDalProtocollo(protocollo,serviceBinding);
 		
-		if (this.isModalitaStandard() || !supportoAsincroni) {
+		if (this.isModalitaStandard() || !supportoAsincroni || datiInvocazione) {
 
 			de = new DataElement();
 			de.setType(DataElementType.HIDDEN);
@@ -3321,7 +3332,7 @@ public class PorteDelegateHelper extends ConnettoriHelper {
 		case PorteDelegateCostanti.ATTRIBUTO_PORTE_DELEGATE_PARENT_CONFIGURAZIONE:
 			// Prendo il nome e il tipo del servizio
 			AccordoServizioParteSpecifica asps = this.apsCore.getAccordoServizioParteSpecifica(Integer.parseInt(idAsps));
-			String servizioTmpTile = this.getLabelIdServizio(asps);
+			String servizioTmpTile = this.getLabelServizioFruizione(protocollo, new IDSoggetto(tipoSoggettoFruitore, nomeSoggettoFruitore), asps);
 			
 			String tipologia = ServletUtils.getObjectFromSession(this.session, String.class, AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_TIPO_EROGAZIONE);
 			boolean gestioneFruitori = false;
@@ -3336,12 +3347,15 @@ public class PorteDelegateHelper extends ConnettoriHelper {
 			Parameter pIdSoggettoFruitore = new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_ID_SOGGETTO, idSoggettoFruitore);
 			Parameter pNomeServizio = new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_NOME_SERVIZIO, asps.getNome());
 			Parameter pTipoServizio = new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_TIPO_SERVIZIO, asps.getTipo());
+			Parameter pTipoSoggettoFruitore = new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_TIPO_SOGGETTO_FRUITORE, tipoSoggettoFruitore);
+			Parameter pNomeSoggettoFruitore = new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_NOME_SOGGETTO_FRUITORE, nomeSoggettoFruitore);
 			
 			if(gestioneFruitori) {
 				Boolean vistaErogazioni = ServletUtils.getBooleanAttributeFromSession(ErogazioniCostanti.ASPS_EROGAZIONI_ATTRIBUTO_VISTA_EROGAZIONI, this.session);
 				if(vistaErogazioni != null && vistaErogazioni.booleanValue()) {
 					lstParam.add(new Parameter(ErogazioniCostanti.LABEL_ASPS_FRUIZIONI, ErogazioniCostanti.SERVLET_NAME_ASPS_EROGAZIONI_LIST));
-					lstParam.add(new Parameter(servizioTmpTile, ErogazioniCostanti.SERVLET_NAME_ASPS_EROGAZIONI_CHANGE, pIdServizio,pNomeServizio, pTipoServizio));
+					lstParam.add(new Parameter(servizioTmpTile, ErogazioniCostanti.SERVLET_NAME_ASPS_EROGAZIONI_CHANGE, 
+							pIdServizio,pNomeServizio, pTipoServizio, pTipoSoggettoFruitore, pNomeSoggettoFruitore));
 					boolean gestioneGruppi = true;
 					String paramGestioneGruppi = ServletUtils.getObjectFromSession(this.session, String.class, AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_GESTIONE_GRUPPI);
 					if(paramGestioneGruppi!=null && !"".equals(paramGestioneGruppi)) {
@@ -3359,13 +3373,15 @@ public class PorteDelegateHelper extends ConnettoriHelper {
 					String labelConfigurazione = gestioneConfigurazioni ? ErogazioniCostanti.LABEL_ASPS_GESTIONE_CONFIGURAZIONI : 
 						(gestioneGruppi ? MessageFormat.format(ErogazioniCostanti.LABEL_ASPS_GESTIONE_GRUPPI_CON_PARAMETRO, this.getLabelAzioni(serviceBinding)) : AccordiServizioParteSpecificaCostanti.LABEL_APS_PORTE_APPLICATIVE);
 					
-					lstParam.add(new Parameter(labelConfigurazione, AccordiServizioParteSpecificaCostanti.SERVLET_NAME_APS_FRUITORI_PORTE_DELEGATE_LIST ,pIdFruizione,pIdServizio,pIdSoggettoFruitore));
+					lstParam.add(new Parameter(labelConfigurazione, AccordiServizioParteSpecificaCostanti.SERVLET_NAME_APS_FRUITORI_PORTE_DELEGATE_LIST ,
+							pIdFruizione,pIdServizio,pIdSoggettoFruitore, pTipoSoggettoFruitore, pNomeSoggettoFruitore));
 					
 				}else {
 					lstParam.add(new Parameter(AccordiServizioParteSpecificaCostanti.LABEL_APS_FRUITORI, AccordiServizioParteSpecificaCostanti.SERVLET_NAME_APS_LIST));
 					//	lstParam.add(new Parameter(servizioTmpTile, AccordiServizioParteSpecificaCostanti.SERVLET_NAME_APS_CHANGE, pIdServizio,pNomeServizio, pTipoServizio));
 					lstParam.add(new Parameter(AccordiServizioParteSpecificaCostanti.LABEL_APS_CONFIGURAZIONI_DI + servizioTmpTile, 
-							AccordiServizioParteSpecificaCostanti.SERVLET_NAME_APS_FRUITORI_PORTE_DELEGATE_LIST ,pIdFruizione,pIdServizio,pIdSoggettoFruitore));
+							AccordiServizioParteSpecificaCostanti.SERVLET_NAME_APS_FRUITORI_PORTE_DELEGATE_LIST ,
+							pIdFruizione,pIdServizio,pIdSoggettoFruitore, pTipoSoggettoFruitore, pNomeSoggettoFruitore));
 				}
 			}
 			else {

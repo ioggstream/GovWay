@@ -1201,6 +1201,8 @@ public class PorteApplicativeHelper extends ConnettoriHelper {
 			}
 		}
 		
+		boolean disableSaveButtonForDatiInvocazione = true;
+		
 		if(!isConfigurazione || datiInvocazione) {
 			de = new DataElement();
 			if(datiInvocazione) {
@@ -1264,6 +1266,8 @@ public class PorteApplicativeHelper extends ConnettoriHelper {
 				de.setLabels(tipoModeAzioneLabel); 
 				de.setSelected(modeaz);
 				de.setPostBack(true);
+				
+				disableSaveButtonForDatiInvocazione = false;
 			}
 		} else {
 			de.setType(DataElementType.HIDDEN);
@@ -1301,6 +1305,9 @@ public class PorteApplicativeHelper extends ConnettoriHelper {
 					de.setLabels(azioniListLabel);
 					de.setSelected(azid);
 					dati.addElement(de);
+					
+					disableSaveButtonForDatiInvocazione = false;
+					
 				} else {
 		
 					de = new DataElement();
@@ -1338,6 +1345,8 @@ public class PorteApplicativeHelper extends ConnettoriHelper {
 							else {
 								de.setType(DataElementType.TEXT_EDIT);
 							}
+							
+							disableSaveButtonForDatiInvocazione = false;
 						}
 					}else
 						de.setType(DataElementType.HIDDEN);
@@ -1371,6 +1380,8 @@ public class PorteApplicativeHelper extends ConnettoriHelper {
 						if( ServletUtils.isCheckBoxEnabled(forceWsdlBased) || CostantiRegistroServizi.ABILITATO.equals(forceWsdlBased) ){
 							de.setSelected(true);
 						}
+						
+						disableSaveButtonForDatiInvocazione = false;
 					}
 				}
 				else{
@@ -1511,6 +1522,11 @@ public class PorteApplicativeHelper extends ConnettoriHelper {
 			}
 			
 		}
+		
+		if(datiInvocazione && disableSaveButtonForDatiInvocazione) {
+			this.pd.disableEditMode();
+		}
+		
 		
 		
 		// *************** ServizioApplicativo Erogatore *********************

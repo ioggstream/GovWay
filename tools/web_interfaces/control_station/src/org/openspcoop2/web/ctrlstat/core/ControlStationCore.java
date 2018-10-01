@@ -4945,17 +4945,10 @@ public class ControlStationCore {
 				}
 				else if(consideraProtocolliCompatibiliSoggettoSelezionato &&
 						u.getSoggettoSelezionatoPddConsole()!=null && !"".equals(u.getSoggettoSelezionatoPddConsole())) {
-					List<org.openspcoop2.core.registry.Soggetto> listSoggettiOperativi = this.getSoggettiOperativi();
+					String tipoSoggetto = u.getSoggettoSelezionatoPddConsole().split("/")[0];
 					SoggettiCore soggettiCore = new SoggettiCore(this);
-					for (org.openspcoop2.core.registry.Soggetto soggetto : listSoggettiOperativi) {
-						String protocollo = soggettiCore.getProtocolloAssociatoTipoSoggetto(soggetto.getTipo());
-						if(protocolliList.contains(protocollo)==false) {
-							String name = NamingUtils.getLabelSoggetto(protocollo, new IDSoggetto(soggetto.getTipo(),soggetto.getNome()));
-							if(name.equals(u.getSoggettoSelezionatoPddConsole())) {
-								protocolliList.add(protocollo);
-							}
-						}
-					}
+					String protocollo = soggettiCore.getProtocolloAssociatoTipoSoggetto(tipoSoggetto); 
+					protocolliList.add(protocollo);
 					return protocolliList;
 				}
 			}
