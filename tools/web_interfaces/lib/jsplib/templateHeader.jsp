@@ -116,6 +116,11 @@ String logoTitolo = gd.getLogoHeaderTitolo();
 	// 																spanLabelClass = "item-label-with-icon";
 	// 																itemClass ="menu-item-with-icon";
 	// 															}
+	
+																String toolTip = " ";
+																if(!l.getTooltip().equals("")){
+																	toolTip = " title=\"" + l.getTooltip() + "\"";
+														  		}
 																
 																if(l.getUrl().equals("")){
 																	itemClass += " menu-no-pointer";
@@ -132,24 +137,24 @@ String logoTitolo = gd.getLogoHeaderTitolo();
 																					if (l.getTarget().equals("_blank")) {
 																          			%>
 																          				<a class="td2PageHeader" onClick="var win = window.open('<%= l.getUrl() %>', '<%= l.getLabel().replace(' ', '_') %>', 'width=900,height=700,resizable=yes,scrollbars=yes');win.focus();return false;" 
-																          					target="<%= l.getTarget() %>" href="<%= l.getUrl() %>"><%= l.getLabel() %></a>
+																          					target="<%= l.getTarget() %>" href="<%= l.getUrl() %>" <%= toolTip %> ><%= l.getLabel() %></a>
 																          			<%
 																					}else if("new".equals(l.getTarget())){
-																					%><a class="td2PageHeader" target="_blank" href="<%= l.getUrl() %>"><%= l.getLabel() %></a><%
+																					%><a class="td2PageHeader" target="_blank" href="<%= l.getUrl() %>" <%= toolTip %> ><%= l.getLabel() %></a><%
 																					}else {
-																          			%><a class="td2PageHeader" target="<%= l.getTarget() %>" href="<%= l.getUrl() %>"><%= l.getLabel() %></a><%
+																          			%><a class="td2PageHeader" target="<%= l.getTarget() %>" href="<%= l.getUrl() %>" <%= toolTip %> ><%= l.getLabel() %></a><%
 																					}
 																      			} else {
 																        		//solo url
-																        		%><a class="td2PageHeader" href="<%= l.getUrl() %>"><%= l.getLabel() %></a><%
+																        		%><a class="td2PageHeader" href="<%= l.getUrl() %>" <%= toolTip %> ><%= l.getLabel() %></a><%
 																      			}
 																			} else {
 																      			if (!l.getOnClick().equals("")) {
 																        		//onClick
-																        		%><a class="td2PageHeader" href="" onClick="<%= l.getOnClick() %>; return false;"><%= l.getLabel() %></a><%
+																        		%><a class="td2PageHeader" href="" onClick="<%= l.getOnClick() %>; return false;" <%= toolTip %> ><%= l.getLabel() %></a><%
 																      			} else {
 																				//solo stringa
-																        		%><span class="td2PageHeader"><%= l.getLabel() %></span><%
+																        		%><span class="td2PageHeader" <%= toolTip %> ><%= l.getLabel() %></span><%
 																      			}
 																    		}
 																    		%>

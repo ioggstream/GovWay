@@ -55,6 +55,7 @@ import org.openspcoop2.web.lib.users.dao.User;
 import org.openspcoop2.web.monitor.core.bean.LoginBean;
 import org.openspcoop2.web.monitor.core.bean.UserDetailsBean;
 import org.openspcoop2.web.monitor.core.logger.LoggerManager;
+import org.openspcoop2.web.monitor.core.utils.DynamicPdDBeanUtils;
 import org.openspcoop2.web.monitor.core.utils.ParseUtility;
 import org.slf4j.Logger;
 
@@ -103,7 +104,7 @@ public class Utility {
 		return null;
 		//		return Utility.loginBean;
 	}
-	
+
 	public static LoginBean getLoginBeanFromSession(HttpSession sessione) {
 		if(sessione!= null){
 			LoginBean lb = (LoginBean)sessione.getAttribute(org.openspcoop2.web.monitor.core.bean.AbstractLoginBean.LOGIN_BEAN_SESSION_ATTRIBUTE_NAME);
@@ -322,7 +323,7 @@ public class Utility {
 
 		return null;
 	}
-	
+
 	public static String getLoggedUtenteModalita() {
 		LoginBean lb = getLoginBean();
 
@@ -332,7 +333,7 @@ public class Utility {
 
 		return null;
 	}
-	
+
 	public static Configurazione getConfigurazioneGenerale() {
 		LoginBean lb = getLoginBean();
 
@@ -342,13 +343,13 @@ public class Utility {
 
 		return null;
 	}
-	
+
 	public static boolean isMultitenantAbilitato() {
 		LoginBean lb = getLoginBean();
 
 		if(lb!= null && lb.isLoggedIn()){
 			Configurazione configurazioneGenerale = lb.getConfigurazioneGenerale();
-			
+
 			if(configurazioneGenerale.getMultitenant() != null) {
 				if(configurazioneGenerale.getMultitenant().getStato()!=null) {
 					return StatoFunzionalita.ABILITATO.equals(configurazioneGenerale.getMultitenant().getStato());
@@ -446,7 +447,7 @@ public class Utility {
 
 	public static org.openspcoop2.core.commons.search.Soggetto getSoggetto(IdSoggetto idSog) {
 		LoginBean lb = getLoginBean();
-		
+
 		if(lb!= null && lb.isLoggedIn()){
 			return lb.getSoggetto(idSog);
 		}
@@ -455,7 +456,7 @@ public class Utility {
 			lb = new LoginBean(true);
 			return lb.getSoggetto(idSog);
 		}
-		
+
 		return null;
 	}
 
@@ -518,7 +519,7 @@ public class Utility {
 			}
 		}
 	}
-	
+
 	public static List<String> getListaProtocolli(User utente, List<Soggetto> listaSoggettiGestione, ProtocolFactoryManager pfManager,	MapReader<String, IProtocolFactory<?>> protocolFactories) throws ProtocolException {
 		List<String> listaNomiProtocolli = new  ArrayList<String>();
 
@@ -554,8 +555,25 @@ public class Utility {
 				}
 			}
 		}
-		
+
 		return ProtocolUtils.orderProtocolli(listaNomiProtocolli);
+	}
+
+	public static List<Soggetto> getSoggettiOperativiAssociatiAlProfilo(User u, String profiloSelezionato) throws Exception {
+		List<Soggetto> soggetti = new ArrayList<Soggetto>();
+		// se il profilo e' specificato allora ritorno solo quello
+		if (StringUtils.isNotEmpty(profiloSelezionato)) {
+			for (IDSoggetto idSog : u.getSoggetti()) {
+				if (DynamicPdDBeanUtils.getInstance(log).isTipoSoggettoCompatibileConProtocollo(idSog.getTipo(), profiloSelezionato)) {
+					IdSoggetto idsog2 = new IdSoggetto();
+					idsog2.setNome(idSog.getNome());
+					idsog2.setTipo(idSog.getTipo());
+					Soggetto soggetto = Utility.getSoggetto(idsog2);
+					soggetti.add(soggetto);
+				}
+			}
+		}  
+		return soggetti;
 	}
 	
 	public static List<Soggetto> getSoggettiGestione(User u, String tipoNomeSoggettoLocale) {
@@ -573,7 +591,7 @@ public class Utility {
 				if (idSog.getTipo().equals(tipo)
 						&& idSog.getNome().equals(nome)) {
 					IdSoggetto idsog2 = new IdSoggetto();
-//					idsog2.setId(idSog.getId());
+					//					idsog2.setId(idSog.getId());
 					idsog2.setNome(idSog.getNome());
 					idsog2.setTipo(idSog.getTipo());
 					Soggetto soggetto = Utility.getSoggetto(idsog2);
@@ -590,7 +608,7 @@ public class Utility {
 				String tipoNome = idSog.getTipo()+"/"+idSog.getNome();
 				if(checkUnique.contains(tipoNome)==false){
 					IdSoggetto idsog2 = new IdSoggetto();
-//					idsog2.setId(idSog.getId());
+					//					idsog2.setId(idSog.getId());
 					idsog2.setNome(idSog.getNome());
 					idsog2.setTipo(idSog.getTipo());
 
@@ -603,5 +621,58 @@ public class Utility {
 			}
 			return soggetti;
 		}
+	}
+
+	public static List<String> getProtocolli(User utente, ProtocolFactoryManager pfManager, MapReader<String, IProtocolFactory<?>> protocolFactories) throws Exception {
+		return getProtocolli(utente, pfManager, protocolFactories, false);
+	}
+	public static List<String> getProtocolli(User utente, ProtocolFactoryManager pfManager, MapReader<String, IProtocolFactory<?>> protocolFactories, boolean ignoreProtocolloSelezionato) throws  Exception {
+		return getProtocolli(utente, pfManager, protocolFactories, ignoreProtocolloSelezionato, false);
+	}
+	public static List<String> getProtocolli(User utente, ProtocolFactoryManager pfManager, MapReader<String, IProtocolFactory<?>> protocolFactories, boolean ignoreProtocolloSelezionato, 
+			boolean consideraProtocolliCompatibiliSoggettoSelezionato) throws Exception {
+		List<String> protocolliList = new ArrayList<String>();
+
+		if(!ignoreProtocolloSelezionato) {
+			if(utente.getProtocolloSelezionatoPddMonitor()!=null) {
+				protocolliList.add(utente.getProtocolloSelezionatoPddMonitor());
+				return protocolliList;
+			}
+			else if(consideraProtocolliCompatibiliSoggettoSelezionato && utente.getProtocolloSelezionatoPddMonitor()!=null && !"".equals(utente.getProtocolloSelezionatoPddMonitor())) {
+				String tipoSoggetto = utente.getProtocolloSelezionatoPddMonitor().split("/")[0];
+				String protocollo = pfManager.getProtocolByOrganizationType(tipoSoggetto);
+				protocolliList.add(protocollo);
+				return protocolliList;
+			}
+		}
+
+		if(utente.getProtocolliSupportati()!=null && utente.getProtocolliSupportati().size()>0) {
+			return ProtocolUtils.orderProtocolli(utente.getProtocolliSupportati());
+		}
+
+		return getProtocolli(protocolFactories); // ordinato dentro il metodo
+
+	}
+
+	public static List<String> getProtocolli(MapReader<String, IProtocolFactory<?>> protocolFactories){
+
+		List<String> protocolliList = new ArrayList<String>();
+
+		Enumeration<String> protocolli = protocolFactories.keys();
+		while (protocolli.hasMoreElements()) {
+
+			String protocollo = protocolli.nextElement();
+			protocolliList.add(protocollo);
+		}
+
+		return ProtocolUtils.orderProtocolli(protocolliList);
+	}
+	
+	public static String normalizeLabel(String label, int maxWidth) {
+		if(label.length() > maxWidth) {
+			return label.substring(0, maxWidth - 3) + "...";
+		}
+		
+		return label;
 	}
 }

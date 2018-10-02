@@ -316,7 +316,8 @@ public class GeneralHelper {
 								new Parameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_MODALITA,Costanti.CHECK_BOX_ENABLED)
 								);
 						}
-						glProt.setLabelWidth(this.core.getFontWidth(labelProt, 14)); 
+
+						glProt.setLabelWidth(this.core.getFontWidth(glProt.getLabel(), 14)); 
 						link.addElement(glProt);
 					}
 				
@@ -379,8 +380,13 @@ public class GeneralHelper {
  				String labelSelezionato = soggettoOperativoSelezionato == null ? UtentiCostanti.LABEL_PARAMETRO_MODALITA_ALL : ConsoleHelper._getLabelNomeSoggetto(idSoggettoOperativo);
 				String labelSelezionatoCompleta = MessageFormat.format(LoginCostanti.LABEL_MENU_SOGGETTO_CORRENTE_WITH_PARAM, labelSelezionato);
 				glSoggettoCorrente.setLabel(labelSelezionatoCompleta); 
+				
+				if(labelSelezionatoCompleta.length() > this.core.getLunghezzaMassimaLabelSoggettiOperativiMenuUtente()) {
+					glSoggettoCorrente.setLabel(ConsoleHelper.normalizeLabel(labelSelezionatoCompleta, this.core.getLunghezzaMassimaLabelSoggettiOperativiMenuUtente()));
+				}
+				
 				glSoggettoCorrente.setUrl("");
-				glSoggettoCorrente.setLabelWidth(this.core.getFontWidth(labelSelezionatoCompleta,  Font.BOLD, 16)); 
+				glSoggettoCorrente.setLabelWidth(this.core.getFontWidth(glSoggettoCorrente.getLabel(),  Font.BOLD, 16)); 
 				link.addElement(glSoggettoCorrente);
 				
 				Integer numeroMassimoSoggettiSelectListSoggettiOperatiti = this.core.getNumeroMassimoSoggettiSelectListSoggettiOperatiti();
@@ -423,7 +429,13 @@ public class GeneralHelper {
 										new Parameter(UtentiCostanti.PARAMETRO_UTENTE_CHANGE_SOGGETTO,Costanti.CHECK_BOX_ENABLED)
 										);
 							}
-							glSoggetto.setLabelWidth(this.core.getFontWidth(label, 14)); 
+							
+							if(label.length() > this.core.getLunghezzaMassimaLabelSoggettiOperativiMenuUtente()) {
+								glSoggetto.setLabel(ConsoleHelper.normalizeLabel(label, this.core.getLunghezzaMassimaLabelSoggettiOperativiMenuUtente()));
+								glSoggetto.setTooltip(label); 
+							}
+							
+							glSoggetto.setLabelWidth(this.core.getFontWidth(glSoggetto.getLabel(), 14)); 
 							link.addElement(glSoggetto);
 						}
 					

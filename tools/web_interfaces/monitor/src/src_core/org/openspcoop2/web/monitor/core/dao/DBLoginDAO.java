@@ -174,6 +174,21 @@ public class DBLoginDAO implements ILoginDAO {
 	}
 	
 	@Override
+	public void salvaSoggettoPddMonitor(User user) throws NotFoundException, ServiceException {
+		try {
+			boolean existsUser = this.utenteDAO.existsUser(user.getLogin());
+
+			if(!existsUser)
+				throw new NotFoundException("Utente ["+user.getLogin()+"] non registrato");
+
+			this.utenteDAO.saveSoggettoUtilizzatoPddMonitor(user.getLogin(), user.getSoggettoSelezionatoPddMonitor());
+		} catch (DriverUsersDBException e) {
+			DBLoginDAO.log.error(e.getMessage(), e);
+			throw new ServiceException(e);
+		}
+	}
+	
+	@Override
 	public UserDetailsBean loadUserByUsername(String username)
 			throws NotFoundException, ServiceException, UserInvalidException {
 

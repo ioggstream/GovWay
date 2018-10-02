@@ -32,6 +32,12 @@ package org.openspcoop2.web.monitor.core.constants;
 public class Costanti {
 
 	public static final String LABEL_MENU_MODALITA_CORRENTE_WITH_PARAM = org.openspcoop2.core.constants.Costanti.LABEL_PARAMETRO_PROTOCOLLO_COMPACT+": {0}";
+	public static final String LABEL_MENU_SOGGETTO_CORRENTE_WITH_PARAM = "Soggetto: {0}";
+	
+	public final static String LABEL_PARAMETRO_SOGGETTI_OPERATIVI = "Soggetti Operativi";
+	public final static String LABEL_PARAMETRO_SOGGETTO_OPERATIVO = "Soggetto Operativo";
+	public final static String LABEL_PARAMETRO_SOGGETTO_COMPACT = "Soggetto Operativo";
+	public final static String LABEL_PARAMETRO_SOGGETTI_COMPACT = "Soggetti Operativi";
 	
 	public static final String LABEL_PARAMETRO_MODALITA_ALL = "Tutti";
 	public static final String VALUE_PARAMETRO_MODALITA_ALL = "qualsiasi";

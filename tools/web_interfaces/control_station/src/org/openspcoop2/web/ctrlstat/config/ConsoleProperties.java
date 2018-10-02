@@ -850,6 +850,10 @@ public class ConsoleProperties {
 		return this.readIntegerProperty(true, "console.selectListSoggettiOperativi.numeroMassimoSoggettiVisualizzati");
 	}
 	
+	public Integer getLunghezzaMassimaLabelSoggettiOperativiMenuUtente() throws Exception{
+		return this.readIntegerProperty(true, "console.selectListSoggettiOperativi.lunghezzaMassimaLabel");
+	}
+	
 	/* ---------------- Gestione govwayConsole centralizzata ----------------------- */
 
 	public Boolean isGestioneCentralizzata_SincronizzazionePdd() throws UtilsException{

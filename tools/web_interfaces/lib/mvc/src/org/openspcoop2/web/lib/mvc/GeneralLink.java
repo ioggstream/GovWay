@@ -43,6 +43,7 @@ public class GeneralLink {
     String onclick;
     String icon;
     int labelWidth;
+    String tooltip;
 
     public GeneralLink() {
     	this.label = "";
@@ -50,6 +51,7 @@ public class GeneralLink {
     	this.target = "";
     	this.onclick = "";
     	this.icon="";
+    	this.tooltip = "";
     }
 
     public void setLabel(String s) {
@@ -113,5 +115,11 @@ public class GeneralLink {
 	}
 	public void setLabelWidth(int labelWidth) {
 		this.labelWidth = labelWidth;
+	}
+	public String getTooltip() {
+		return this.tooltip;
+	}
+	public void setTooltip(String tooltip) {
+		this.tooltip = tooltip;
 	}
 }

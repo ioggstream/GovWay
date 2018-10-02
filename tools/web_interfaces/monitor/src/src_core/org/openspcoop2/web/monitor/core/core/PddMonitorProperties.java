@@ -826,4 +826,12 @@ public class PddMonitorProperties {
 	public boolean isVisualizzaFiltroAzioniSelectList() throws Exception{
 		return "true".equalsIgnoreCase(this.appProperties.getProperty("console.filtri.azioni.selectList.enabled", true, true));
 	}
+	
+	public Integer getNumeroMassimoSoggettiOperativiMenuUtente() throws Exception{
+		return new Integer(this.appProperties.getProperty("console.selectListSoggettiOperativi.numeroMassimoSoggettiVisualizzati",true,true));
+	}
+	
+	public Integer getLunghezzaMassimaLabelSoggettiOperativiMenuUtente() throws Exception{
+		return new Integer(this.appProperties.getProperty("console.selectListSoggettiOperativi.lunghezzaMassimaLabel",true,true));
+	}
 }

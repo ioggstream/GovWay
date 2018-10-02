@@ -6784,4 +6784,11 @@ public class ConsoleHelper {
 		return ProtocolFactoryManager.getInstance().getProtocolFactoryByName(protocollo).
 				createProtocolIntegrationConfiguration().useInterfaceNameInSubscriptionInvocationURL(serviceBinding);
 	}
+	
+	public static String normalizeLabel(String label, int maxWidth) {
+		if(label.length() > maxWidth) {
+			return label.substring(0, maxWidth - 3) + "...";
+		}
+		return label;
+	}
 }

@@ -1373,11 +1373,10 @@ public class SummaryBean implements Serializable{
 		this.protocolli = new ArrayList<SelectItem>();
 //		this.protocolli.add(new SelectItem("*",AllConverter.ALL_STRING));
 		try {
-			List<Soggetto> listaSoggettiGestione = this.getSoggettiGestione();
 			ProtocolFactoryManager pfManager = org.openspcoop2.protocol.engine.ProtocolFactoryManager.getInstance();
 			MapReader<String,IProtocolFactory<?>> protocolFactories = pfManager.getProtocolFactories();	
 			User utente = Utility.getLoggedUtente();
-			List<String> listaNomiProtocolli = Utility.getListaProtocolli(utente, listaSoggettiGestione, pfManager, protocolFactories);
+			List<String> listaNomiProtocolli = Utility.getProtocolli(utente, pfManager, protocolFactories, true);
 
 			for (String protocolKey : listaNomiProtocolli) {
 				IProtocolFactory<?> protocollo = protocolFactories.get(protocolKey);
@@ -1416,8 +1415,7 @@ public class SummaryBean implements Serializable{
 				return false;
 			}
 
-			List<Soggetto> listaSoggettiGestione = this.getSoggettiGestione();
-			List<String> listaNomiProtocolli = Utility.getListaProtocolli(utente,listaSoggettiGestione, pfManager, protocolFactories);
+			List<String> listaNomiProtocolli = Utility.getProtocolli(utente, pfManager, protocolFactories, true);
 
 			numeroProtocolli = listaNomiProtocolli.size();
 
@@ -1425,7 +1423,7 @@ public class SummaryBean implements Serializable{
 			if(numeroProtocolli == 1)
 				return false;
 
-		} catch (ProtocolException e) {
+		} catch (Exception e) {
 			SummaryBean.log.error("Si e' verificato un errore durante il caricamento della lista protocolli: " + e.getMessage(), e);
 		}  
 
