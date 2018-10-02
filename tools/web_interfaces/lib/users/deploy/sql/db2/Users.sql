@@ -12,6 +12,8 @@ CREATE TABLE users
 	protocollo_pddmonitor VARCHAR(255),
 	soggetto_pddconsole VARCHAR(255),
 	soggetto_pddmonitor VARCHAR(255),
+	soggetti_all INT,
+	servizi_all INT,
 	-- fk/pk columns
 	id BIGINT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1 NO CYCLE NO CACHE),
 	-- unique constraints

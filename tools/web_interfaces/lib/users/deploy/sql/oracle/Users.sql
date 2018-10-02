@@ -14,6 +14,8 @@ CREATE TABLE users
 	protocollo_pddmonitor VARCHAR2(255),
 	soggetto_pddconsole VARCHAR2(255),
 	soggetto_pddmonitor VARCHAR2(255),
+	soggetti_all NUMBER,
+	servizi_all NUMBER,
 	-- fk/pk columns
 	id NUMBER NOT NULL,
 	-- unique constraints

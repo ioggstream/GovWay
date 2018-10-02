@@ -5147,6 +5147,20 @@ public class ControlStationCore {
 		return this.soggettiRegistroList(null, s);
 	}
 	
+	public List<IDSoggetto> getIdSoggettiOperativi() throws DriverRegistroServiziException{
+		return this.getIdSoggettiOperativi(null);
+	}
+	public List<IDSoggetto> getIdSoggettiOperativi(String protocollo) throws DriverRegistroServiziException{
+		List<org.openspcoop2.core.registry.Soggetto> list = this.getSoggettiOperativi(protocollo);
+		List<IDSoggetto> l = new ArrayList<>();
+		if(list!=null && !list.isEmpty()) {
+			for (org.openspcoop2.core.registry.Soggetto soggetto : list) {
+				l.add(new IDSoggetto(soggetto.getTipo(), soggetto.getNome()));
+			}
+		}
+		return l;
+	}
+	
 	public IDSoggetto convertSoggettoSelezionatoToID(String soggettoOperativoSelezionato) {
 		return new IDSoggetto(soggettoOperativoSelezionato.split("/")[0], soggettoOperativoSelezionato.split("/")[1]);
 	}

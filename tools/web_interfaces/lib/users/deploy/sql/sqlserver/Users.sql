@@ -12,6 +12,8 @@ CREATE TABLE users
 	protocollo_pddmonitor VARCHAR(255),
 	soggetto_pddconsole VARCHAR(255),
 	soggetto_pddmonitor VARCHAR(255),
+	soggetti_all INT,
+	servizi_all INT,
 	-- fk/pk columns
 	id BIGINT IDENTITY,
 	-- unique constraints

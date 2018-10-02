@@ -8,6 +8,10 @@
 	ALTER TABLE users ADD COLUMN soggetto_pddconsole VARCHAR(255);
 	ALTER TABLE users ADD COLUMN soggetto_pddmonitor VARCHAR(255);
 
+	Aggiunta l'informazioni sui soggetti e servizi gestibili dall'utente:
+	ALTER TABLE users ADD COLUMN soggetti_all INT;
+	ALTER TABLE users ADD COLUMN servizi_all INT;
+
 2017-11-28  Andrea Poli <apoli@link.it>
 
 	Creato file ChangeLog

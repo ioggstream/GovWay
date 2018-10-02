@@ -41,6 +41,7 @@ import org.openspcoop2.web.ctrlstat.core.Search;
 import org.openspcoop2.web.ctrlstat.costanti.CostantiControlStation;
 import org.openspcoop2.web.ctrlstat.servlet.ConsoleHelper;
 import org.openspcoop2.web.ctrlstat.servlet.login.LoginCostanti;
+import org.openspcoop2.web.lib.mvc.CheckboxStatusType;
 import org.openspcoop2.web.lib.mvc.Costanti;
 import org.openspcoop2.web.lib.mvc.DataElement;
 import org.openspcoop2.web.lib.mvc.DataElementType;
@@ -93,7 +94,9 @@ public class UtentiHelper extends ConsoleHelper {
 				((isAccordiCooperazione == null) || !ServletUtils.isCheckBoxEnabled(isAccordiCooperazione)));
 	}
 	
+	@SuppressWarnings("unused")
 	private String getLabelSezionePddMonitorSoggettiServizi(boolean isDiagnosticaEnabled, boolean isReportisticaEnabled) {
+		
 		if(isDiagnosticaEnabled && isReportisticaEnabled) {
 			return UtentiCostanti.LABEL_CONFIGURAZIONE_PDD_MONITOR_MONITORAGGIO_REPORTISTICA;
 		}
@@ -103,12 +106,14 @@ public class UtentiHelper extends ConsoleHelper {
 		else {
 			return UtentiCostanti.LABEL_CONFIGURAZIONE_PDD_MONITOR_REPORTISTICA;
 		}
+
 	}
 	
 	public Vector<DataElement> addUtentiToDati(Vector<DataElement> dati,TipoOperazione tipoOperazione,boolean singlePdD,
 			String nomesu,String pwsu,String confpwsu,InterfaceType interfaceType,
 			String isServizi,String isDiagnostica,String isReportistica,String isSistema,String isMessaggi,String isUtenti,String isAuditing, String isAccordiCooperazione,
-			String changepwd, String [] modalitaGateway) throws Exception{
+			String changepwd, String [] modalitaGateway,
+			String isSoggettiAll, String isServiziAll, User oldImgUser) throws Exception{
 
 		Boolean contaListe = ServletUtils.getContaListeFromSession(this.session);
 		
@@ -242,6 +247,110 @@ public class UtentiHelper extends ConsoleHelper {
 			}
 		}
 
+		
+
+		// Abilitazioni
+
+		boolean isDiagnosticaEnabled = ServletUtils.isCheckBoxEnabled(isDiagnostica);
+		boolean isReportisticaEnabled = ServletUtils.isCheckBoxEnabled(isReportistica);
+		
+		if(isDiagnosticaEnabled || isReportisticaEnabled) {
+		
+			de = new DataElement();
+			de.setLabel(UtentiCostanti.LABEL_VISIBILITA_DATI_GOVWAY_MONITOR);
+			de.setType(DataElementType.TITLE);
+			dati.addElement(de);	
+			
+
+			if(this.utentiCore.isMultitenant()) {
+				
+				de = new DataElement();
+				de.setLabel(UtentiCostanti.LABEL_UTENTI_SOGGETTI);
+				de.setType(DataElementType.SUBTITLE);
+				dati.addElement(de);
+				
+//				if(TipoOperazione.CHANGE.equals(tipoOperazione)) {
+//					String valueSoggetti = getLabelSezionePddMonitorSoggettiServizi(isDiagnosticaEnabled, isReportisticaEnabled) + 
+//							UtentiCostanti.LABEL_SUFFIX_RESTRIZIONE_SOGGETTI;
+//					de = new DataElement();
+//					de.setType(DataElementType.NOTE);
+//					de.setValue(valueSoggetti);
+//					dati.addElement(de);
+//				}
+				
+				de = new DataElement();
+				de.setType(DataElementType.CHECKBOX);
+				de.setLabel(UtentiCostanti.LABEL_ABILITAZIONI_PUNTUALI_SOGGETTI_TUTTI);
+				de.setName(UtentiCostanti.PARAMETRO_UTENTI_ABILITAZIONI_SOGGETTI_ALL);
+				de.setSelected(ServletUtils.isCheckBoxEnabled(isSoggettiAll));
+				de.setPostBack(true);
+				dati.addElement(de);
+				
+				if(  TipoOperazione.CHANGE.equals(tipoOperazione) && oldImgUser.isPermitAllSoggetti()==false && !ServletUtils.isCheckBoxEnabled(isSoggettiAll)) {
+					
+					de = new DataElement();
+					de.setType(DataElementType.LINK);
+					de.setUrl(UtentiCostanti.SERVLET_NAME_UTENTI_SOGGETTI_LIST, new Parameter(UtentiCostanti.PARAMETRO_UTENTI_USERNAME, nomesu));
+					String nomeLink = UtentiCostanti.LABEL_UTENTI_SOGGETTI;
+					if(contaListe){
+						Search searchForCount = new Search(true,1);
+						this.utentiCore.utentiSoggettiList(nomesu, searchForCount);
+						int num = searchForCount.getNumEntries(Liste.UTENTI_SOGGETTI);
+						ServletUtils.setDataElementCustomLabel(de, nomeLink, (long) num);
+					}else {
+						de.setValue(nomeLink);
+					}
+					dati.addElement(de);
+			
+				}
+			}
+			
+			
+				
+			de = new DataElement();
+			de.setLabel(UtentiCostanti.LABEL_UTENTI_SERVIZI);
+			de.setType(DataElementType.SUBTITLE);
+			dati.addElement(de);
+			
+//			if(TipoOperazione.CHANGE.equals(tipoOperazione)) {
+//				String valueServizi = getLabelSezionePddMonitorSoggettiServizi(isDiagnosticaEnabled, isReportisticaEnabled)+ 
+//						UtentiCostanti.LABEL_SUFFIX_RESTRIZIONE_API;
+//				de = new DataElement();
+//				de.setType(DataElementType.NOTE);
+//				de.setValue(valueServizi);
+//				dati.addElement(de);
+//			}
+			
+			de = new DataElement();
+			de.setType(DataElementType.CHECKBOX);
+			de.setLabel(UtentiCostanti.LABEL_ABILITAZIONI_PUNTUALI_SERVIZI_TUTTI);
+			de.setName(UtentiCostanti.PARAMETRO_UTENTI_ABILITAZIONI_SERVIZI_ALL);
+			de.setSelected(ServletUtils.isCheckBoxEnabled(isServiziAll));
+			de.setPostBack(true);
+			dati.addElement(de);
+			
+			if((TipoOperazione.CHANGE.equals(tipoOperazione) && oldImgUser.isPermitAllServizi()==false && !ServletUtils.isCheckBoxEnabled(isServiziAll))) {
+				
+				de = new DataElement();
+				de.setType(DataElementType.LINK);
+				de.setUrl(UtentiCostanti.SERVLET_NAME_UTENTI_SERVIZI_LIST, new Parameter(UtentiCostanti.PARAMETRO_UTENTI_USERNAME, nomesu));
+				String nomeLink = UtentiCostanti.LABEL_UTENTI_SERVIZI;
+				if(contaListe){
+					Search searchForCount = new Search(true,1);
+					this.utentiCore.utentiServiziList(nomesu, searchForCount);
+					int num = searchForCount.getNumEntries(Liste.UTENTI_SERVIZI);
+					ServletUtils.setDataElementCustomLabel(de, nomeLink, (long) num);
+				}else {
+					de.setValue(nomeLink);
+				}
+				dati.addElement(de);
+				
+			}
+			
+		}
+
+		
+		
 		de = new DataElement();
 		de.setLabel(UtentiCostanti.LABEL_MODALITA_INTERFACCIA);
 		de.setType(DataElementType.TITLE);
@@ -293,45 +402,8 @@ public class UtentiHelper extends ConsoleHelper {
 			de.setValue(interfaceType.toString().toLowerCase());
 			dati.addElement(de);
 		}
-
-		// se sono in modifica ed e' stato selezionato il diritto diagnostica mostro i link per la definizione di soggetti e servizi
-		boolean isDiagnosticaEnabled = ServletUtils.isCheckBoxEnabled(isDiagnostica);
-		boolean isReportisticaEnabled = ServletUtils.isCheckBoxEnabled(isReportistica);
-		if( (isDiagnosticaEnabled || isReportisticaEnabled) && TipoOperazione.CHANGE.equals(tipoOperazione)) {
-			de = new DataElement();
-			de.setLabel(getLabelSezionePddMonitorSoggettiServizi(isDiagnosticaEnabled, isReportisticaEnabled));
-			de.setType(DataElementType.TITLE);
-			dati.addElement(de);
-			if(this.utentiCore.isMultitenant()) {
-				de = new DataElement();
-				de.setType(DataElementType.LINK);
-				de.setUrl(UtentiCostanti.SERVLET_NAME_UTENTI_SOGGETTI_LIST, new Parameter(UtentiCostanti.PARAMETRO_UTENTI_USERNAME, nomesu));
-				if(contaListe){
-					Search searchForCount = new Search(true,1);
-					this.utentiCore.utentiSoggettiList(nomesu, searchForCount);
-					int num = searchForCount.getNumEntries(Liste.UTENTI_SOGGETTI);
-					ServletUtils.setDataElementCustomLabel(de, UtentiCostanti.LABEL_UTENTI_SOGGETTI, (long) num);
-				}else {
-					de.setValue(UtentiCostanti.LABEL_UTENTI_SOGGETTI);
-				}
-				dati.addElement(de);
-			}
-			
-			de = new DataElement();
-			de.setType(DataElementType.LINK);
-			de.setUrl(UtentiCostanti.SERVLET_NAME_UTENTI_SERVIZI_LIST, new Parameter(UtentiCostanti.PARAMETRO_UTENTI_USERNAME, nomesu));
-			if(contaListe){
-				Search searchForCount = new Search(true,1);
-				this.utentiCore.utentiServiziList(nomesu, searchForCount);
-				int num = searchForCount.getNumEntries(Liste.UTENTI_SERVIZI);
-				ServletUtils.setDataElementCustomLabel(de, UtentiCostanti.LABEL_UTENTI_SERVIZI, (long) num);
-			}else {
-				de.setValue(UtentiCostanti.LABEL_UTENTI_SERVIZI);
-			}
-			dati.addElement(de);
-			
-		}
-
+		
+		
 		
 		de = new DataElement();
 		de.setLabel(UtentiCostanti.LABEL_PASSWORD);
@@ -875,9 +947,6 @@ public class UtentiHelper extends ConsoleHelper {
 						}
 						
 						// Controlli su eventuali soggetti/servizi associati alle modalita' deselezionate
-						boolean isDiagnosticaEnabled = ServletUtils.isCheckBoxEnabled(isDiagnostica);
-						boolean isReportisticaEnabled = ServletUtils.isCheckBoxEnabled(isReportistica);
-						String labelConsoleMonitor = this.getLabelSezionePddMonitorSoggettiServizi(isDiagnosticaEnabled, isReportisticaEnabled);
 						for (String protocolloDaControllare : protocolliEliminati) {
 							// controllo servizi
 							if(user.getServizi().size() > 0) {
@@ -885,9 +954,9 @@ public class UtentiHelper extends ConsoleHelper {
 									String protocolloAssociatoTipoSoggetto = this.soggettiCore.getProtocolloAssociatoTipoSoggetto(idServizio.getTipo());
 									if(protocolloAssociatoTipoSoggetto.equals(protocolloDaControllare)) {
 										this.pd.setMessage("L'utente " + nomesu 
-												+ " non pu&ograve; essere modificato poich&egrave; sono stati rilevati dei servizi, appartenenti al "+
+												+ " non pu&ograve; essere modificato poich&egrave; sono stati rilevati delle API, appartenenti al "+
 										org.openspcoop2.core.constants.Costanti.LABEL_PARAMETRO_PROTOCOLLO_DI_HTML_ESCAPE+" '"
-												+ this.getLabelProtocollo(protocolloDaControllare) +"', associati per la funzionalit&agrave; di "+ labelConsoleMonitor);
+												+ this.getLabelProtocollo(protocolloDaControllare) +"', registrate tra le restrizioni dell'utente");
 										return false;
 									}
 								}
@@ -900,7 +969,7 @@ public class UtentiHelper extends ConsoleHelper {
 										this.pd.setMessage("L'utente " + nomesu 
 												+ " non pu&ograve; essere modificato poich&egrave; sono stati rilevati dei soggetti, appartenenti al "+
 										org.openspcoop2.core.constants.Costanti.LABEL_PARAMETRO_PROTOCOLLO_DI_HTML_ESCAPE+" '"
-												+ this.getLabelProtocollo(protocolloDaControllare) +"', associati per la funzionalit&agrave; di "+ labelConsoleMonitor);
+												+ this.getLabelProtocollo(protocolloDaControllare) +"', registrati tra le restrizioni dell'utente");
 										return false;
 									}
 								}
@@ -919,14 +988,13 @@ public class UtentiHelper extends ConsoleHelper {
 					
 					boolean oldDiagnostica = user.getPermessi().isDiagnostica();
 					boolean oldReportistica = user.getPermessi().isReportistica();
-					String labelConsoleMonitor = this.getLabelSezionePddMonitorSoggettiServizi(oldDiagnostica, oldReportistica);
 						
 					if( (oldDiagnostica || oldReportistica) && user.getServizi().size() > 0) {
-						this.pd.setMessage("L'utente " + nomesu + " non pu&ograve; essere modificato poich&egrave; sono stati rilevati dei servizi associati per la funzionalit&agrave; di "+ labelConsoleMonitor);
+						this.pd.setMessage("L'utente " + nomesu + " non pu&ograve; essere modificato poich&egrave; sono stati rilevate delle API registrate tra le restrizioni dell'utente");
 						return false;
 					}
 					if( (oldDiagnostica || oldReportistica) && user.getSoggetti().size() > 0) {
-						this.pd.setMessage("L'utente " + nomesu + " non pu&ograve; essere modificato poich&egrave; sono stati rilevati dei soggetti associati per la funzionalit&agrave; di "+ labelConsoleMonitor);
+						this.pd.setMessage("L'utente " + nomesu + " non pu&ograve; essere modificato poich&egrave; sono stati rilevati dei soggetti registrati tra le restrizioni dell'utente");
 						return false;
 					}
 				}
@@ -1163,7 +1231,9 @@ public class UtentiHelper extends ConsoleHelper {
 			}
 
 			// setto le label delle colonne
-			String[] labels = { UtentiCostanti.LABEL_UTENTE, UtentiCostanti.LABEL_MODALITA_INTERFACCIA, 
+			String[] labels = { 
+					"",
+					UtentiCostanti.LABEL_UTENTE, UtentiCostanti.LABEL_MODALITA_INTERFACCIA, 
 					UtentiCostanti.LABEL_MODALITA_GATEWAY_COMPACT, 
 					UtentiCostanti.LABEL_PERMESSI_GESTIONE, UtentiCostanti.LABEL_CAMBIA_IDENTITA };
 			this.pd.setLabels(labels);
@@ -1178,8 +1248,24 @@ public class UtentiHelper extends ConsoleHelper {
 
 					Vector<DataElement> e = new Vector<DataElement>();
 
-					// nome utente
+					// Stato utente
 					DataElement de = new DataElement();
+					de.setWidthPx(10);
+					de.setType(DataElementType.CHECKBOX);
+					if(mySU.isConfigurazioneValidaAbilitazioni()){
+						de.setSelected(CheckboxStatusType.ABILITATO);
+					}
+					else{
+						de.setToolTip(mySU.getReasonInvalidConfiguration());
+						de.setValue(mySU.getReasonInvalidConfiguration());
+						de.setSelected(CheckboxStatusType.DISABILITATO);
+					}
+					de.setUrl(UtentiCostanti.SERVLET_NAME_UTENTI_CHANGE,
+							new Parameter(UtentiCostanti.PARAMETRO_UTENTI_USERNAME, mySU.getLogin()));
+					e.addElement(de);
+					
+					// nome utente
+					de = new DataElement();
 					de.setUrl(UtentiCostanti.SERVLET_NAME_UTENTI_CHANGE,
 							new Parameter(UtentiCostanti.PARAMETRO_UTENTI_USERNAME, mySU.getLogin()));
 					de.setIdToRemove(mySU.getId().toString());
@@ -1266,7 +1352,8 @@ public class UtentiHelper extends ConsoleHelper {
 
 					// login as su
 					de = new DataElement();
-					if (!userLogin.equals(mySU.getLogin()) && !this.hasOnlyPermessiDiagnosticaReportistica(mySU)) {
+					if (!userLogin.equals(mySU.getLogin()) && !this.hasOnlyPermessiDiagnosticaReportistica(mySU) &&
+							mySU.isConfigurazioneValidaAbilitazioni()) {
 						de.setUrl(LoginCostanti.SERVLET_NAME_LOGIN_AS_SU,
 								new Parameter(LoginCostanti.PARAMETRO_LOGIN_LOGIN, mySU.getLogin()));
 						de.setValue(UtentiCostanti.LABEL_ACCEDI);

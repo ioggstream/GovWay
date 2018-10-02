@@ -111,4 +111,5 @@ public class LoginCostanti {
 	public final static String LOGIN_JS_FUNCTION = "CheckDati();return false;";
 
 	public static final String MESSAGGIO_ERRORE_UTENTE_NON_ABILITATO_UTILIZZO_CONSOLE = "L'utente non &egrave; abilitato ad utilizzare la console"; 
+	public static final String MESSAGGIO_ERRORE_UTENTE_NON_ABILITATO_UTILIZZO_CONSOLE_CONFIGURAZIONE_NON_CORRETTO = "L'utente non &egrave; abilitato ad utilizzare la console: configurazione incompleta"; 
 }

@@ -105,10 +105,20 @@ public class UtentiCostanti {
 	public final static String LABEL_CAMBIA_IDENTITA = "Cambia identità";
 	public final static String LABEL_ACCEDI = "Accedi";
 	public final static String LABEL_MODIFICA = "Modifica";
-	public final static String LABEL_CONFIGURAZIONE_PDD_MONITOR_MONITORAGGIO_REPORTISTICA = "Monitoraggio/Reportistica";
-	public final static String LABEL_CONFIGURAZIONE_PDD_MONITOR_MONITORAGGIO = "Monitoraggio";
-	public final static String LABEL_CONFIGURAZIONE_PDD_MONITOR_REPORTISTICA = "Reportistica";
-	public final static String LABEL_UTENTI_SERVIZI = "Servizi";
+	public final static String LABEL_ATTENZIONE = "Attenzione";
+	public final static String LABEL_VISIBILITA_DATI_GOVWAY_MONITOR = "Visibilità dati tramite govwayMonitor";
+	public final static String LABEL_ABILITAZIONI_PUNTUALI_SOGGETTI_DEFINIZIONE_CREATE_NOTE = "Attenzione: procedere con la registrazione dei soggetti visibili tramite govwayMonitor per l'utente appena creato";
+	public final static String LABEL_ABILITAZIONI_PUNTUALI_SOGGETTI_DEFINIZIONE_UPDATE_NOTE = "Per completare la configurazione dell'utente definire i soggetti visibili tramite govwayMonitor";
+	public final static String LABEL_ABILITAZIONI_PUNTUALI_SERVIZI_DEFINIZIONE_CREATE_NOTE = "Attenzione: procedere con la registrazione delle API visibili tramite govwayMonitor per l'utente appena creato";
+	public final static String LABEL_ABILITAZIONI_PUNTUALI_SERVIZI_DEFINIZIONE_UPDATE_NOTE = "Per completare la configurazione dell'utente definire le API visibili tramite govwayMonitor";
+	public final static String LABEL_ABILITAZIONI_PUNTUALI_SOGGETTI_TUTTI = "Tutti";
+	public final static String LABEL_ABILITAZIONI_PUNTUALI_SERVIZI_TUTTI = "Tutte";
+	public final static String LABEL_CONFIGURAZIONE_PDD_MONITOR_MONITORAGGIO_REPORTISTICA = "L'utente è abilitato al Monitoraggio e alla Reportistica";
+	public final static String LABEL_CONFIGURAZIONE_PDD_MONITOR_MONITORAGGIO = "L'utente è abilitato al Monitoraggio";
+	public final static String LABEL_CONFIGURAZIONE_PDD_MONITOR_REPORTISTICA = "L'utente è abilitato alla Reportistica";
+	public final static String LABEL_SUFFIX_RESTRIZIONE_SOGGETTI = " dei seguenti soggetti:";
+	public final static String LABEL_SUFFIX_RESTRIZIONE_API = " delle seguenti API:";
+	public final static String LABEL_UTENTI_SERVIZI = "API";
 	public final static String LABEL_UTENTI_SOGGETTI = "Soggetti";
 	public final static String LABEL_UTENTI_SOGGETTI_DISPONIBILI_ESAURITI = "Non esistono altri soggetti associabili all'utente";
 	public final static String LABEL_UTENTI_SOGGETTI_DISPONIBILI_ESAURITI_PER_LA_MODALITA_XX = "Non esistono altri soggetti del "+org.openspcoop2.core.constants.Costanti.LABEL_PARAMETRO_PROTOCOLLO_DI_HTML_ESCAPE.toLowerCase()+" {0} associabili all''utente";
@@ -135,6 +145,8 @@ public class UtentiCostanti {
 	public final static String PARAMETRO_UTENTI_SINGLE_SU_ACCORDI_COOPERAZIONE = "singleSuAC";
 	public final static String PARAMETRO_UTENTI_MODALITA_PREFIX = "mod_";
 	public final static String PARAMETRO_UTENTI_PROTOCOLLO = "protocollo";
+	public final static String PARAMETRO_UTENTI_ABILITAZIONI_SOGGETTI_ALL = "isSoggettiAll";
+	public final static String PARAMETRO_UTENTI_ABILITAZIONI_SERVIZI_ALL = "isServiziAll";
 	
 	public final static String PARAMETRO_UTENTE_LOGIN = "login";
 	public final static String PARAMETRO_UTENTE_PASSWORD = "password";

@@ -103,6 +103,10 @@ public class UserDetailsBean implements Serializable {
 			throw new UserInvalidException("Utente non dispone di alcun ruolo necessario per accedere alla console");
 		}
 		
+		if(!u.isConfigurazioneValidaAbilitazioni()) {
+			throw new UserInvalidException("L'utente non è abilitato ad utilizzare la console: configurazione incompleta");
+		}
+		
 		this.utente = u;
 	}
 	public User getUtente(){

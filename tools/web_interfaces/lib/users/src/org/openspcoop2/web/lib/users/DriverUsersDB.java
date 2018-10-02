@@ -359,7 +359,23 @@ public class DriverUsersDB {
 				
 				String soggetto_pddmonitor =rs.getString("soggetto_pddmonitor");
 				user.setSoggettoSelezionatoPddMonitor(soggetto_pddmonitor);
-								
+				
+				int permitAllSoggetti = rs.getInt("soggetti_all");
+				if(CostantiDB.TRUE == permitAllSoggetti) {
+					user.setPermitAllSoggetti(true);
+				}
+				else {
+					user.setPermitAllSoggetti(false);
+				}
+				
+				int permitAllServizi = rs.getInt("servizi_all");
+				if(CostantiDB.TRUE == permitAllServizi) {
+					user.setPermitAllServizi(true);
+				}
+				else {
+					user.setPermitAllServizi(false);
+				}
+				
 				// Fix: se completa, siamo per forza in modalità completa
 				if(user.isPermitInterfaceComplete()) {
 					user.setInterfaceType(InterfaceType.COMPLETA);
@@ -859,6 +875,8 @@ public class DriverUsersDB {
 			sqlQueryObject.addInsertField("protocollo_pddmonitor", "?");
 			sqlQueryObject.addInsertField("soggetto_pddconsole", "?");
 			sqlQueryObject.addInsertField("soggetto_pddmonitor", "?");
+			sqlQueryObject.addInsertField("soggetti_all", "?");
+			sqlQueryObject.addInsertField("servizi_all", "?");
 			sqlQuery = sqlQueryObject.createSQLInsert();
 			stm = connectionDB.prepareStatement(sqlQuery);
 			int index = 1;
@@ -872,6 +890,8 @@ public class DriverUsersDB {
 			stm.setString(index++, user.getProtocolloSelezionatoPddMonitor());
 			stm.setString(index++, user.getSoggettoSelezionatoPddConsole());
 			stm.setString(index++, user.getSoggettoSelezionatoPddMonitor());
+			stm.setInt(index++, user.isPermitAllSoggetti()? CostantiDB.TRUE : CostantiDB.FALSE);
+			stm.setInt(index++, user.isPermitAllServizi()? CostantiDB.TRUE : CostantiDB.FALSE);
 			stm.executeUpdate();
 			stm.close();
 						
@@ -945,6 +965,8 @@ public class DriverUsersDB {
 			sqlQueryObject.addUpdateField("protocollo_pddmonitor", "?");
 			sqlQueryObject.addUpdateField("soggetto_pddconsole", "?");
 			sqlQueryObject.addUpdateField("soggetto_pddmonitor", "?");
+			sqlQueryObject.addUpdateField("soggetti_all", "?");
+			sqlQueryObject.addUpdateField("servizi_all", "?");
 			sqlQueryObject.addWhereCondition("login=?");
 			sqlQuery = sqlQueryObject.createSQLUpdate();
 			stm = connectionDB.prepareStatement(sqlQuery);
@@ -958,6 +980,8 @@ public class DriverUsersDB {
 			stm.setString(index++, user.getProtocolloSelezionatoPddMonitor());
 			stm.setString(index++, user.getSoggettoSelezionatoPddConsole());
 			stm.setString(index++, user.getSoggettoSelezionatoPddMonitor());
+			stm.setInt(index++, user.isPermitAllSoggetti()? CostantiDB.TRUE : CostantiDB.FALSE);
+			stm.setInt(index++, user.isPermitAllServizi()? CostantiDB.TRUE : CostantiDB.FALSE);
 			stm.setString(index++, user.getLogin());
 			stm.executeUpdate();
 			stm.close();

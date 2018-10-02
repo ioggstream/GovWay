@@ -38,7 +38,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.openspcoop2.core.id.IDSoggetto;
-import org.openspcoop2.core.registry.Soggetto;
 import org.openspcoop2.protocol.engine.utils.NamingUtils;
 import org.openspcoop2.protocol.utils.ProtocolUtils;
 import org.openspcoop2.web.ctrlstat.core.ControlStationCore;
@@ -360,15 +359,18 @@ public class GeneralHelper {
 			// prelevo il soggetto selezionato
 			String soggettoOperativoSelezionato = u.getSoggettoSelezionatoPddConsole();
 			
-			List<Soggetto> soggettiOperativi = this.soggettiCore.getSoggettiOperativi(protocolloSelezionato);
+			List<IDSoggetto> idSoggettiOperativi = this.soggettiCore.getIdSoggettiOperativi(protocolloSelezionato);
+			// Si e' deciso che i soggetti associati valgono solo per govwayMonitor
+//			if(u.getSoggetti()!=null && !u.getSoggetti().isEmpty()) {
+//				idSoggettiOperativi = u.getSoggetti();
+//			}
 			
 			// visualizzo il menu' soggetti solo se e' stato selezionato un protocollo 
 			if(protocolloSelezionato!=null && !"".equals(protocolloSelezionato) &&
-					soggettiOperativi != null && !soggettiOperativi.isEmpty()) {
+					idSoggettiOperativi != null && !idSoggettiOperativi.isEmpty()) {
 				
-				if(soggettoOperativoSelezionato==null && soggettiOperativi.size()==1) {
-					Soggetto soggetto = soggettiOperativi.get(0);
-					IDSoggetto idSoggetto = new IDSoggetto(soggetto.getTipo(), soggetto.getNome()); 
+				if(soggettoOperativoSelezionato==null && idSoggettiOperativi.size()==1) {
+					IDSoggetto idSoggetto = idSoggettiOperativi.get(0);
 					soggettoOperativoSelezionato = idSoggetto.toString(); // forzo
 				}
 				
@@ -391,13 +393,12 @@ public class GeneralHelper {
 				
 				Integer numeroMassimoSoggettiSelectListSoggettiOperatiti = this.core.getNumeroMassimoSoggettiSelectListSoggettiOperatiti();
 				
-				if(soggettiOperativi.size() < numeroMassimoSoggettiSelectListSoggettiOperatiti) {
+				if(idSoggettiOperativi.size() < numeroMassimoSoggettiSelectListSoggettiOperatiti) {
 					
-					if(soggettiOperativi.size()>1) {
+					if(idSoggettiOperativi.size()>1) {
 						List<String> listaLabel = new ArrayList<>();
 						Map<String, IDSoggetto> mapLabelIds = new HashMap<>();
-						for (Soggetto soggetto : soggettiOperativi) {
-							IDSoggetto idSoggetto = new IDSoggetto(soggetto.getTipo(), soggetto.getNome()); 
+						for (IDSoggetto idSoggetto : idSoggettiOperativi) {
 							String labelSoggetto = ConsoleHelper._getLabelNomeSoggetto(idSoggetto);
 							if(!listaLabel.contains(labelSoggetto)) {
 								listaLabel.add(labelSoggetto);

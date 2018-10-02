@@ -43,6 +43,7 @@ import org.openspcoop2.web.ctrlstat.servlet.GeneralHelper;
 import org.openspcoop2.web.lib.mvc.DataElement;
 import org.openspcoop2.web.lib.mvc.ForwardParams;
 import org.openspcoop2.web.lib.mvc.GeneralData;
+import org.openspcoop2.web.lib.mvc.MessageType;
 import org.openspcoop2.web.lib.mvc.PageData;
 import org.openspcoop2.web.lib.mvc.Parameter;
 import org.openspcoop2.web.lib.mvc.ServletUtils;
@@ -104,7 +105,10 @@ public final class UtentiAdd extends Action {
 			String isUtenti = utentiHelper.getParameter(UtentiCostanti.PARAMETRO_UTENTI_IS_UTENTI);
 			String isAuditing = utentiHelper.getParameter(UtentiCostanti.PARAMETRO_UTENTI_IS_AUDITING);
 			String isAccordiCooperazione = utentiHelper.getParameter(UtentiCostanti.PARAMETRO_UTENTI_IS_ACCORDI_COOPERAZIONE);
-	
+			
+			String isSoggettiAll = utentiHelper.getParameter(UtentiCostanti.PARAMETRO_UTENTI_ABILITAZIONI_SOGGETTI_ALL);
+			String isServiziAll = utentiHelper.getParameter(UtentiCostanti.PARAMETRO_UTENTI_ABILITAZIONI_SERVIZI_ALL);
+			
 			Boolean singlePdD = (Boolean) session.getAttribute(CostantiControlStation.SESSION_PARAMETRO_SINGLE_PDD);
 			
 			List<String> protocolliRegistratiConsole = utentiCore.getProtocolli();
@@ -146,7 +150,7 @@ public final class UtentiAdd extends Action {
 				utentiHelper.addUtentiToDati(dati, TipoOperazione.ADD, singlePdD,
 						nomesu,pwsu,confpwsu,interfaceType,
 						isServizi,isDiagnostica,isReportistica,isSistema,isMessaggi,isUtenti,isAuditing,isAccordiCooperazione,
-						null,modalitaScelte);
+						null,modalitaScelte, isSoggettiAll, isServiziAll, null);
 				
 				pd.setDati(dati);
 		
@@ -175,7 +179,7 @@ public final class UtentiAdd extends Action {
 				utentiHelper.addUtentiToDati(dati, TipoOperazione.ADD, singlePdD,
 						nomesu,pwsu,confpwsu,interfaceType,
 						isServizi,isDiagnostica,isReportistica,isSistema,isMessaggi,isUtenti,isAuditing,isAccordiCooperazione,
-						null,modalitaScelte);
+						null,modalitaScelte, isSoggettiAll, isServiziAll, null);
 				
 				pd.setDati(dati);
 	
@@ -249,6 +253,12 @@ public final class UtentiAdd extends Action {
 				} 
 			}
 			
+			if (ServletUtils.isCheckBoxEnabled(isDiagnostica) || ServletUtils.isCheckBoxEnabled(isReportistica)) {
+				newU.setPermitAllSoggetti(ServletUtils.isCheckBoxEnabled(isSoggettiAll));
+				newU.setPermitAllServizi(ServletUtils.isCheckBoxEnabled(isServiziAll));
+			}
+			
+			
 			utentiCore.performCreateOperation(userLogin, utentiHelper.smista(), newU);
 	
 			// Preparo la lista
@@ -262,6 +272,13 @@ public final class UtentiAdd extends Action {
 	
 			utentiHelper.prepareUtentiList(ricerca, lista, singlePdD);
 	
+			if(newU.isConfigurazioneValidaSoggettiAbilitati()==false) {
+				pd.setMessage(UtentiCostanti.LABEL_ABILITAZIONI_PUNTUALI_SOGGETTI_DEFINIZIONE_CREATE_NOTE, MessageType.INFO);
+			}
+			else if(newU.isConfigurazioneValidaServiziAbilitati()==false) {
+				pd.setMessage(UtentiCostanti.LABEL_ABILITAZIONI_PUNTUALI_SERVIZI_DEFINIZIONE_CREATE_NOTE, MessageType.INFO);
+			}
+			
 			ServletUtils.setGeneralAndPageDataIntoSession(session, gd, pd);
 	
 			return ServletUtils.getStrutsForwardEditModeFinished(mapping, UtentiCostanti.OBJECT_NAME_UTENTI, ForwardParams.ADD());

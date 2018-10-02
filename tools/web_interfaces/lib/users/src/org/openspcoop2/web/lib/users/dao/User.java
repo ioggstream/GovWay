@@ -55,6 +55,8 @@ public class User implements Serializable {
 	private String protocolloSelezionatoPddMonitor;
 	private String soggettoSelezionatoPddConsole; 
 	private String soggettoSelezionatoPddMonitor; 
+	private boolean permitAllSoggetti = false;
+	private boolean permitAllServizi = false;
 	private List<IDSoggetto> soggetti = new ArrayList<>();
 	private List<IDServizio> servizi = new ArrayList<>();
 	private List<Stato> stati = new ArrayList<>();
@@ -219,6 +221,74 @@ public class User implements Serializable {
 		this.soggettoSelezionatoPddMonitor = soggettoSelezionatoPddMonitor;
 	}
 	
+	public boolean isPermitAllSoggetti() {
+		return this.permitAllSoggetti;
+	}
+	public void setPermitAllSoggetti(boolean permitAllSoggetti) {
+		this.permitAllSoggetti = permitAllSoggetti;
+	}
+	public boolean isPermitAllServizi() {
+		return this.permitAllServizi;
+	}
+	public void setPermitAllServizi(boolean permitAllServizi) {
+		this.permitAllServizi = permitAllServizi;
+	}
+	
+	public boolean isConfigurazioneValidaAbilitazioni() {
+		
+		if(this.isConfigurazioneValidaSoggettiAbilitati()==false) {
+			return false;
+		}
+		if(this.isConfigurazioneValidaServiziAbilitati()==false) {
+			return false;
+		}
+		
+		return true;
+	}
+	public boolean isConfigurazioneValidaSoggettiAbilitati() {
+			
+		if( this.permessi.isDiagnostica() || this.permessi.isReportistica() ) {
+			if(this.permitAllSoggetti==false) {
+				if(this.soggetti==null || this.soggetti.size()<=0) {
+					return false;
+				}
+			}
+		}
+			
+		return true;
+	}
+	public boolean isConfigurazioneValidaServiziAbilitati() {
+		
+		if( this.permessi.isDiagnostica() || this.permessi.isReportistica() ) {
+			if(this.permitAllServizi==false) {
+				if(this.servizi==null || this.servizi.size()<=0) {
+					return false;
+				}
+			}	
+		}
+		return true;
+	}
+	
+	public String getReasonInvalidConfiguration() {
+
+		String msgErrore = "L'utente non possiede abilitazioni valide";
+		
+		if(this.permitAllSoggetti==false) {
+			if(this.soggetti==null || this.soggetti.size()<=0) {
+				return msgErrore;
+			}
+		}
+		
+		if( this.permessi.isDiagnostica() || this.permessi.isReportistica() ) {
+			if(this.permitAllServizi==false) {
+				if(this.servizi==null || this.servizi.size()<=0) {
+					return msgErrore;
+				}
+			}
+		}
+		
+		return null;
+	}
 	
 	private static final long serialVersionUID = 1L;
 

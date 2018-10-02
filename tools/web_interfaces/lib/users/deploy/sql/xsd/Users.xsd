@@ -171,6 +171,28 @@
                         </xsd:appinfo>
                     </xsd:annotation>
                 </xsd:element>
+                <xsd:element name="soggetti_all" type="xsd:int" minOccurs="0">
+                    <xsd:annotation>
+                        <xsd:appinfo>
+                            <linkit:generator
+                                xmlns:linkit="http://www.link.it/project_generator">
+                                <linkit:sql-column-mapping name="soggetti_all" />
+                                <linkit:sql-ddl-column-comment><![CDATA[Indicazione sei l'utente dispone il permesso di gestire ogni soggetto.]]></linkit:sql-ddl-column-comment>
+                            </linkit:generator>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="servizi_all" type="xsd:int" minOccurs="0">
+                    <xsd:annotation>
+                        <xsd:appinfo>
+                            <linkit:generator
+                                xmlns:linkit="http://www.link.it/project_generator">
+                                <linkit:sql-column-mapping name="servizi_all" />
+                                <linkit:sql-ddl-column-comment><![CDATA[Indicazione sei l'utente dispone il permesso di gestire ogni servizio.]]></linkit:sql-ddl-column-comment>
+                            </linkit:generator>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                </xsd:element>
 
                 
                 <xsd:element ref="users-stati" minOccurs="0" maxOccurs="unbounded">
