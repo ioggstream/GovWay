@@ -806,6 +806,10 @@ public class ConsoleProperties {
 		return this.readIntegerProperty(true, "menu.porte.correlazioneApplicativa.maxLength");
 	}
 	
+	public Boolean isMenuPortaDelegataLocalForward() throws UtilsException{
+		return this.readBooleanProperty(true, "menu.porte.localForward");
+	}
+	
 	public Boolean isMenuConfigurazioneVisualizzazioneDiagnosticaTracciatura() throws UtilsException{
 		String p = "menu.configurazione.visualizzazioneDiagnosticaTracciatura.standard";
 		String tmp = this.readProperty(false, p);

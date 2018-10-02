@@ -142,6 +142,7 @@ public final class PorteDelegateChange extends Action {
 			String integrazione = porteDelegateHelper.getParameter(PorteDelegateCostanti.PARAMETRO_PORTE_DELEGATE_INTEGRAZIONE);
 			String stateless = porteDelegateHelper.getParameter(PorteDelegateCostanti.PARAMETRO_PORTE_DELEGATE_STATELESS);
 			String localForward = porteDelegateHelper.getParameter(PorteDelegateCostanti.PARAMETRO_PORTE_DELEGATE_LOCAL_FORWARD );
+			String paLocalForward = porteDelegateHelper.getParameter(PorteDelegateCostanti.PARAMETRO_PORTE_DELEGATE_LOCAL_FORWARD_PA);
 			String gestBody = porteDelegateHelper.getParameter(PorteDelegateCostanti.PARAMETRO_PORTE_DELEGATE_GESTIONE_BODY);
 			String gestManifest = porteDelegateHelper.getParameter(PorteDelegateCostanti.PARAMETRO_PORTE_DELEGATE_GESTIONE_MANIFEST);
 			String ricsim = porteDelegateHelper.getParameter(PorteDelegateCostanti.PARAMETRO_PORTE_DELEGATE_RICEVUTA_ASINCRONA_SIMMETRICA);
@@ -637,6 +638,9 @@ public final class PorteDelegateChange extends Action {
 					if (localForward == null) {
 						localForward = PorteDelegateCostanti.DEFAULT_VALUE_PARAMETRO_PORTE_DELEGATE_LOCAL_FORWARD_DISABILITATO;
 					}
+					if(pde.getLocalForward()!=null && pde.getLocalForward().getPortaApplicativa()!=null) {
+						paLocalForward = pde.getLocalForward().getPortaApplicativa();
+					}
 				}
 				if (gestBody == null) {
 					String allegaBody = null;
@@ -905,7 +909,7 @@ public final class PorteDelegateChange extends Action {
 						serviziListLabel, servizio, tiposervizio, versioneServizio,
 						patternServizio, modeaz, azid, azioniListLabel,
 						azioniList, azione, patternAzione, numAzioni,
-						stateless, localForward, ricsim, ricasim, statoValidazione,
+						stateless, localForward, paLocalForward, ricsim, ricasim, statoValidazione,
 						tipoValidazione, numCorrApp, scadcorr, gestBody,
 						gestManifest,integrazione, autenticazioneOpzionale, autenticazioneCustom, 
 						autorizzazioneCustom,autorizzazioneAutenticati,autorizzazioneRuoli,autorizzazioneRuoliTipologia,autorizzazioneContenuti,
@@ -1068,7 +1072,7 @@ public final class PorteDelegateChange extends Action {
 						serviziList, serviziListLabel, servizio,
 						tiposervizio, servizio, versioneServizio, modeaz, azid,
 						azioniListLabel, azioniList, azione, azione,
-						numAzioni,  stateless, localForward, ricsim, ricasim,
+						numAzioni,  stateless, localForward, paLocalForward, ricsim, ricasim,
 						statoValidazione, tipoValidazione, numCorrApp, scadcorr, gestBody,
 						gestManifest,integrazione, autenticazioneOpzionale, autenticazioneCustom, 
 						autorizzazioneCustom,autorizzazioneAutenticati,autorizzazioneRuoli,autorizzazioneRuoliTipologia,autorizzazioneContenuti,
@@ -1153,6 +1157,7 @@ public final class PorteDelegateChange extends Action {
 			if(localForward!=null){
 				portaDelegata.setLocalForward(new PortaDelegataLocalForward());
 				portaDelegata.getLocalForward().setStato(StatoFunzionalita.toEnumConstant(localForward));
+				portaDelegata.getLocalForward().setPortaApplicativa(paLocalForward);
 			}
 
 			PortaDelegataSoggettoErogatore pdSogg = new PortaDelegataSoggettoErogatore();
@@ -1179,6 +1184,7 @@ public final class PorteDelegateChange extends Action {
 			}
 			pdServizio.setNome(servizio);
 			pdServizio.setTipo(tiposervizio);
+			pdServizio.setVersione(Integer.parseInt(versioneServizio));
 
 			portaDelegata.setServizio(pdServizio);
 

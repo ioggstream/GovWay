@@ -113,7 +113,7 @@ public class PorteDelegateHelper extends ConnettoriHelper {
 			String servizio, String tiposervizio,String versioneServizio, String patternServizio,
 			String modeaz, String azid, String[] azioniListLabel,
 			String[] azioniList, String azione, String patternAzione,
-			long totAzioni,  String stateless, String localForward, String ricsim,
+			long totAzioni,  String stateless, String localForward, String paLocalForward, String ricsim,
 			String ricasim, String statoValidazione, String tipoValidazione,
 			int numCorrApp, String scadcorr, String gestBody,
 			String gestManifest, String integrazione, String autenticazioneOpzionale, String autenticazioneCustom,
@@ -875,24 +875,7 @@ public class PorteDelegateHelper extends ConnettoriHelper {
 //				}
 			}
 		}			
-		String[] tipoLocalForward = { PorteDelegateCostanti.DEFAULT_VALUE_PARAMETRO_PORTE_DELEGATE_LOCAL_FORWARD_ABILITATO,
-				PorteDelegateCostanti.DEFAULT_VALUE_PARAMETRO_PORTE_DELEGATE_LOCAL_FORWARD_DISABILITATO };
-		de = new DataElement();
-		de.setLabel(PorteDelegateCostanti.LABEL_PARAMETRO_PORTE_DELEGATE_LOCAL_FORWARD);
-		de.setName(PorteDelegateCostanti.PARAMETRO_PORTE_DELEGATE_LOCAL_FORWARD);
-		de.setSize(alternativeSize);
-		if (this.isModalitaStandard() || !multitenant || localForwardShow==false || (isConfigurazione && !datiAltro)) {
-			de.setType(DataElementType.HIDDEN);
-			de.setValue(localForward);
-			dati.addElement(de);
-		}else{
-			de.setType(DataElementType.SELECT);
-			de.setValues(tipoLocalForward);
-			de.setSelected(localForward);
-			deIntegrazione.addElement(de);
-		}
 		
-
 		if(deIntegrazione.size()>0){
 			
 			if(!isConfigurazione || datiAltro) {
@@ -908,6 +891,43 @@ public class PorteDelegateHelper extends ConnettoriHelper {
 		}
 		
 		
+		boolean localForwardDisable = !this.porteDelegateCore.isShowPortaDelegataLocalForward() || this.isModalitaStandard() || !multitenant || localForwardShow==false || (isConfigurazione && !datiAltro);
+		
+		if(!localForwardDisable) {
+			de = new DataElement();
+			de.setType(DataElementType.TITLE);
+			de.setLabel(PorteDelegateCostanti.LABEL_PARAMETRO_PORTE_DELEGATE_LOCAL_FORWARD);
+			dati.addElement(de);
+		}
+		
+		de = new DataElement();
+		de.setLabel(PorteDelegateCostanti.LABEL_PARAMETRO_PORTE_DELEGATE_LOCAL_FORWARD_STATO);
+		de.setName(PorteDelegateCostanti.PARAMETRO_PORTE_DELEGATE_LOCAL_FORWARD);
+		de.setSize(alternativeSize);
+		if (localForwardDisable) {
+			de.setType(DataElementType.HIDDEN);
+		}else{
+			String[] tipoLocalForward = { PorteDelegateCostanti.DEFAULT_VALUE_PARAMETRO_PORTE_DELEGATE_LOCAL_FORWARD_ABILITATO,
+					PorteDelegateCostanti.DEFAULT_VALUE_PARAMETRO_PORTE_DELEGATE_LOCAL_FORWARD_DISABILITATO };
+			de.setType(DataElementType.SELECT);
+			de.setValues(tipoLocalForward);
+			de.setSelected(localForward);
+			de.setPostBack(true);
+		}
+		de.setValue(localForward);
+		dati.addElement(de);
+		
+		de = new DataElement();
+		de.setLabel(PorteDelegateCostanti.LABEL_PARAMETRO_PORTE_DELEGATE_LOCAL_FORWARD_PA);
+		de.setName(PorteDelegateCostanti.PARAMETRO_PORTE_DELEGATE_LOCAL_FORWARD_PA);
+		de.setValue(paLocalForward);
+		if (localForwardDisable || !PorteDelegateCostanti.DEFAULT_VALUE_PARAMETRO_PORTE_DELEGATE_LOCAL_FORWARD_ABILITATO.equals(localForward)) {
+			de.setType(DataElementType.HIDDEN);
+		}
+		else {
+			de.setType(DataElementType.TEXT_EDIT);
+		}
+		dati.addElement(de);
 		
 		
 		

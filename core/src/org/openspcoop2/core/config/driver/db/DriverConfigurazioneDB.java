@@ -11958,9 +11958,19 @@ implements IDriverConfigurazioneGet, IDriverConfigurazioneCRUD, IDriverWS, IMoni
 			}
 		}
 		
+		String filterSoggettoTipoNome = SearchUtils.getFilter(ricerca, idLista,  Filtri.FILTRO_SOGGETTO);
+		String filterSoggettoTipo = null;
+		String filterSoggettoNome = null;
+		if(filterSoggettoTipoNome!=null && !"".equals(filterSoggettoTipoNome)) {
+			filterSoggettoTipo = filterSoggettoTipoNome.split("/")[0];
+			filterSoggettoNome = filterSoggettoTipoNome.split("/")[1];
+		}
+		
 		this.log.debug("search : " + search);
 		this.log.debug("filterProtocollo : " + filterProtocollo);
 		this.log.debug("filterProtocolli : " + filterProtocolli);
+		this.log.debug("filterSoggettoNome : " + filterSoggettoNome);
+		this.log.debug("filterSoggettoTipo : " + filterSoggettoTipo);
 		
 		Connection con = null;
 		PreparedStatement stmt=null;
@@ -12003,6 +12013,10 @@ implements IDriverConfigurazioneGet, IDriverConfigurazioneCRUD, IDriverWS, IMoni
 				else if(tipologiaErogazione!=null) {
 					sqlQueryObject.addWhereCondition(true, "tipologia_erogazione is not null", "tipologia_erogazione<>?");
 				}
+				if(filterSoggettoNome!=null && !"".equals(filterSoggettoNome)) {
+					sqlQueryObject.addWhereCondition(CostantiDB.SOGGETTI+".tipo_soggetto=?");
+					sqlQueryObject.addWhereCondition(CostantiDB.SOGGETTI+".nome_soggetto=?");
+				}
 				sqlQueryObject.setANDLogicOperator(true);
 				queryString = sqlQueryObject.createSQLQuery();
 			} else {
@@ -12022,6 +12036,10 @@ implements IDriverConfigurazioneGet, IDriverConfigurazioneCRUD, IDriverWS, IMoni
 				else if(tipologiaErogazione!=null) {
 					sqlQueryObject.addWhereCondition(true, "tipologia_erogazione is not null", "tipologia_erogazione<>?");
 				}
+				if(filterSoggettoNome!=null && !"".equals(filterSoggettoNome)) {
+					sqlQueryObject.addWhereCondition(CostantiDB.SOGGETTI+".tipo_soggetto=?");
+					sqlQueryObject.addWhereCondition(CostantiDB.SOGGETTI+".nome_soggetto=?");
+				}
 				sqlQueryObject.setANDLogicOperator(true);
 				queryString = sqlQueryObject.createSQLQuery();
 			}
@@ -12035,6 +12053,10 @@ implements IDriverConfigurazioneGet, IDriverConfigurazioneCRUD, IDriverWS, IMoni
 			}
 			else if(tipologiaErogazione!=null) {
 				stmt.setString(index++, tipologiaErogazione.getValue());
+			}
+			if(filterSoggettoNome!=null && !"".equals(filterSoggettoNome)) {
+				stmt.setString(index++, filterSoggettoTipo);
+				stmt.setString(index++, filterSoggettoNome);
 			}
 			risultato = stmt.executeQuery();
 			if (risultato.next())
@@ -12067,6 +12089,10 @@ implements IDriverConfigurazioneGet, IDriverConfigurazioneCRUD, IDriverWS, IMoni
 				else if(tipologiaErogazione!=null) {
 					sqlQueryObject.addWhereCondition(true, "tipologia_erogazione is not null", "tipologia_erogazione<>?");
 				}
+				if(filterSoggettoNome!=null && !"".equals(filterSoggettoNome)) {
+					sqlQueryObject.addWhereCondition(CostantiDB.SOGGETTI+".tipo_soggetto=?");
+					sqlQueryObject.addWhereCondition(CostantiDB.SOGGETTI+".nome_soggetto=?");
+				}
 				sqlQueryObject.setANDLogicOperator(true);
 				sqlQueryObject.addOrderBy("nome");
 				sqlQueryObject.addOrderBy("nome_soggetto");
@@ -12097,6 +12123,10 @@ implements IDriverConfigurazioneGet, IDriverConfigurazioneCRUD, IDriverWS, IMoni
 				else if(tipologiaErogazione!=null) {
 					sqlQueryObject.addWhereCondition(true, "tipologia_erogazione is not null", "tipologia_erogazione<>?");
 				}
+				if(filterSoggettoNome!=null && !"".equals(filterSoggettoNome)) {
+					sqlQueryObject.addWhereCondition(CostantiDB.SOGGETTI+".tipo_soggetto=?");
+					sqlQueryObject.addWhereCondition(CostantiDB.SOGGETTI+".nome_soggetto=?");
+				}
 				sqlQueryObject.setANDLogicOperator(true);
 				sqlQueryObject.addOrderBy("nome");
 				sqlQueryObject.addOrderBy("nome_soggetto");
@@ -12116,6 +12146,10 @@ implements IDriverConfigurazioneGet, IDriverConfigurazioneCRUD, IDriverWS, IMoni
 			}
 			else if(tipologiaErogazione!=null) {
 				stmt.setString(index++, tipologiaErogazione.getValue());
+			}
+			if(filterSoggettoNome!=null && !"".equals(filterSoggettoNome)) {
+				stmt.setString(index++, filterSoggettoTipo);
+				stmt.setString(index++, filterSoggettoNome);
 			}
 			risultato = stmt.executeQuery();
 

@@ -105,7 +105,23 @@ public final class AccordiServizioParteSpecificaList extends Action {
 				else if(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_TIPO_EROGAZIONE_VALUE_FRUIZIONE.equals(tipologia)) {
 					ServletUtils.setObjectIntoSession(session, AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_TIPO_EROGAZIONE_VALUE_FRUIZIONE,
 							AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_TIPO_EROGAZIONE);
-					ricerca.addFilter(idLista, Filtri.FILTRO_DOMINIO, SoggettiCostanti.SOGGETTO_DOMINIO_ESTERNO_VALUE);
+					
+					boolean filtraSoloEsterni = true;
+					if(apsCore.isMultitenant() && apsCore.getMultitenantSoggettiFruizioni()!=null) {
+						switch (apsCore.getMultitenantSoggettiFruizioni()) {
+						case SOLO_SOGGETTI_ESTERNI:
+							filtraSoloEsterni = true;
+							break;
+						case ESCLUDI_SOGGETTO_FRUITORE:
+						case TUTTI:
+							filtraSoloEsterni = false;
+							break;
+						}
+					}
+					
+					if(filtraSoloEsterni)
+						ricerca.addFilter(idLista, Filtri.FILTRO_DOMINIO, SoggettiCostanti.SOGGETTO_DOMINIO_ESTERNO_VALUE);
+					
 					gestioneFruitori = true;
 				}
 				else if(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_TIPO_EROGAZIONE_VALUE_COMPLETA.equals(tipologia)) {

@@ -145,6 +145,7 @@ public final class PorteDelegateAdd extends Action {
 			String azione = porteDelegateHelper.getParameter(PorteDelegateCostanti.PARAMETRO_PORTE_DELEGATE_AZIONE);
 			String stateless = porteDelegateHelper.getParameter(PorteDelegateCostanti.PARAMETRO_PORTE_DELEGATE_STATELESS);
 			String localForward = porteDelegateHelper.getParameter(PorteDelegateCostanti.PARAMETRO_PORTE_DELEGATE_LOCAL_FORWARD);
+			String paLocalForward = porteDelegateHelper.getParameter(PorteDelegateCostanti.PARAMETRO_PORTE_DELEGATE_LOCAL_FORWARD_PA);
 			String gestBody = porteDelegateHelper.getParameter(PorteDelegateCostanti.PARAMETRO_PORTE_DELEGATE_GESTIONE_BODY);
 			String gestManifest = porteDelegateHelper.getParameter(PorteDelegateCostanti.PARAMETRO_PORTE_DELEGATE_GESTIONE_MANIFEST);
 			String ricsim = porteDelegateHelper.getParameter(PorteDelegateCostanti.PARAMETRO_PORTE_DELEGATE_RICEVUTA_ASINCRONA_SIMMETRICA);
@@ -529,7 +530,7 @@ public final class PorteDelegateAdd extends Action {
 						sp, tiposp, sp, servid, serviziList,
 						serviziListLabel, servizio, tiposervizio, versioneServizio, servizio,
 						modeaz, azid, azioniListLabel, azioniList, azione,
-						azione, numAzioni,  stateless, localForward, ricsim, ricasim,
+						azione, numAzioni,  stateless, localForward, paLocalForward, ricsim, ricasim,
 						statoValidazione, tipoValidazione, 0, "", gestBody, gestManifest,
 						null, autenticazioneOpzionale, autenticazioneCustom, 
 						autorizzazioneCustom,autorizzazioneAutenticati,autorizzazioneRuoli,autorizzazioneRuoliTipologia,autorizzazioneContenuti,idsogg,protocollo,
@@ -582,7 +583,7 @@ public final class PorteDelegateAdd extends Action {
 						sp, tiposp, sp, servid, serviziList,
 						serviziListLabel, servizio, tiposervizio,versioneServizio, servizio,
 						modeaz, azid, azioniListLabel, azioniList, azione,
-						azione, numAzioni, stateless, localForward, ricsim, ricasim,
+						azione, numAzioni, stateless, localForward, paLocalForward, ricsim, ricasim,
 						statoValidazione, tipoValidazione, 0, "", gestBody, gestManifest,
 						null, autenticazioneOpzionale, autenticazioneCustom, 
 						autorizzazioneCustom,autorizzazioneAutenticati,autorizzazioneRuoli,autorizzazioneRuoliTipologia,autorizzazioneContenuti ,idsogg,protocollo,
@@ -729,6 +730,7 @@ public final class PorteDelegateAdd extends Action {
 			if(localForward!=null){
 				portaDelegata.setLocalForward(new PortaDelegataLocalForward());
 				portaDelegata.getLocalForward().setStato(StatoFunzionalita.toEnumConstant(localForward));
+				portaDelegata.getLocalForward().setPortaApplicativa(paLocalForward);
 			}
 
 			PortaDelegataSoggettoErogatore pdSogg = new PortaDelegataSoggettoErogatore();

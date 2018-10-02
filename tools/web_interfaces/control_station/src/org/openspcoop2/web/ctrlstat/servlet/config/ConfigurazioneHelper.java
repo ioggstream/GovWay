@@ -6459,8 +6459,8 @@ public class ConfigurazioneHelper extends ConsoleHelper{
 			
 			// setto le label delle colonne
 			String[] labels = { 
+					"",//ConfigurazioneCostanti.LABEL_CONFIGURAZIONE_STATO,
 					ConfigurazioneCostanti.LABEL_PARAMETRO_CONFIGURAZIONE_CONTROLLO_TRAFFICO_POLICY_IDENTIFICATIVO,
-					ConfigurazioneCostanti.LABEL_CONFIGURAZIONE_STATO,
 					ConfigurazioneCostanti.LABEL_CONFIGURAZIONE_RUNTIME,
 					ConfigurazioneCostanti.LABEL_CONFIGURAZIONE_FILTRO,
 					ConfigurazioneCostanti.LABEL_CONFIGURAZIONE_RAGGRUPPAMENTO_COLUMN
@@ -6491,23 +6491,7 @@ public class ConfigurazioneHelper extends ConsoleHelper{
 					Parameter pPolicyId = new Parameter(ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_CONTROLLO_TRAFFICO_POLICY_ID, policy.getId() + ""); 
 
 					DataElement de = new DataElement();
-					if(ruoloPorta!=null) {
-						de.setUrl(ConfigurazioneCostanti.SERVLET_NAME_CONFIGURAZIONE_CONTROLLO_TRAFFICO_ATTIVAZIONE_POLICY_CHANGE, pPolicyId, parRuoloPorta, parNomePorta);
-					}
-					else {
-						de.setUrl(ConfigurazioneCostanti.SERVLET_NAME_CONFIGURAZIONE_CONTROLLO_TRAFFICO_ATTIVAZIONE_POLICY_CHANGE, pPolicyId);
-					}
-					
-					if(StringUtils.isNotEmpty(policy.getAlias()))
-						de.setValue(policy.getIdPolicy());
-					else 
-						de.setValue(policy.getIdActivePolicy());
-					
-					de.setIdToRemove(""+policy.getId());
-					de.setToolTip(nDesr); 
-					e.addElement(de);
-					
-					de = new DataElement();
+					de.setWidthPx(10);
 					de.setType(DataElementType.CHECKBOX);
 					if(policy.isEnabled()){
 						if(policy.isWarningOnly()){
@@ -6526,8 +6510,31 @@ public class ConfigurazioneHelper extends ConsoleHelper{
 						de.setValue(ConfigurazioneCostanti.LABEL_CONFIGURAZIONE_STATO_DISABILITATO);
 						de.setSelected(CheckboxStatusType.DISABILITATO);
 					}
+					if(ruoloPorta!=null) {
+						de.setUrl(ConfigurazioneCostanti.SERVLET_NAME_CONFIGURAZIONE_CONTROLLO_TRAFFICO_ATTIVAZIONE_POLICY_CHANGE, pPolicyId, parRuoloPorta, parNomePorta);
+					}
+					else {
+						de.setUrl(ConfigurazioneCostanti.SERVLET_NAME_CONFIGURAZIONE_CONTROLLO_TRAFFICO_ATTIVAZIONE_POLICY_CHANGE, pPolicyId);
+					}
 					e.addElement(de);
 					
+					de = new DataElement();
+					if(ruoloPorta!=null) {
+						de.setUrl(ConfigurazioneCostanti.SERVLET_NAME_CONFIGURAZIONE_CONTROLLO_TRAFFICO_ATTIVAZIONE_POLICY_CHANGE, pPolicyId, parRuoloPorta, parNomePorta);
+					}
+					else {
+						de.setUrl(ConfigurazioneCostanti.SERVLET_NAME_CONFIGURAZIONE_CONTROLLO_TRAFFICO_ATTIVAZIONE_POLICY_CHANGE, pPolicyId);
+					}
+					
+					if(StringUtils.isNotEmpty(policy.getAlias()))
+						de.setValue(policy.getIdPolicy());
+					else 
+						de.setValue(policy.getIdActivePolicy());
+					
+					de.setIdToRemove(""+policy.getId());
+					de.setToolTip(nDesr); 
+					e.addElement(de);
+										
 					de = new DataElement();
 					if(policy.isEnabled()){
 						de.setValue("Visualizza");

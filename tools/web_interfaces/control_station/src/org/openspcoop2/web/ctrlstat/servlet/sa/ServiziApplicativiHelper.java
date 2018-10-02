@@ -1454,7 +1454,7 @@ public class ServiziApplicativiHelper extends ConnettoriHelper {
 			// setto le label delle colonne
 			List<String> labels = new ArrayList<String>();
 			labels.add(ServiziApplicativiCostanti.LABEL_PARAMETRO_SERVIZI_APPLICATIVI_NOME);
-			if(!useIdSogg && multitenant) {
+			if(!useIdSogg && (multitenant && !this.isSoggettoMultitenantSelezionato())) {
 				labels.add(ServiziApplicativiCostanti.LABEL_PARAMETRO_SERVIZI_APPLICATIVI_PROVIDER);
 			}
 			if( showProtocolli ) {
@@ -1499,12 +1499,14 @@ public class ServiziApplicativiHelper extends ConnettoriHelper {
 					de.setIdToRemove(sa.getId().toString());
 					e.addElement(de);
 
-					if(!useIdSogg && multitenant) {
+					if(!useIdSogg && (multitenant && !this.isSoggettoMultitenantSelezionato())) {
 						de = new DataElement();
-						de.setUrl(SoggettiCostanti.SERVLET_NAME_SOGGETTI_CHANGE, 
-								new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_ID, sa.getIdSoggetto()+""),
-								new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_NOME, sa.getNomeSoggettoProprietario()),
-								new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_TIPO, sa.getTipoSoggettoProprietario()));
+						if(this.isModalitaCompleta()) {
+							de.setUrl(SoggettiCostanti.SERVLET_NAME_SOGGETTI_CHANGE, 
+									new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_ID, sa.getIdSoggetto()+""),
+									new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_NOME, sa.getNomeSoggettoProprietario()),
+									new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_TIPO, sa.getTipoSoggettoProprietario()));
+						}
 						de.setValue(this.getLabelNomeSoggetto(protocollo, sa.getTipoSoggettoProprietario() , sa.getNomeSoggettoProprietario()));
 						e.addElement(de);
 					}

@@ -303,7 +303,7 @@ public class ErogazioniHelper extends AccordiServizioParteSpecificaHelper{
 				Fruitore fruitore = null;
 				IDSoggetto idSoggettoFruitore = null;
 				if(showConfigurazionePD || gestioneFruitori) {
-					fruitore = asps.getFruitore(0);
+					fruitore = asps.getFruitore(0); // NOTA: il metodo 'soggettiServizioList' ritorna un unico fruitore in caso di gestioneFruitori abiltata per ogni entry. Crea cioè un accordo con fruitore per ogni fruitore esistente
 					idSoggettoFruitore = new IDSoggetto(fruitore.getTipo(), fruitore.getNome());
 				}
 

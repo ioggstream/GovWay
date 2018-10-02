@@ -955,7 +955,8 @@ public class SoggettiHelper extends ConnettoriHelper {
 						new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_TIPO,elem.getTipo()));
 				de.setValue(this.getLabelNomeSoggetto(protocollo, elem.getTipo(), elem.getNome()));
 				de.setIdToRemove(elem.getId().toString());
-				de.setToolTip(elem.getCodiceIpa());
+				de.setToolTip(de.getValue());
+				de.setSize(100);
 				e.addElement(de);
 
 				if(showProtocolli) {
