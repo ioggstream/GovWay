@@ -415,8 +415,10 @@ public class LoginBean extends AbstractLoginBean {
 		}
 		
 		// cambio della modalita' provoca il reset del soggetto
+		this.colonneUserInfo = null;
 		this.setSoggettoPddMonitor(null);
 		this.cambiaSoggetto();
+		
 		
 		return "modalita";
 	}
