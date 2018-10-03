@@ -9,7 +9,7 @@
     
    	<c:if test="#{applicationBean.user}">
 		<c:if test="#{!applicationBean.amministratore}">
-			<link:prop label="Soggetto Locale" rendered="#{loginBean.loggedUser.sizeSoggetti>1}">
+			<link:prop label="Soggetto Locale" rendered="#{sf_bean.showFiltroSoggettoLocale}">
 				<rich:comboBox width="416" id="sogLocaleSuggestion"  converter="selectItemConverter"
 								value="#{sf_soggettoLocale}" listWidth="#{sf_mbean.soggettiAssociatiSelectItemsWidth}"
 								defaultLabel="Selezione Soggetto Locale" directInputSuggestions="true"
@@ -29,7 +29,7 @@
 		
 	<c:if test="#{not sf_bean.visualizzaFiltroSoggettiSelectList}">
 		<c:if test="#{applicationBean.amministratore}">
-				<link:prop label="Soggetto Locale">
+				<link:prop label="Soggetto Locale" rendered="#{sf_bean.showFiltroSoggettoLocale}">
 					<h:inputText id="sogLocaleInput" value="#{sf_labelSoggettoLocale}" styleClass="inputLinkLong"/>
 					<rich:suggestionbox id="sogLocaleSuggestion" width="416"
 						for="sogLocaleInput" listWidth="#{sf_mbean.soggettiLocaleSelectItemsWidth}"
@@ -114,7 +114,7 @@
     
    	<c:if test="#{sf_bean.visualizzaFiltroSoggettiSelectList}">
 		<c:if test="#{applicationBean.amministratore}">
-			<link:prop label="Soggetto Locale">
+			<link:prop label="Soggetto Locale" rendered="#{sf_bean.showFiltroSoggettoLocale}">
 				<rich:comboBox id="sogLocaleCombo" value="#{sf_soggettoLocale}" converter="selectItemConverter"
 					defaultLabel="Selezione Soggetto Locale" directInputSuggestions="true" listWidth="#{sf_mbean.soggettiLocaleSelectItemsWidth}"
 					width="416"   enableManualInput="false">

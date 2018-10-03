@@ -11,7 +11,7 @@
     	<c:if test="#{applicationBean.user}">
 			<c:if test="#{!applicationBean.amministratore}">		
 				<c:if test="#{sf_showSoggetti}">
-					<link:prop label="Soggetto Locale" rendered="#{loginBean.loggedUser.sizeSoggetti>1}">
+					<link:prop label="Soggetto Locale" rendered="#{sf_bean.showFiltroSoggettoLocale}">
 						<rich:comboBox width="416" id="sogLocaleCombo" converter="selectItemConverter" defaultLabel="Selezione Soggetto Locale"
 									value="#{sf_soggettoLocale}"  listWidth="#{sf_mbean.soggettiAssociatiSelectItemsWidth}"
 									enableManualInput="false">
@@ -93,7 +93,7 @@
 		</c:if>		
 		<c:if test="#{applicationBean.amministratore}">
 			<c:if test="#{sf_showSoggetti}">
-				<link:prop label="Soggetto Locale">
+				<link:prop label="Soggetto Locale" rendered="#{sf_bean.showFiltroSoggettoLocale}">
 					<h:inputText id="sogLocaleInput" value="#{sf_labelSoggettoLocale}" styleClass="inputLinkLong"/>
 					<rich:suggestionbox id="sogLocaleSuggestion" width="416"
 						for="sogLocaleInput" listWidth="#{sf_mbean.soggettiLocaleSelectItemsWidth}"
@@ -180,7 +180,7 @@
    		<c:if test="#{applicationBean.user}">
 			<c:if test="#{!applicationBean.amministratore}">		
 				<c:if test="#{sf_showSoggetti}">
-					<link:prop label="Soggetto Locale" rendered="#{loginBean.loggedUser.sizeSoggetti>1}">
+					<link:prop label="Soggetto Locale" rendered="#{sf_bean.showFiltroSoggettoLocale}">
 						<rich:comboBox width="416" id="sogLocaleCombo" converter="selectItemConverter" defaultLabel="Selezione Soggetto Locale"
 									value="#{sf_soggettoLocale}"  listWidth="#{sf_mbean.soggettiAssociatiSelectItemsWidth}"
 									enableManualInput="false">
@@ -230,7 +230,7 @@
 		</c:if>		
 		<c:if test="#{applicationBean.amministratore}">
 			<c:if test="#{sf_showSoggetti}">
-				<link:prop label="Soggetto Locale">
+				<link:prop label="Soggetto Locale" rendered="#{sf_bean.showFiltroSoggettoLocale}">
 					<rich:comboBox width="416" id="sogLocaleCombo" converter="selectItemConverter" defaultLabel="Selezione Soggetto Locale"
 								value="#{sf_soggettoLocale}"  listWidth="#{sf_mbean.soggettiLocaleSelectItemsWidth}"
 								enableManualInput="false">

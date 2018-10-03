@@ -740,7 +740,7 @@ public class LoginBean extends AbstractLoginBean {
 		List<Soggetto> soggettiOperativi = DynamicPdDBeanUtils.getInstance(this.log).getListaSoggetti(protocolloSelezionato, TipoPdD.OPERATIVO);
 		
 		if(protocolloSelezionato!=null && !"".equals(protocolloSelezionato) && soggettiOperativi != null && !soggettiOperativi.isEmpty()) {
-			List<Soggetto> soggettiAssociatiUtente = Utility.getSoggettiOperativiAssociatiAlProfilo(utente, protocolloSelezionato);  
+			List<Soggetto> soggettiAssociatiUtente = Utility.getSoggettiOperativiAssociatiAlProfilo(this.getLoggedUser(), protocolloSelezionato);  
 			
 			if(soggettiAssociatiUtente.isEmpty())
 				return soggettiOperativi;
@@ -868,5 +868,37 @@ public class LoginBean extends AbstractLoginBean {
 	public void setVociMenuSoggetto(List<MenuModalitaItem> vociMenuModalita) {
 	}
 	
-	
+	public boolean isShowFiltroSoggettoLocale(){
+		try {
+			User utente = Utility.getLoggedUtente();
+			
+			String soggettoOperativoSelezionato = utente.getSoggettoSelezionatoPddMonitor();
+			// utente ha selezionato un soggetto
+			if(soggettoOperativoSelezionato != null) {
+				return false;
+			}
+			
+			ProtocolFactoryManager pfManager = ProtocolFactoryManager.getInstance();
+			MapReader<String,IProtocolFactory<?>> protocolFactories = pfManager.getProtocolFactories();	
+			List<String> protocolliDispondibili = Utility.getProtocolli(utente, pfManager, protocolFactories, true);
+			String protocolloSelezionato = utente.getProtocolloSelezionatoPddMonitor();
+			if(protocolliDispondibili.size()==1) {
+				protocolloSelezionato = protocolliDispondibili.get(0); // forzo
+			}
+			
+			int numeroSoggettiDisponibili = Utility.getLoggedUser().getUtenteSoggettoProtocolliMap().containsKey(protocolloSelezionato) ? Utility.getLoggedUser().getUtenteSoggettoProtocolliMap().get(protocolloSelezionato).size() : 0;
+			
+			if(numeroSoggettiDisponibili == 1)
+				return false;
+						
+			List<Soggetto> soggettiOperativi = DynamicPdDBeanUtils.getInstance(this.log).getListaSoggetti(protocolloSelezionato, TipoPdD.OPERATIVO);
+			numeroSoggettiDisponibili = soggettiOperativi != null ? soggettiOperativi.size() : 0;
+			
+			if(numeroSoggettiDisponibili == 1)
+				return false;
+		} catch (Exception e) {
+			this.log.error("Si e' verificato un errore durante il caricamento della lista protocolli: " + e.getMessage(), e);
+		} 
+		return true;
+	}
 }

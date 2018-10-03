@@ -44,6 +44,7 @@ import org.openspcoop2.web.monitor.core.bean.AbstractDateSearchForm;
 import org.openspcoop2.web.monitor.core.bean.ApplicationBean;
 import org.openspcoop2.web.monitor.core.bean.BaseSearchForm;
 import org.openspcoop2.web.monitor.core.constants.Costanti;
+import org.openspcoop2.web.monitor.core.constants.TipologiaRicerca;
 import org.openspcoop2.web.monitor.core.filters.BrowserFilter;
 import org.openspcoop2.web.monitor.core.logger.LoggerManager;
 import org.openspcoop2.web.monitor.core.utils.BrowserInfo;
@@ -181,7 +182,7 @@ public class StatsSearchForm extends BaseSearchForm{
 		
 		lst.add(new SelectItem("--", "--"));  
 
-		if(this.tipoStatistica.equals(TipoStatistica.DISTRIBUZIONE_SERVIZIO_APPLICATIVO) || !this.getTipologiaRicerca().equals("ingresso")) {
+		if(this.tipoStatistica.equals(TipoStatistica.DISTRIBUZIONE_SERVIZIO_APPLICATIVO) || !TipologiaRicerca.ingresso.equals(this.getTipologiaRicercaEnum())) {
 			lst.add(new SelectItem(Costanti.VALUE_TIPO_RICONOSCIMENTO_APPLICATIVO, "Applicativo"));  
 		}
 		lst.add(new SelectItem(Costanti.VALUE_TIPO_RICONOSCIMENTO_IDENTIFICATIVO_AUTENTICATO, "Identificativo Autenticato"));  

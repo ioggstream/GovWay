@@ -333,6 +333,16 @@ public class Utility {
 
 		return null;
 	}
+	
+	public static String getLoggedUtenteSoggettoPddMonitor() {
+		LoginBean lb = getLoginBean();
+
+		if(lb!= null && lb.isLoggedIn()){
+			return lb.getSoggettoPddMonitor();
+		}
+
+		return null;
+	}
 
 	public static Configurazione getConfigurazioneGenerale() {
 		LoginBean lb = getLoginBean();
@@ -558,22 +568,24 @@ public class Utility {
 
 		return ProtocolUtils.orderProtocolli(listaNomiProtocolli);
 	}
-
-	public static List<Soggetto> getSoggettiOperativiAssociatiAlProfilo(User u, String profiloSelezionato) throws Exception {
+	public static List<Soggetto> getSoggettiOperativiAssociatiAlProfilo(UserDetailsBean u, String profiloSelezionato) throws Exception {
 		List<Soggetto> soggetti = new ArrayList<Soggetto>();
-		// se il profilo e' specificato allora ritorno solo quello
-		if (StringUtils.isNotEmpty(profiloSelezionato)) {
-			for (IDSoggetto idSog : u.getSoggetti()) {
-				if (DynamicPdDBeanUtils.getInstance(log).isTipoSoggettoCompatibileConProtocollo(idSog.getTipo(), profiloSelezionato)) {
-					IdSoggetto idsog2 = new IdSoggetto();
-					idsog2.setNome(idSog.getNome());
-					idsog2.setTipo(idSog.getTipo());
-					Soggetto soggetto = Utility.getSoggetto(idsog2);
-					soggetti.add(soggetto);
-				}
+		
+		if(u.getUtenteSoggettoProtocolliMap().containsKey(profiloSelezionato)) {
+			for (IDSoggetto idSog : u.getUtenteSoggettoProtocolliMap().get(profiloSelezionato)) {
+				IdSoggetto idsog2 = new IdSoggetto();
+				idsog2.setNome(idSog.getNome());
+				idsog2.setTipo(idSog.getTipo());
+				Soggetto soggetto = Utility.getSoggetto(idsog2);
+				soggetti.add(soggetto);
 			}
-		}  
+		}
+			
 		return soggetti;
+	}
+	
+	public static boolean isTipoSoggettoCompatibileConProtocollo(String tipoSoggetto, String tipoProtocollo)  throws Exception{
+		return DynamicPdDBeanUtils.getInstance(log).isTipoSoggettoCompatibileConProtocollo(tipoSoggetto, tipoProtocollo);
 	}
 	
 	public static List<Soggetto> getSoggettiGestione(User u, String tipoNomeSoggettoLocale) {
@@ -622,7 +634,16 @@ public class Utility {
 			return soggetti;
 		}
 	}
+	
+	public static List<String> getProtocolli(User utente) throws Exception {
+		return getProtocolli(utente, false);
+	}
 
+	public static List<String> getProtocolli(User utente, boolean ignoreProtocolloSelezionato) throws Exception {
+		ProtocolFactoryManager pfManager = ProtocolFactoryManager.getInstance();
+		MapReader<String,IProtocolFactory<?>> protocolFactories = pfManager.getProtocolFactories();	
+		return getProtocolli(utente, pfManager, protocolFactories, ignoreProtocolloSelezionato);
+	}
 	public static List<String> getProtocolli(User utente, ProtocolFactoryManager pfManager, MapReader<String, IProtocolFactory<?>> protocolFactories) throws Exception {
 		return getProtocolli(utente, pfManager, protocolFactories, false);
 	}

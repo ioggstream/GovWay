@@ -19,23 +19,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.openspcoop2.web.monitor.core.dao;
-
-import org.openspcoop2.web.lib.users.dao.Stato;
-import org.openspcoop2.web.lib.users.dao.User;
+package org.openspcoop2.web.monitor.core.constants;
 
 /**
- * IUserService
+ * TipologiaRicerca
  * 
  * @author Pintori Giuliano (pintori@link.it)
  * @author $Author$
  * @version $Rev$, $Date$
  *
  */
-public interface IUserService extends IService<User, String>{
-
-	public Stato getTableState(String nomeTabella,User utente);
-
-	public void saveTableState(String nomeTabella, User user, Stato stato);
-	
+public enum TipologiaRicerca {
+	all, ingresso, uscita;
 }

@@ -827,6 +827,10 @@ public class PddMonitorProperties {
 		return "true".equalsIgnoreCase(this.appProperties.getProperty("console.filtri.azioni.selectList.enabled", true, true));
 	}
 	
+	public boolean isVisualizzaVoceEntrambiFiltroRuolo() throws Exception{
+		return "true".equalsIgnoreCase(this.appProperties.getProperty("console.filtri.ruolo.selectList.visualizzaVoceEntrambi", true, true));
+	}
+	
 	public Integer getNumeroMassimoSoggettiOperativiMenuUtente() throws Exception{
 		return new Integer(this.appProperties.getProperty("console.selectListSoggettiOperativi.numeroMassimoSoggettiVisualizzati",true,true));
 	}

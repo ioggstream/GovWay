@@ -41,7 +41,7 @@
 								<rich:comboBox id="protocolloCombo" value="#{summaryBean.protocollo}" converter="selectItemConverter" 
 									defaultLabel="Seleziona #{applicationBean.labelProfilo}" directInputSuggestions="true" width="416" enableManualInput="false">
 									<f:selectItems value="#{summaryBean.protocolli}"/>
-									<a4j:support status="mainStatus" event="onselect" actionListener="#{summaryBean.protocolloSelected}" data="#{summaryBean.data}" oncomplete="updateChart(data)" reRender="summaryCt"/>
+									<a4j:support status="mainStatus" event="onselect" actionListener="#{summaryBean.protocolloSelected}" data="#{summaryBean.data}" oncomplete="updateChart(data)" reRender="summaryCt,sogLocaleCombo"/>
 								</rich:comboBox>
 							</link:prop>
 							
@@ -55,7 +55,7 @@
 							</link:prop>
 							
 							<c:if test="#{!applicationBean.amministratore}">
-								<link:prop label="#{loginBean.loggedUser.labelTipiNomiSoggettiServiziAssociati}" rendered="#{loginBean.loggedUser.sizeSoggetti>1}">
+								<link:prop label="#{summaryBean.labelTipiNomiSoggettiServiziAssociati}" rendered="#{summaryBean.showFiltroSoggettoLocale}">
 									<a4j:region renderRegionOnly="true">
 										<rich:comboBox width="416" id="sogLocaleCombo" converter="selectItemConverter"
 														value="#{summaryBean.soggettoLocale}" directInputSuggestions="true"
@@ -68,7 +68,7 @@
 								</link:prop>
 							</c:if>
 							<c:if test="#{applicationBean.amministratore}">
-								<link:prop label="Soggetto Locale / Servizio">
+								<link:prop label="#{summaryBean.labelServizio}">
 									<a4j:region renderRegionOnly="true">
 										<h:inputText id="sogLocaleCombo" value="#{summaryBean.labelSoggettoLocale}" styleClass="inputLinkLong" />
 										<rich:suggestionbox id="sogLocaleComboSuggestion" width="416"

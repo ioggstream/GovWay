@@ -60,6 +60,7 @@ import org.openspcoop2.web.monitor.core.constants.Costanti;
 import org.openspcoop2.web.monitor.core.constants.ModalitaRicercaTransazioni;
 import org.openspcoop2.web.monitor.core.constants.TipoMatch;
 import org.openspcoop2.web.monitor.core.constants.TipoMessaggio;
+import org.openspcoop2.web.monitor.core.constants.TipologiaRicerca;
 import org.openspcoop2.web.monitor.core.core.PddMonitorProperties;
 import org.openspcoop2.web.monitor.core.core.PermessiUtenteOperatore;
 import org.openspcoop2.web.monitor.core.core.Utility;
@@ -86,8 +87,9 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 	private String nomeAzione;
 	private String nomeServizio;
 	// private String nomeDestinatario;
-	private String tipologiaRicerca;
-	private String defaultTipologiaRicerca;
+	private TipologiaRicerca tipologiaRicerca;
+	private TipologiaRicerca defaultTipologiaRicerca;
+	private boolean tipologiaRicercaEntrambiEnabled;
 	// private String trafficoPerSoggetto;
 	// private String soggettoLocale;
 
@@ -131,6 +133,7 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 	private String protocollo;
 	private List<SelectItem> protocolli= null;
 	private String modalita = null;
+	private String soggettoPddMonitor = null;
 	
 
 	private IFilter filtro;
@@ -189,7 +192,7 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 
 	public BaseSearchForm() {
 
-		this.tipologiaRicerca = this.getDefaultTipologiaRicerca();
+		this.tipologiaRicerca = this.getDefaultTipologiaRicercaEnum();
 		this.esitoGruppo = EsitoUtils.ALL_VALUE;
 		this.esitoDettaglio = EsitoUtils.ALL_VALUE;
 		try {
@@ -217,7 +220,8 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 			this.intervalloRefresh = govwayMonitorProperties.getIntervalloRefreshTransazioniLive();
 			this.tempoMassimoRefreshLive = govwayMonitorProperties.getTempoMassimoRefreshLive();
 			this.setRicerchePersonalizzateAttive(govwayMonitorProperties.isAttivoModuloRicerchePersonalizzate());
-			this.setStatistichePersonalizzateAttive(govwayMonitorProperties.isAttivoModuloTransazioniStatistichePersonalizzate());			
+			this.setStatistichePersonalizzateAttive(govwayMonitorProperties.isAttivoModuloTransazioniStatistichePersonalizzate());	
+			this.tipologiaRicercaEntrambiEnabled = govwayMonitorProperties.isVisualizzaVoceEntrambiFiltroRuolo();
 		} catch (Exception e) {
 			BaseSearchForm.log.error("Errore durante la creazione del form: " + e.getMessage(),e);
 		}
@@ -228,7 +232,7 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 
 	public BaseSearchForm(boolean useInBatch) {
 
-		this.tipologiaRicerca = this.getDefaultTipologiaRicerca();
+		this.tipologiaRicerca = this.getDefaultTipologiaRicercaEnum();
 		this.esitoGruppo = EsitoUtils.ALL_VALUE;
 		this.esitoDettaglio = EsitoUtils.ALL_VALUE;
 		try {
@@ -268,7 +272,7 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 	public void initSearchListener(ActionEvent ae) {
 		try {
 			super.initSearchListener(ae);
-			this.tipologiaRicerca = this.getDefaultTipologiaRicerca();
+			this.tipologiaRicerca = this.getDefaultTipologiaRicercaEnum();
 			this.esitoGruppo = EsitoUtils.ALL_VALUE;
 			this.esitoDettaglio = EsitoUtils.ALL_VALUE;
 			try {
@@ -288,6 +292,7 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 					: "Ultimo mese");
 
 			_setPeriodo();
+			User utente = this.getUser();
 
 			this.aggiornaNuovaDataRicerca();
 
@@ -308,7 +313,14 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 
 			this.tipoNomeDestinatario = null;
 			this.tipoNomeMittente = null;
-			this.tipoNomeSoggettoLocale = null;
+			
+			String loggedUtenteSoggettoPddMonitor = Utility.getLoggedUtenteSoggettoPddMonitor();
+			if(this.isShowFiltroSoggettoLocale() && Costanti.VALUE_PARAMETRO_MODALITA_ALL.equals(loggedUtenteSoggettoPddMonitor)) {
+				this.tipoNomeSoggettoLocale = null;
+			} else {
+				this.tipoNomeSoggettoLocale = loggedUtenteSoggettoPddMonitor;
+			}
+			
 			this.tipoNomeTrafficoPerSoggetto = null;
 			
 			this.labelTipoNomeMittente = null;
@@ -327,7 +339,7 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 			this.sortField = null;
 			
 			IProtocolFactory<?> protocolFactory = null;
-			User utente = this.getUser();
+			
 			
 			if(this.isShowListaProtocolli()) {
 				String loggedUtenteModalita = Utility.getLoggedUtenteModalita();
@@ -442,7 +454,12 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 
 		this.tipoNomeDestinatario = null;
 		this.tipoNomeMittente = null;
-		this.tipoNomeSoggettoLocale = null;
+		String loggedUtenteSoggettoPddMonitor = Utility.getLoggedUtenteSoggettoPddMonitor();
+		if(this.isShowFiltroSoggettoLocale() && Costanti.VALUE_PARAMETRO_MODALITA_ALL.equals(loggedUtenteSoggettoPddMonitor)) {
+			this.tipoNomeSoggettoLocale = null;
+		} else {
+			this.tipoNomeSoggettoLocale = loggedUtenteSoggettoPddMonitor;
+		}
 		this.tipoNomeTrafficoPerSoggetto = null;
 		
 		this.labelTipoNomeMittente = null;
@@ -656,11 +673,11 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 				IDServizio idServizio = Utility.parseServizioSoggetto(this.getNomeServizio());
 				
 				String nomeSoggetto = null;
-				if ("ingresso".equals(this.getTipologiaRicerca())) {
+				if (TipologiaRicerca.ingresso.equals(this.getTipologiaRicercaEnum())) {
 					if (StringUtils.isNotBlank(this.getSoggettoLocale())) {
 						nomeSoggetto = this.getSoggettoLocale();
 					}
-				} else if ("uscita".equals(this.getTipologiaRicerca())) {
+				} else if (TipologiaRicerca.uscita.equals(this.getTipologiaRicercaEnum())) {
 					// uscita
 					if (StringUtils.isNotBlank(this.getNomeDestinatario())) {
 						nomeSoggetto = this.getNomeDestinatario();
@@ -715,28 +732,51 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 			this.tipoNomeDestinatario = null;
 
 	}
-
+	
 	public String getTipologiaRicerca() {
-		return this.tipologiaRicerca;
+		return this.getTipologiaRicercaEnum() != null ? this.getTipologiaRicercaEnum().toString() : "";
 	}
 
 	public void setTipologiaRicerca(String tipologiaRicerca) {
-		this.tipologiaRicerca = tipologiaRicerca;
-
-		if (StringUtils.isEmpty(tipologiaRicerca)
-				|| "--".equals(tipologiaRicerca))
+		if (StringUtils.isEmpty(tipologiaRicerca) || "--".equals(tipologiaRicerca))
 			this.tipologiaRicerca = null;
+		else 
+			this.setTipologiaRicerca(TipologiaRicerca.valueOf(tipologiaRicerca));
+		
+	}
+
+	public TipologiaRicerca getTipologiaRicercaEnum() {
+		return this.tipologiaRicerca;
+	}
+
+	public void setTipologiaRicerca(TipologiaRicerca tipologiaRicerca) {
+		this.tipologiaRicerca = tipologiaRicerca;
 	}
 	
 	public String getDefaultTipologiaRicerca() {
-		return this.defaultTipologiaRicerca != null ? this.defaultTipologiaRicerca : "all";
+		return this.getDefaultTipologiaRicercaEnum() != null ? this.getDefaultTipologiaRicercaEnum().toString() : "";
+	}
+	
+	public TipologiaRicerca getDefaultTipologiaRicercaEnum() {
+		if(this.defaultTipologiaRicerca != null) {
+			return this.defaultTipologiaRicerca;
+		} else {
+			if(this.tipologiaRicercaEntrambiEnabled) 
+				return TipologiaRicerca.all;
+			else 
+				return TipologiaRicerca.uscita;
+		}
+	}
+	
+	public void setDefaultTipologiaRicerca(TipologiaRicerca defaultTipologiaRicerca) {
+		this.defaultTipologiaRicerca = defaultTipologiaRicerca;
 	}
 
 	public void setDefaultTipologiaRicerca(String defaultTipologiaRicerca) {
-		this.defaultTipologiaRicerca = defaultTipologiaRicerca;
-
 		if (StringUtils.isEmpty(defaultTipologiaRicerca) || "--".equals(defaultTipologiaRicerca))
 			this.defaultTipologiaRicerca = null;
+		else 
+			this.setDefaultTipologiaRicerca(TipologiaRicerca.valueOf(defaultTipologiaRicerca));
 	}
 
 	public PermessiUtenteOperatore getPermessiUtenteOperatore() throws CoreException, UserInvalidException {
@@ -748,9 +788,9 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 		String tipoSoggettoLocale = null;
 		String nomeSoggettoLocale = null;
 
-		if(this.tipoNomeSoggettoLocale!=null && !StringUtils.isEmpty(this.tipoNomeSoggettoLocale) && !"--".equals(this.tipoNomeSoggettoLocale)){
-			tipoSoggettoLocale = Utility.parseTipoSoggetto(this.tipoNomeSoggettoLocale);
-			nomeSoggettoLocale = Utility.parseNomeSoggetto(this.tipoNomeSoggettoLocale);
+		if(!StringUtils.isEmpty(this.getTipoNomeSoggettoLocale()) && !"--".equals(this.getTipoNomeSoggettoLocale())){
+			tipoSoggettoLocale = Utility.parseTipoSoggetto(this.getTipoNomeSoggettoLocale());
+			nomeSoggettoLocale = Utility.parseNomeSoggetto(this.getTipoNomeSoggettoLocale());
 		}
 
 		return PermessiUtenteOperatore.getPermessiUtenteOperatore(user, tipoSoggettoLocale, nomeSoggettoLocale);
@@ -777,13 +817,13 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 	}
 
 	public String getTipoSoggettoLocale() {
-		User u = getUser();
-		if (u.getSoggetti().size() == 1) {
-			IDSoggetto s = u.getSoggetti().get(0);
-			this.tipoNomeSoggettoLocale = s.getTipo() + "/" + s.getNome();
-		}
+//		User u = getUser();
+//		if (u.getSoggetti().size() == 1) {
+//			IDSoggetto s = u.getSoggetti().get(0);
+//			this.tipoNomeSoggettoLocale = s.getTipo() + "/" + s.getNome();
+//		}
 
-		return Utility.parseTipoSoggetto(this.tipoNomeSoggettoLocale);
+		return Utility.parseTipoSoggetto(this.getTipoNomeSoggettoLocale());
 	}
 
 	/**
@@ -792,14 +832,14 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 	 * @return Soggetto Locale
 	 */
 	public String getSoggettoLocale() {
+//
+//		User u = getUser();
+//		if (u.getSoggetti().size() == 1) {
+//			IDSoggetto s = u.getSoggetti().get(0);
+//			this.tipoNomeSoggettoLocale = s.getTipo() + "/" + s.getNome();
+//		}
 
-		User u = getUser();
-		if (u.getSoggetti().size() == 1) {
-			IDSoggetto s = u.getSoggetti().get(0);
-			this.tipoNomeSoggettoLocale = s.getTipo() + "/" + s.getNome();
-		}
-
-		return Utility.parseNomeSoggetto(this.tipoNomeSoggettoLocale);
+		return Utility.parseNomeSoggetto(this.getTipoNomeSoggettoLocale());
 	}
 
 	public void setTipoNomeSoggettoLocale(String soggettoLocale) {
@@ -815,7 +855,7 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 	 */
 	public List<Soggetto> getSoggettiGestione() {
 		User u = getUser();
-		return Utility.getSoggettiGestione(u,this.tipoNomeSoggettoLocale);
+		return Utility.getSoggettiGestione(u,this.getTipoNomeSoggettoLocale());
 	}
 
 	// public void setSoggettoGestione(String soggettoGestione) {
@@ -1340,7 +1380,16 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 	}
 	
 	public String getTipoNomeSoggettoLocale() {
-		return this.tipoNomeSoggettoLocale;
+		if(this.isCloned) {
+			return this.tipoNomeSoggettoLocaleCloned;
+		}
+		else {
+			if(!this.getSoggettoPddMonitor().equals(Costanti.VALUE_PARAMETRO_MODALITA_ALL)) {
+				this.setTipoNomeSoggettoLocale(Utility.getLoginBean().getSoggettoPddMonitor()); 
+			}
+			
+			return this.tipoNomeSoggettoLocale;
+		}
 	}
 	
 	public String getTipoNomeMittenteTooltip() {
@@ -1397,7 +1446,7 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 	}
 
 	public String getTipoNomeSoggettoLocaleTooltip() {
-		if(StringUtils.isNotEmpty(this.tipoNomeSoggettoLocale)) {
+		if(StringUtils.isNotEmpty(this.getTipoNomeSoggettoLocale())) {
 			try {
 				String tipoProtocollo = this.getProtocollo();
 				IDSoggetto idSoggetto = new IDSoggetto();
@@ -1410,7 +1459,7 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 				BaseSearchForm.log.error(e.getMessage(), e);
 			}
 		}
-		return this.tipoNomeSoggettoLocale;
+		return this.getTipoNomeSoggettoLocale();
 	}
 
 	public String getIntervalloRefresh() {
@@ -1497,8 +1546,10 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 
 	private boolean isCloned = false;
 	private String protocolCloned = null;
+	private String tipoNomeSoggettoLocaleCloned = null;
 	public void saveProtocollo() {
 		this.protocolCloned = this.protocollo;
+		this.tipoNomeSoggettoLocaleCloned = this.tipoNomeSoggettoLocale;
 		this.isCloned = true;
 	}
 	
@@ -1583,6 +1634,21 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 		}  
 
 		return true;
+	}
+	
+	public String getSoggettoPddMonitor() {
+		if(this.soggettoPddMonitor == null)
+			return Utility.getLoginBean().getSoggettoPddMonitor();
+		
+		return this.soggettoPddMonitor;
+	}
+
+	public void setSoggettoPddMonitor(String soggettoPddMonitor) {
+		this.soggettoPddMonitor = soggettoPddMonitor;
+	}
+	
+	public boolean isShowFiltroSoggettoLocale(){
+		return Utility.getLoginBean().isShowFiltroSoggettoLocale();
 	}
 	
 	public boolean isSetFiltroProtocollo() {
@@ -1785,7 +1851,7 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 		
 		lst.add(new SelectItem("--", "--"));  
 		
-		if(!this.getTipologiaRicerca().equals("ingresso")) {
+		if(!TipologiaRicerca.ingresso.equals(this.getTipologiaRicercaEnum())) {
 			lst.add(new SelectItem(Costanti.VALUE_TIPO_RICONOSCIMENTO_APPLICATIVO, "Applicativo"));  
 		}
 		lst.add(new SelectItem(Costanti.VALUE_TIPO_RICONOSCIMENTO_IDENTIFICATIVO_AUTENTICATO, "Identificativo Autenticato"));  
@@ -1934,4 +2000,14 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 		}
 	}
 	
+	public List<SelectItem> getTipologieRicerca() throws Exception {
+		List<SelectItem> listaTipologie = new ArrayList<SelectItem>();
+		
+		listaTipologie.add(new SelectItem(TipologiaRicerca.ingresso.toString(),"Erogazione"));
+		listaTipologie.add(new SelectItem(TipologiaRicerca.uscita.toString(),"Fruizione"));
+		if(this.tipologiaRicercaEntrambiEnabled)
+			listaTipologie.add(new SelectItem(TipologiaRicerca.all.toString(),"Erogazione/Fruizione"));
+		
+		return listaTipologie;
+	}
 }

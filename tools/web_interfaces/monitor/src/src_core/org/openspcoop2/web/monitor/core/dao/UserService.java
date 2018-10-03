@@ -106,22 +106,6 @@ public class UserService implements IUserService {
 	}
 
 	@Override
-	public List<String> getTipiNomiSoggettiAssociati(User utente) {
-		List<String> lst = null;
-		if (utente != null) {
-			lst = new ArrayList<String>();
-			for (IDSoggetto idsog : utente.getSoggetti()) {
-				if (idsog.getTipo() != null && idsog.getNome() != null) {
-					lst.add(idsog.getTipo() + "/" + idsog.getNome());
-				}
-			}
-		}
-
-		return lst;
-
-	}
-
-	@Override
 	public Stato getTableState(String nomeTabella,User utente) {
 		Stato state = null;
 		UserService.log.debug("Get Table State [utente: " + utente.getLogin() + "]");

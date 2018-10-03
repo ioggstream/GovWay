@@ -93,6 +93,7 @@ import org.openspcoop2.web.monitor.core.constants.CaseSensitiveMatch;
 import org.openspcoop2.web.monitor.core.constants.Costanti;
 import org.openspcoop2.web.monitor.core.constants.ModalitaRicercaTransazioni;
 import org.openspcoop2.web.monitor.core.constants.TipoMatch;
+import org.openspcoop2.web.monitor.core.constants.TipologiaRicerca;
 import org.openspcoop2.web.monitor.core.core.PddMonitorProperties;
 import org.openspcoop2.web.monitor.core.core.PermessiUtenteOperatore;
 import org.openspcoop2.web.monitor.core.core.Utility;
@@ -2146,9 +2147,9 @@ public class TransazioniService implements ITransazioniService {
 			}
 			
 			// TODO Decommentare appena risolto bug delle enumeration
-			if ("all".equals(this.searchForm.getTipologiaRicerca())	|| StringUtils.isEmpty(this.searchForm.getTipologiaRicerca())) {
+			if (this.searchForm.getTipologiaRicercaEnum() == null || TipologiaRicerca.all.equals(this.searchForm.getTipologiaRicercaEnum())) {
 				// devo prendere tutte le transazioni
-			} else if ("ingresso".equals(this.searchForm.getTipologiaRicerca())) {
+			} else if (TipologiaRicerca.ingresso.equals(this.searchForm.getTipologiaRicercaEnum())) {
 				// EROGAZIONE
 				// sb.append(" AND t.tipoPorta <> 'delegata' ");
 				if (addAnd)
@@ -2185,13 +2186,13 @@ public class TransazioniService implements ITransazioniService {
 			}
 
 			// TODO Decommentare appena risolto bug delle enumeration
-			if ("all".equals(this.searchForm.getTipologiaRicerca())	|| StringUtils.isEmpty(this.searchForm.getTipologiaRicerca())) {
+			if (this.searchForm.getTipologiaRicercaEnum() == null || TipologiaRicerca.all.equals(this.searchForm.getTipologiaRicercaEnum())) {
 				// devo prendere tutte le transazioni che sono diverse da
 				// integration manager
 				// sb.append(" AND t.tipoPorta <> 'integration_manager' ");
 
 				filter.notEquals(Transazione.model().PDD_RUOLO,	PddRuolo.INTEGRATION_MANAGER);
-			} else if ("ingresso".equals(this.searchForm.getTipologiaRicerca())) {
+			} else if (TipologiaRicerca.ingresso.equals(this.searchForm.getTipologiaRicercaEnum())) {
 				// EROGAZIONE
 				// sb.append(" AND t.tipoPorta = 'applicativa' ");
 				if (addAnd)
@@ -2320,13 +2321,12 @@ public class TransazioniService implements ITransazioniService {
 
 			// imposto il soggetto (loggato) come mittente o destinatario in
 			// base alla tipologia di ricerca selezionata
-			if ("all".equals(this.searchForm.getTipologiaRicerca()) || StringUtils.isEmpty(this.searchForm.getTipologiaRicerca())) {
+			if (this.searchForm.getTipologiaRicercaEnum() == null || TipologiaRicerca.all.equals(this.searchForm.getTipologiaRicercaEnum())) {
 				// il soggetto loggato puo essere mittente o destinatario
 				// se e' selezionato "trafficoPerSoggetto" allora il nome del
 				// soggetto selezionato va messo come complementare
 
-				boolean trafficoSoggetto = StringUtils
-						.isNotBlank(this.searchForm.getTrafficoPerSoggetto());
+				boolean trafficoSoggetto = StringUtils.isNotBlank(this.searchForm.getTrafficoPerSoggetto());
 
 				if (trafficoSoggetto) {
 					// il mio soggetto non e' stato impostato (soggetto in gestione, puo succedero solo in caso admin)
@@ -2354,7 +2354,7 @@ public class TransazioniService implements ITransazioniService {
 					// nessun filtro da impostare
 				}
 
-			} else if ("ingresso".equals(this.searchForm.getTipologiaRicerca())) {
+			} else if (TipologiaRicerca.ingresso.equals(this.searchForm.getTipologiaRicercaEnum())) {
 				// EROGAZIONE
 
 				// il mittente puo non essere specifica

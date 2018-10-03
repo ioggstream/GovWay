@@ -83,6 +83,7 @@ import org.openspcoop2.utils.UtilsException;
 import org.openspcoop2.web.monitor.core.bean.BaseSearchForm;
 import org.openspcoop2.web.monitor.core.constants.CaseSensitiveMatch;
 import org.openspcoop2.web.monitor.core.constants.TipoMatch;
+import org.openspcoop2.web.monitor.core.constants.TipologiaRicerca;
 import org.openspcoop2.web.monitor.core.core.PddMonitorProperties;
 import org.openspcoop2.web.monitor.core.core.PermessiUtenteOperatore;
 import org.openspcoop2.web.monitor.core.core.Utility;
@@ -1098,18 +1099,13 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 			// imposto il soggetto (loggato) come mittente o destinatario in
 			// base
 			// alla tipologia di ricerca selezionata
-			if ("all".equals(this.andamentoTemporaleSearch
-					.getTipologiaRicerca())
-					|| StringUtils.isEmpty(this.andamentoTemporaleSearch
-							.getTipologiaRicerca())) {
+			if (this.andamentoTemporaleSearch.getTipologiaRicercaEnum() == null || TipologiaRicerca.all.equals(this.andamentoTemporaleSearch.getTipologiaRicercaEnum())) {
 				// il soggetto loggato puo essere mittente o destinatario
 				// se e' selezionato "trafficoPerSoggetto" allora il nome
 				// del
 				// soggetto selezionato va messo come complementare
 
-				boolean trafficoSoggetto = StringUtils
-						.isNotBlank(this.andamentoTemporaleSearch
-								.getTrafficoPerSoggetto());
+				boolean trafficoSoggetto = StringUtils.isNotBlank(this.andamentoTemporaleSearch.getTrafficoPerSoggetto());
 				boolean soggetto = listaSoggettiGestione.size() > 0;
 				String tipoTrafficoSoggetto = null;
 				String nomeTrafficoSoggetto = null;
@@ -1217,8 +1213,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 					// nessun filtro da impostare
 				}
 
-			} else if ("ingresso".equals(this.andamentoTemporaleSearch
-					.getTipologiaRicerca())) {
+			} else if (TipologiaRicerca.ingresso.equals(this.andamentoTemporaleSearch.getTipologiaRicercaEnum())) {
 				// EROGAZIONE
 				expr.and().equals(model.TIPO_PORTA, "applicativa");
 
@@ -1666,9 +1661,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 			}
 			
 			// ho 3 diversi tipi di query in base alla tipologia di ricerca
-			if ("all".equals(this.distribSoggettoSearch.getTipologiaRicerca())
-					|| StringUtils.isEmpty(this.distribSoggettoSearch
-							.getTipologiaRicerca())) {
+			if (this.distribSoggettoSearch.getTipologiaRicercaEnum() == null || TipologiaRicerca.all.equals(this.distribSoggettoSearch.getTipologiaRicercaEnum())) {
 				// erogazione/fruizione
 
 				// MITTENTE
@@ -1897,8 +1890,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 				NonNegativeNumber nnn = dao.unionCount(union, mitUnionExpr, destUnionExpr); 
 				return nnn != null ? nnn.longValue() : 0L;
 
-			} else if ("ingresso".equals(this.distribSoggettoSearch
-					.getTipologiaRicerca())) {
+			} else if (TipologiaRicerca.ingresso.equals(this.distribSoggettoSearch.getTipologiaRicercaEnum())) {
 				// EROGAZIONE
 				// il destinatario e' l'utente loggato (sempre presente se non
 				// sono
@@ -2205,9 +2197,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 		List<Soggetto> listaSoggettiGestione = this.distribSoggettoSearch
 				.getSoggettiGestione();
 		// ho 3 diversi tipi di query in base alla tipologia di ricerca
-		if ("all".equals(this.distribSoggettoSearch.getTipologiaRicerca())
-				|| StringUtils.isEmpty(this.distribSoggettoSearch
-						.getTipologiaRicerca())) {
+		if (this.distribSoggettoSearch.getTipologiaRicercaEnum() == null || TipologiaRicerca.all.equals(this.distribSoggettoSearch.getTipologiaRicercaEnum())) {
 			// erogazione/fruizione
 
 			// EROGAZIONE
@@ -2604,8 +2594,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 
 			}
 
-		} else if ("ingresso".equals(this.distribSoggettoSearch
-				.getTipologiaRicerca())) {
+		} else if (TipologiaRicerca.ingresso.equals(this.distribSoggettoSearch.getTipologiaRicercaEnum())) {
 			// EROGAZIONE
 			// il destinatario e' l'utente loggato (sempre presente se non
 			// sono
@@ -3546,9 +3535,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 			// imposto il soggetto (loggato) come mittente o destinatario in
 			// base
 			// alla tipologia di ricerca selezionata
-			if ("all".equals(this.distribServizioSearch.getTipologiaRicerca())
-					|| StringUtils.isEmpty(this.distribServizioSearch
-							.getTipologiaRicerca())) {
+			if (this.distribServizioSearch.getTipologiaRicercaEnum() == null || TipologiaRicerca.all.equals(this.distribServizioSearch.getTipologiaRicercaEnum())) {
 				// il soggetto loggato puo essere mittente o destinatario
 				// se e' selezionato "trafficoPerSoggetto" allora il nome
 				// del
@@ -3673,8 +3660,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 					// nessun filtro da impostare
 				}
 
-			} else if ("ingresso".equals(this.distribServizioSearch
-					.getTipologiaRicerca())) {
+			} else if (TipologiaRicerca.ingresso.equals(this.distribServizioSearch.getTipologiaRicercaEnum())) {
 				// EROGAZIONE
 				expr.and().notEquals(model.TIPO_PORTA,
 						"delegata");
@@ -3916,9 +3902,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 			// imposto il soggetto (loggato) come mittente o destinatario in
 			// base
 			// alla tipologia di ricerca selezionata
-			if ("all".equals(this.distribAzioneSearch.getTipologiaRicerca())
-					|| StringUtils.isEmpty(this.distribAzioneSearch
-							.getTipologiaRicerca())) {
+			if (this.distribAzioneSearch.getTipologiaRicercaEnum() == null || TipologiaRicerca.all.equals(this.distribAzioneSearch.getTipologiaRicercaEnum())) {
 				// il soggetto loggato puo essere mittente o destinatario
 				// se e' selezionato "trafficoPerSoggetto" allora il nome
 				// del
@@ -4043,8 +4027,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 					// nessun filtro da impostare
 				}
 
-			} else if ("ingresso".equals(this.distribAzioneSearch
-					.getTipologiaRicerca())) {
+			} else if (TipologiaRicerca.ingresso.equals(this.distribAzioneSearch.getTipologiaRicercaEnum())) {
 				// EROGAZIONE
 				expr.and().notEquals(model.TIPO_PORTA,
 						"delegata");
@@ -4450,14 +4433,10 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 			// Fix introdotto per gestire il soggetto proprietario
 			boolean forceErogazione = false;
 			boolean forceFruizione = false;
-			if (  
-				"all".equals(this.distribSaSearch.getTipologiaRicerca()) 
-				|| 
-				StringUtils.isEmpty(this.distribSaSearch.getTipologiaRicerca())
-				) {
+			if (this.distribSaSearch.getTipologiaRicercaEnum() == null || TipologiaRicerca.all.equals(this.distribSaSearch.getTipologiaRicercaEnum())) {
 				forceErogazione = true;
 				forceFruizione = true;
-			} else if ( "ingresso".equals(this.distribSaSearch.getTipologiaRicerca())) {
+			} else if (TipologiaRicerca.ingresso.equals(this.distribSaSearch.getTipologiaRicercaEnum())) {
 				forceErogazione = true;
 			} else {
 				forceFruizione = true;
@@ -4572,14 +4551,10 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 			// Fix introdotto per gestire il soggetto proprietario
 			boolean forceErogazione = false;
 			boolean forceFruizione = false;
-			if (  
-				"all".equals(this.distribSaSearch.getTipologiaRicerca()) 
-				|| 
-				StringUtils.isEmpty(this.distribSaSearch.getTipologiaRicerca())
-				) {
+			if (this.distribSaSearch.getTipologiaRicercaEnum() == null || TipologiaRicerca.all.equals(this.distribSaSearch.getTipologiaRicercaEnum())) {
 				forceErogazione = true;
 				forceFruizione = true;
-			} else if ( "ingresso".equals(this.distribSaSearch.getTipologiaRicerca())) {
+			} else if (TipologiaRicerca.ingresso.equals(this.distribSaSearch.getTipologiaRicercaEnum())) {
 				forceErogazione = true;
 			} else {
 				forceFruizione = true;
@@ -5059,7 +5034,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 					&& 
 					!forceFruizione 
 					&&
-					("all".equals(this.distribSaSearch.getTipologiaRicerca()) || StringUtils.isEmpty(this.distribSaSearch.getTipologiaRicerca()))
+					(this.distribSaSearch.getTipologiaRicercaEnum() == null || TipologiaRicerca.all.equals(this.distribSaSearch.getTipologiaRicercaEnum()))
 				) {
 				// il soggetto loggato puo essere mittente o destinatario
 				// se e' selezionato "trafficoPerSoggetto" allora il nome
@@ -5185,7 +5160,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 					// nessun filtro da impostare
 				}
 
-			} else if ( forceErogazione || "ingresso".equals(this.distribSaSearch.getTipologiaRicerca())) {
+			} else if ( forceErogazione || TipologiaRicerca.ingresso.equals(this.distribSaSearch.getTipologiaRicercaEnum())) {
 				// EROGAZIONE
 				expr.and().notEquals(model.TIPO_PORTA,
 						"delegata");
@@ -6159,8 +6134,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 			// ho 3 diversi tipi di query in base alla tipologia di ricerca
 
 			// imposto il soggetto (loggato) come mittente o destinatario in base alla tipologia di ricerca selezionata
-			if ("all".equals(this.statistichePersonalizzateSearch.getTipologiaRicerca())
-					|| StringUtils.isEmpty(this.statistichePersonalizzateSearch.getTipologiaRicerca())) {
+			if (this.statistichePersonalizzateSearch.getTipologiaRicercaEnum() == null || TipologiaRicerca.all.equals(this.statistichePersonalizzateSearch.getTipologiaRicercaEnum())) {
 				// il soggetto loggato puo essere mittente o destinatario
 				// se e' selezionato "trafficoPerSoggetto" allora il nome
 				// del
@@ -6276,8 +6250,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 					// nessun filtro da impostare
 				}
 
-			} else if ("ingresso".equals(this.statistichePersonalizzateSearch
-					.getTipologiaRicerca())) {
+			} else if (TipologiaRicerca.ingresso.equals(this.statistichePersonalizzateSearch.getTipologiaRicercaEnum())) {
 				// EROGAZIONE
 				expr.and().equals(model.TIPO_PORTA, "applicativa");
 

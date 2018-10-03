@@ -227,7 +227,7 @@ public class SummaryBean implements Serializable{
 		} catch (Exception e) {
 			SummaryBean.log.error("Errore durante la init del SummaryBean: "+e.getMessage(),e); 
 		}
-
+		
 		try {
 			this.esitiProperties = EsitiProperties.getInstance(SummaryBean.log, this.protocollo);
 		} catch (Exception e) {
@@ -665,18 +665,24 @@ public class SummaryBean implements Serializable{
 	@SuppressWarnings("deprecation")
 	private PermessiUtenteOperatore getPermessiUtenteOperatore() throws CoreException{
 		UserDetailsBean loggedUser = Utility.getLoggedUser();
-		User u =  Utility.getLoggedUtente();
+		String loggedUtenteSoggettoPddMonitor = Utility.getLoggedUtenteSoggettoPddMonitor();
+		String forceSoggettoLocale= null;
+		if(!(this.isShowFiltroSoggettoLocale() && Costanti.VALUE_PARAMETRO_MODALITA_ALL.equals(loggedUtenteSoggettoPddMonitor))) {
+			forceSoggettoLocale = loggedUtenteSoggettoPddMonitor;
+		}
 		
-		int foundSoggetti = u.getSoggetti() != null ? u.getSoggetti().size() : 0;
-		int foundServizi = u.getServizi() != null ? u.getServizi().size() : 0;
+		String tipoProtocollo = this.getProtocollo();
+		
+		int foundSoggetti = loggedUser.getUtenteSoggettoProtocolliMap().containsKey(tipoProtocollo) ? loggedUser.getUtenteSoggettoProtocolliMap().get(tipoProtocollo).size() : 0;
+		int foundServizi = loggedUser.getUtenteServizioProtocolliMap().containsKey(tipoProtocollo) ? loggedUser.getUtenteServizioProtocolliMap().get(tipoProtocollo).size() : 0;
 		
 		if((foundServizi + foundSoggetti) == 1) {
 			IDServizio idServizio =  null;
 			if(foundServizi == 1) {
-				idServizio = u.getServizi().get(0);
+				idServizio = loggedUser.getUtenteServizioProtocolliMap().get(tipoProtocollo).get(0);
 			} else {
 				idServizio = new IDServizio();
-				idServizio.setSoggettoErogatore(u.getSoggetti().get(0));
+				idServizio.setSoggettoErogatore(loggedUser.getUtenteSoggettoProtocolliMap().get(tipoProtocollo).get(0));
 			}
 			this.soggettoLocale = Utility.convertToSoggettoServizio(idServizio);
 		}
@@ -686,8 +692,15 @@ public class SummaryBean implements Serializable{
 		String tipoServizio = null;
 		String nomeServizio = null;
 		Integer versioneServizio = null;
+		
+		IDServizio idServizio = null;
 		if(this.soggettoLocale!=null && !StringUtils.isEmpty(this.soggettoLocale) && !"--".equals(this.soggettoLocale)){
-			IDServizio idServizio = Utility.parseSoggettoServizio(this.soggettoLocale);
+			idServizio = Utility.parseSoggettoServizio(this.soggettoLocale);
+		} else {
+			if(!Costanti.VALUE_PARAMETRO_MODALITA_ALL.equals(loggedUtenteSoggettoPddMonitor))
+				idServizio = Utility.parseSoggettoServizio(forceSoggettoLocale);
+		}
+		if(idServizio != null) {
 			tipoSoggettoLocale = idServizio.getSoggettoErogatore().getTipo();
 			nomeSoggettoLocale = idServizio.getSoggettoErogatore().getNome();
 			versioneServizio = idServizio.getVersione();
@@ -695,10 +708,7 @@ public class SummaryBean implements Serializable{
 			nomeServizio = idServizio.getNome(); // possono essere null
 		}
 		
-		return PermessiUtenteOperatore.getPermessiUtenteOperatore(loggedUser, 
-				tipoSoggettoLocale,nomeSoggettoLocale, 
-				tipoServizio, nomeServizio,versioneServizio);
-		
+		return PermessiUtenteOperatore.getPermessiUtenteOperatore(loggedUser, tipoSoggettoLocale, nomeSoggettoLocale, tipoServizio, nomeServizio,versioneServizio);
 	}
 
 
@@ -1019,9 +1029,6 @@ public class SummaryBean implements Serializable{
 	
 	@SuppressWarnings("deprecation")
 	public List<SelectItem> _getTipiNomiSoggettiAssociati(boolean soloOperativi) throws Exception {
-		if(this.soggettiAssociati == null)
-			this.soggettiAssociati = new ArrayList<SelectItem>();
-		
 		if(!this.soggettiAssociatiSelectItemsWidthCheck){
 			this.soggettiAssociati = new ArrayList<SelectItem>();
 
@@ -1032,31 +1039,28 @@ public class SummaryBean implements Serializable{
 				String tipoProtocollo = this.getProtocollo();
 				Map<String,String> mapInternal = new HashMap<String,String>();
 				
-				List<IDSoggetto> tipiNomiSoggettiAssociati = loggedUser.getUtenteSoggettoList();
-				List<IDServizio> tipiNomiServiziAssociati = loggedUser.getUtenteServizioList();
 				if(tipoProtocollo != null) {
+					List<IDSoggetto> tipiNomiSoggettiAssociati = loggedUser.getUtenteSoggettoProtocolliMap().containsKey(tipoProtocollo) ? loggedUser.getUtenteSoggettoProtocolliMap().get(tipoProtocollo) : new ArrayList<>();
+					List<IDServizio> tipiNomiServiziAssociati = loggedUser.getUtenteServizioProtocolliMap().containsKey(tipoProtocollo) ? loggedUser.getUtenteServizioProtocolliMap().get(tipoProtocollo) : new ArrayList<>();
+					
 					// se ho selezionato un protocollo devo filtrare per protocollo
 					if(tipiNomiSoggettiAssociati !=null && tipiNomiSoggettiAssociati.size() > 0) {
 						for (IDSoggetto utenteSoggetto : tipiNomiSoggettiAssociati) {
-							if(this.dynamicUtils.isTipoSoggettoCompatibileConProtocollo(utenteSoggetto.getTipo(), tipoProtocollo)){
-								boolean add = true;
-								if(soloOperativi) {
-									String nomePddFromSoggetto = this.dynamicUtils.getServerFromSoggetto(utenteSoggetto.getTipo(), utenteSoggetto.getNome());
-									add = this.dynamicUtils.checkTipoPdd(nomePddFromSoggetto, TipoPdD.OPERATIVO);
-								}
+							boolean add = true;
+							if(soloOperativi) {
+								String nomePddFromSoggetto = this.dynamicUtils.getServerFromSoggetto(utenteSoggetto.getTipo(), utenteSoggetto.getNome());
+								add = this.dynamicUtils.checkTipoPdd(nomePddFromSoggetto, TipoPdD.OPERATIVO);
+							}
 
-								if(add) {
-									lstSoggTmp.add(utenteSoggetto);
-								}
+							if(add) {
+								lstSoggTmp.add(utenteSoggetto);
 							}
 						}
 					}
 					
 					if(tipiNomiServiziAssociati !=null && tipiNomiServiziAssociati.size() > 0) {
 						for (IDServizio utenteServizio : tipiNomiServiziAssociati) {
-							if(this.dynamicUtils.isTipoServizioCompatibileConProtocollo(utenteServizio.getTipo(), tipoProtocollo)){
-								lstServTmp.add(utenteServizio);
-							}
+							lstServTmp.add(utenteServizio);
 						}
 					}
 				}
@@ -1143,22 +1147,33 @@ public class SummaryBean implements Serializable{
 		String tipoProtocollo = this.getProtocollo();
 		
 		if(val!=null && !StringUtils.isEmpty((String)val)){
-			
+			String tipoSoggetto = null;
+			String nomeSoggetto = null;
 			
 			Map<String,String> mapInternal = new HashMap<String,String>();
 			
-			List<Soggetto> listSoggetti = this.dynamicUtilsService.soggettiAutoComplete(tipoProtocollo,(String)val);
-			if(listSoggetti!=null && listSoggetti.size()>0){
-				for (Soggetto soggetto : listSoggetti) {
-					IDServizio idServizio = new IDServizio();
-					IDSoggetto idSoggetto = new IDSoggetto(soggetto.getTipoSoggetto(), soggetto.getNomeSoggetto());
-					idServizio.setSoggettoErogatore(idSoggetto);
-					String label = tipoProtocollo != null ? NamingUtils.getLabelSoggetto(tipoProtocollo, idSoggetto) : NamingUtils.getLabelSoggetto(idSoggetto);
-					mapInternal.put(ParseUtility.convertToSoggettoServizio(idServizio), label);
+			// se non ho fissato un soggetto posso cercare anche per soggetto
+			if(this.isShowFiltroSoggettoLocale()) {
+				List<Soggetto> listSoggetti = this.dynamicUtilsService.soggettiAutoComplete(tipoProtocollo,(String)val);
+				if(listSoggetti!=null && listSoggetti.size()>0){
+					for (Soggetto soggetto : listSoggetti) {
+						IDServizio idServizio = new IDServizio();
+						IDSoggetto idSoggetto = new IDSoggetto(soggetto.getTipoSoggetto(), soggetto.getNomeSoggetto());
+						idServizio.setSoggettoErogatore(idSoggetto);
+						String label = tipoProtocollo != null ? NamingUtils.getLabelSoggetto(tipoProtocollo, idSoggetto) : NamingUtils.getLabelSoggetto(idSoggetto);
+						mapInternal.put(ParseUtility.convertToSoggettoServizio(idServizio), label);
+					}
+				}
+			} else {
+				// TODO POLI devo filtra i servizi per il soggetto locale bloccato?
+				String loggedUtenteSoggettoPddMonitor = Utility.getLoggedUtenteSoggettoPddMonitor();
+				if(!Costanti.VALUE_PARAMETRO_MODALITA_ALL.equals(loggedUtenteSoggettoPddMonitor)) {
+					tipoSoggetto = Utility.parseTipoSoggetto(loggedUtenteSoggettoPddMonitor);
+					nomeSoggetto = Utility.parseNomeSoggetto(loggedUtenteSoggettoPddMonitor);
 				}
 			}
 			
-			List<AccordoServizioParteSpecifica> listServizi = this.dynamicUtilsService.getServizi(tipoProtocollo, null, null, null,(String)val,false);
+			List<AccordoServizioParteSpecifica> listServizi = this.dynamicUtilsService.getServizi(tipoProtocollo, null, tipoSoggetto, nomeSoggetto,(String)val,false);
 			if(listServizi!=null && listServizi.size()>0){
 				for (AccordoServizioParteSpecifica asps : listServizi) {
 					IDServizio idServizio = new IDServizio();
@@ -1440,5 +1455,29 @@ public class SummaryBean implements Serializable{
 	public void protocolloSelected(ActionEvent ae) {
 		this.soggettoLocale = null;
 		this.labelSoggettoLocale = null;
+	}
+	
+	public String getLabelServizio() {
+		return !this.isShowFiltroSoggettoLocale() ? "API" : "Soggetto Locale / API"; //this.labelServizio; //Soggetto Locale / Servizio
+	}
+	
+	public boolean isShowFiltroSoggettoLocale(){
+		return Utility.getLoginBean().isShowFiltroSoggettoLocale();
+	}
+	
+	public String getLabelTipiNomiSoggettiServiziAssociati(){
+		User utente = Utility.getLoggedUtente();
+		boolean foundSoggetti = utente.getSoggetti() != null && utente.getSoggetti().size() > 0;
+		boolean foundServizi = utente.getServizi() !=  null && utente.getServizi().size() > 0;
+
+		if(foundSoggetti && foundServizi){
+			return "Soggetto Locale / API";
+		}
+		else if(foundServizi){
+			return "API";
+		}
+		else{
+			return "Soggetto Locale";
+		}
 	}
 }

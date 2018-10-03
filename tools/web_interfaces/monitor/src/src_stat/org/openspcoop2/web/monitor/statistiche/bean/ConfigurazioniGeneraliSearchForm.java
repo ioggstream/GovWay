@@ -21,12 +21,17 @@
  */
 package org.openspcoop2.web.monitor.statistiche.bean;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.faces.event.ActionEvent;
+import javax.faces.model.SelectItem;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.openspcoop2.core.transazioni.constants.PddRuolo;
 import org.openspcoop2.web.monitor.core.bean.BaseSearchForm;
+import org.openspcoop2.web.monitor.core.constants.TipologiaRicerca;
 import org.openspcoop2.web.monitor.core.core.PddMonitorProperties;
 import org.openspcoop2.web.monitor.core.logger.LoggerManager;
 
@@ -102,5 +107,16 @@ public class ConfigurazioniGeneraliSearchForm extends BaseSearchForm implements 
 	@Override
 	protected String eseguiAggiorna() {
 		return null;
+	}
+	
+	
+	@Override
+	public List<SelectItem> getTipologieRicerca() throws Exception {
+		List<SelectItem> listaTipologie = new ArrayList<SelectItem>();
+		
+		listaTipologie.add(new SelectItem(PddRuolo.APPLICATIVA.toString(),"Erogazione"));
+		listaTipologie.add(new SelectItem(PddRuolo.DELEGATA.toString(),"Fruizione"));
+		
+		return listaTipologie;
 	}
 }
