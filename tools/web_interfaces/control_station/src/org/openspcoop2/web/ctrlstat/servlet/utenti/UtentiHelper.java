@@ -150,6 +150,11 @@ public class UtentiHelper extends ConsoleHelper {
 		de.setLabel(UtentiCostanti.LABEL_PERMESSI_GESTIONE);
 		de.setType(DataElementType.TITLE);
 		dati.addElement(de);
+		
+		de = new DataElement();
+		de.setLabel(UtentiCostanti.LABEL_PARAMETRO_UTENTI_REGISTRO_SUBSECTION);
+		de.setType(DataElementType.SUBTITLE);
+		dati.addElement(de);
 
 		de = new DataElement();
 		de.setLabel(UtentiCostanti.LABEL_PARAMETRO_UTENTI_IS_SERVIZI);
@@ -161,28 +166,25 @@ public class UtentiHelper extends ConsoleHelper {
 		
 		de = new DataElement();
 		de.setLabel(UtentiCostanti.LABEL_PARAMETRO_UTENTI_IS_ACCORDI_COOPERAZIONE);
-		de.setType(DataElementType.CHECKBOX);
 		de.setName(UtentiCostanti.PARAMETRO_UTENTI_IS_ACCORDI_COOPERAZIONE);
+		if(this.utentiCore.isAccordiCooperazioneEnabled()) {
+			de.setType(DataElementType.CHECKBOX);
+			de.setPostBack(true);
+		}
+		else {
+			de.setType(DataElementType.HIDDEN);
+		}
 		ServletUtils.setCheckBox(de, isAccordiCooperazione);
-		de.setPostBack(true);
+		de.setValue(de.getSelected());
 		dati.addElement(de);
-
-		de = new DataElement();
-		de.setLabel(UtentiCostanti.LABEL_PARAMETRO_UTENTI_IS_SISTEMA);
-		de.setType(DataElementType.CHECKBOX);
-		de.setName(UtentiCostanti.PARAMETRO_UTENTI_IS_SISTEMA);
-		ServletUtils.setCheckBox(de, isSistema);
-		de.setPostBack(true);
-		dati.addElement(de);
-
-		de = new DataElement();
-		de.setLabel(UtentiCostanti.LABEL_PARAMETRO_UTENTI_IS_MESSAGGI);
-		de.setType(DataElementType.CHECKBOX);
-		de.setName(UtentiCostanti.PARAMETRO_UTENTI_IS_MESSAGGI);
-		ServletUtils.setCheckBox(de, isMessaggi);
-		de.setPostBack(true);
-		dati.addElement(de);
-
+			
+		if(singlePdD) {
+			de = new DataElement();
+			de.setLabel(UtentiCostanti.LABEL_PARAMETRO_UTENTI_GOVWAY_MONITOR_SUBSECTION);
+			de.setType(DataElementType.SUBTITLE);
+			dati.addElement(de);
+		}
+		
 		de = new DataElement();
 		de.setLabel(UtentiCostanti.LABEL_PARAMETRO_UTENTI_IS_DIAGNOSTICA);
 		if (singlePdD) {
@@ -210,13 +212,24 @@ public class UtentiHelper extends ConsoleHelper {
 		dati.addElement(de);
 		
 		de = new DataElement();
-		de.setLabel(UtentiCostanti.LABEL_PARAMETRO_UTENTI_IS_UTENTI);
-		de.setType(DataElementType.CHECKBOX);
-		de.setName(UtentiCostanti.PARAMETRO_UTENTI_IS_UTENTI);
-		ServletUtils.setCheckBox(de, isUtenti);
-		de.setPostBack(true);
+		de.setLabel(UtentiCostanti.LABEL_PARAMETRO_UTENTI_STRUMENTI_SUBSECTION);
+		de.setType(DataElementType.SUBTITLE);
 		dati.addElement(de);
 
+		de = new DataElement();
+		de.setLabel(UtentiCostanti.LABEL_PARAMETRO_UTENTI_IS_MESSAGGI);
+		de.setName(UtentiCostanti.PARAMETRO_UTENTI_IS_MESSAGGI);
+		if(this.utentiCore.showCodaMessage()) {
+			de.setType(DataElementType.CHECKBOX);
+			de.setPostBack(true);
+		}
+		else {
+			de.setType(DataElementType.HIDDEN);
+		}
+		ServletUtils.setCheckBox(de, isMessaggi);
+		de.setValue(de.getSelected());
+		dati.addElement(de);
+		
 		de = new DataElement();
 		de.setLabel(UtentiCostanti.LABEL_PARAMETRO_UTENTI_IS_AUDITING);
 		de.setType(DataElementType.CHECKBOX);
@@ -225,8 +238,28 @@ public class UtentiHelper extends ConsoleHelper {
 		de.setPostBack(true);
 		dati.addElement(de);
 		
+		de = new DataElement();
+		de.setLabel(UtentiCostanti.LABEL_PARAMETRO_UTENTI_CONFIGURAZIONE_SUBSECTION);
+		de.setType(DataElementType.SUBTITLE);
+		dati.addElement(de);
+		
+		de = new DataElement();
+		de.setLabel(UtentiCostanti.LABEL_PARAMETRO_UTENTI_IS_SISTEMA);
+		de.setType(DataElementType.CHECKBOX);
+		de.setName(UtentiCostanti.PARAMETRO_UTENTI_IS_SISTEMA);
+		ServletUtils.setCheckBox(de, isSistema);
+		de.setPostBack(true);
+		dati.addElement(de);
 
-
+		de = new DataElement();
+		de.setLabel(UtentiCostanti.LABEL_PARAMETRO_UTENTI_IS_UTENTI);
+		de.setType(DataElementType.CHECKBOX);
+		de.setName(UtentiCostanti.PARAMETRO_UTENTI_IS_UTENTI);
+		ServletUtils.setCheckBox(de, isUtenti);
+		de.setPostBack(true);
+		dati.addElement(de);
+	
+		
 		
 		if(!onlyUser) {
 			de = new DataElement();

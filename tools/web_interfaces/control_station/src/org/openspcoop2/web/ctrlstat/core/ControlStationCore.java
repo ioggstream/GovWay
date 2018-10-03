@@ -503,6 +503,18 @@ public class ControlStationCore {
 	public boolean isAuditingRegistrazioneElementiBinari() {
 		return this.isAuditingRegistrazioneElementiBinari;
 	}
+	
+	/** IntegrationManager */
+	private boolean isIntegrationManagerEnabled;
+	public boolean isIntegrationManagerEnabled() {
+		return this.isIntegrationManagerEnabled;
+	}
+	
+	/** Accordi di Cooperazione */
+	private boolean isAccordiCooperazioneEnabled;
+	public boolean isAccordiCooperazioneEnabled() {
+		return this.isAccordiCooperazioneEnabled;
+	}
 
 	/** Parametri pdd */
 	private int portaPubblica = 80;
@@ -641,6 +653,9 @@ public class ControlStationCore {
 	}
 	public Integer getLunghezzaMassimaLabelSoggettiOperativiMenuUtente() {
 		return this.selectListSoggettiOperativi_dimensioneMassimaLabel;
+	}
+	public boolean showCodaMessage() {
+		return this.isShowJ2eeOptions() || this.isIntegrationManagerEnabled();
 	}
 
 	/** Motori di Sincronizzazione */
@@ -1500,6 +1515,12 @@ public class ControlStationCore {
 		/** Auditing */
 		this.isAuditingRegistrazioneElementiBinari = core.isAuditingRegistrazioneElementiBinari;
 		
+		/** IntegrationManager */
+		this.isIntegrationManagerEnabled = core.isIntegrationManagerEnabled;
+		
+		/** Accordi di Cooperazione */
+		this.isAccordiCooperazioneEnabled = core.isAccordiCooperazioneEnabled;
+		
 		/** Parametri pdd */
 		this.portaPubblica = core.portaPubblica;
 		this.portaGestione = core.portaGestione;
@@ -1761,6 +1782,8 @@ public class ControlStationCore {
 			this.messageSecurityPropertiesSourceConfiguration = consoleProperties.getMessageSecurityPropertiesSourceConfiguration();
 			this.policyGestioneTokenPropertiesSourceConfiguration = consoleProperties.getPolicyGestioneTokenPropertiesSourceConfiguration();
 			this.isAuditingRegistrazioneElementiBinari = consoleProperties.isAuditingRegistrazioneElementiBinari();
+			this.isIntegrationManagerEnabled = consoleProperties.isIntegrationManagerEnabled();
+			this.isAccordiCooperazioneEnabled = consoleProperties.isAccordiCooperazioneEnabled();
 			
 			// Impostazioni grafiche
 			this.consoleNomeSintesi = consoleProperties.getConsoleNomeSintesi();

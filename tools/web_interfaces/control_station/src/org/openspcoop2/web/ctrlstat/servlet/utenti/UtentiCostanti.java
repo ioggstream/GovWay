@@ -174,14 +174,20 @@ public class UtentiCostanti {
 	public final static String LABEL_PARAMETRO_UTENTI_CONFERMA_PASSWORD = "Conferma Password";
 	public final static String LABEL_PARAMETRO_UTENTI_CHANGE_PASSWORD = "Nuova Password";
 	public final static String LABEL_PARAMETRO_UTENTI_TIPO_GUI =  "Tipo";
-	public final static String LABEL_PARAMETRO_UTENTI_IS_SERVIZI = "Servizi [S]";
+	public final static String LABEL_PARAMETRO_UTENTI_REGISTRO_SUBSECTION = "Registro";
+	public final static String LABEL_PARAMETRO_UTENTI_IS_SERVIZI = "Gestione API [S]";
+	public final static String LABEL_PARAMETRO_UTENTI_IS_ACCORDI_COOPERAZIONE = "Accordi Cooperazione [P]";
+	public final static String LABEL_PARAMETRO_UTENTI_STRUMENTI_SUBSECTION = "Strumenti";
+	public final static String LABEL_PARAMETRO_UTENTI_IS_MESSAGGI = "Coda Messaggi [M]";
+	public final static String LABEL_PARAMETRO_UTENTI_IS_AUDITING = "Auditing [A]";
+	public final static String LABEL_PARAMETRO_UTENTI_CONFIGURAZIONE_SUBSECTION = "Configurazione";
+	public final static String LABEL_PARAMETRO_UTENTI_IS_SISTEMA = "Configurazione Generale [C]";
+	public final static String LABEL_PARAMETRO_UTENTI_IS_UTENTI = "Utenti [U]";
+	public final static String LABEL_PARAMETRO_UTENTI_GOVWAY_MONITOR_SUBSECTION = "GovWay Monitor";
 	public final static String LABEL_PARAMETRO_UTENTI_IS_DIAGNOSTICA = "Monitoraggio [D]";
 	public final static String LABEL_PARAMETRO_UTENTI_IS_REPORTISTICA = "Reportistica [R]";
-	public final static String LABEL_PARAMETRO_UTENTI_IS_SISTEMA = "Sistema [C]";
-	public final static String LABEL_PARAMETRO_UTENTI_IS_MESSAGGI = "Coda Messaggi [M]";
-	public final static String LABEL_PARAMETRO_UTENTI_IS_UTENTI = "Utenti [U]";
-	public final static String LABEL_PARAMETRO_UTENTI_IS_AUDITING = "Auditing [A]";
-	public final static String LABEL_PARAMETRO_UTENTI_IS_ACCORDI_COOPERAZIONE = "Accordi Cooperazione [P]";
+
+	
 
 	public final static String LABEL_PARAMETRO_UTENTE_VECCHIA_PASSWORD = "Vecchia";
 	public final static String LABEL_PARAMETRO_UTENTE_CONFERMA_NUOVA_PASSWORD = "Conferma Nuova";

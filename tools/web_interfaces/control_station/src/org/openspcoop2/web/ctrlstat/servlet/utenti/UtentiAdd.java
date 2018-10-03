@@ -91,7 +91,8 @@ public final class UtentiAdd extends Action {
 			
 			InterfaceType interfaceType = null;
 			if(tipoGui==null) {
-				interfaceType = utentiHelper.getTipoInterfaccia();
+				//interfaceType = utentiHelper.getTipoInterfaccia();
+				interfaceType = InterfaceType.STANDARD;
 			}
 			else {
 				interfaceType = InterfaceType.convert(tipoGui, true);

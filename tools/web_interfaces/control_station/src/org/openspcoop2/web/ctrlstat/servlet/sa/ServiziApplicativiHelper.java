@@ -1886,7 +1886,9 @@ public class ServiziApplicativiHelper extends ConnettoriHelper {
 		}
 		
 		
-		if(!this.isModalitaStandard()) {
+		boolean integrationManagerEnabled = !this.isModalitaStandard() && this.core.isIntegrationManagerEnabled();
+		
+		if(integrationManagerEnabled) {
 			de = new DataElement();
 			de.setLabel(ServiziApplicativiCostanti.LABEL_SERVIZIO_MESSAGE_BOX);
 			de.setType(DataElementType.TITLE);
@@ -1898,7 +1900,7 @@ public class ServiziApplicativiHelper extends ConnettoriHelper {
 		de.setLabel(ServiziApplicativiCostanti.LABEL_PARAMETRO_SERVIZI_APPLICATIVI_MESSAGE_BOX);
 		de.setName(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_MESSAGE_BOX);
 		
-		if(!this.isModalitaStandard()) {
+		if(integrationManagerEnabled) {
 			de.setType(DataElementType.SELECT);
 			de.setValues(tipoGM);
 			if(getmsg==null){

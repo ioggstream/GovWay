@@ -988,7 +988,9 @@ public class ConsoleHelper {
 
 			Vector<MenuEntry> menu = new Vector<MenuEntry>();
 
-			if(pu.isServizi() || pu.isAccordiCooperazione()){
+			boolean showAccordiCooperazione = pu.isAccordiCooperazione() && this.core.isAccordiCooperazioneEnabled();
+			
+			if(pu.isServizi() || showAccordiCooperazione){
 				Boolean serviziVisualizzaModalitaElenco = ConsoleProperties.getInstance().isEnableServiziVisualizzaModalitaElenco();
 				// Oggetti del registro compatti
 				MenuEntry me = new MenuEntry();
@@ -1028,7 +1030,7 @@ public class ConsoleHelper {
 				}
 
 				// Cooperazione e Accordi Composti con permessi P
-				if(pu.isAccordiCooperazione()){
+				if(showAccordiCooperazione){
 					if(this.core.isRegistroServiziLocale()){
 						totEntries +=2;
 					}
@@ -1149,7 +1151,7 @@ public class ConsoleHelper {
 				}
 
 				// Cooperazione e Accordi Composti con permessi P
-				if(pu.isAccordiCooperazione()){
+				if(showAccordiCooperazione){
 					if(this.core.isRegistroServiziLocale()){
 						//COOPERAZIONE
 						entries[index][0] = AccordiCooperazioneCostanti.LABEL_AC_MENU_VISUALE_AGGREGATA;
@@ -1246,7 +1248,9 @@ public class ConsoleHelper {
 				
 				List<String> aliases = this.confCore.getJmxPdD_aliases();
 				
-				if ( pu.isCodeMessaggi() || pu.isAuditing() || 
+				boolean showCodaMessaggi = pu.isCodeMessaggi() && this.core.showCodaMessage();
+				
+				if ( showCodaMessaggi || pu.isAuditing() || 
 						(pu.isSistema() && aliases!=null && aliases.size()>0) ||
 						(listStrumenti!=null && listStrumenti.size()>0) ) {
 					// Se l'utente non ha i permessi "diagnostica", devo
@@ -1258,7 +1262,7 @@ public class ConsoleHelper {
 					if(pu.isSistema() && aliases!=null && aliases.size()>0){
 						totEntries++; // runtime
 					}
-					if(this.isModalitaAvanzata() && pu.isCodeMessaggi()) {
+					if(this.isModalitaAvanzata() && showCodaMessaggi) {
 						totEntries++;
 					}
 					if(pu.isAuditing()) {
@@ -1292,7 +1296,7 @@ public class ConsoleHelper {
 						entries[i][1] = AuditCostanti.SERVLET_NAME_AUDITING;
 						i++;
 					}
-					if (this.isModalitaAvanzata() && pu.isCodeMessaggi()) {
+					if (this.isModalitaAvanzata() && showCodaMessaggi) {
 						entries[i][0] = MonitorCostanti.LABEL_MONITOR;
 						entries[i][1] = MonitorCostanti.SERVLET_NAME_MONITOR;
 						i++;
@@ -1717,7 +1721,9 @@ public class ConsoleHelper {
 
 				}
 
-				if (pu.isAuditing() || pu.isSistema() || pu.isCodeMessaggi()) {
+				boolean showCodaMessaggi = pu.isCodeMessaggi() && this.core.showCodaMessage();
+				
+				if (pu.isAuditing() || pu.isSistema() || showCodaMessaggi) {
 					MenuEntry me = new MenuEntry();
 					me.setTitle(CostantiControlStation.LABEL_STRUMENTI);
 
@@ -1759,7 +1765,7 @@ public class ConsoleHelper {
 						entries[i][1] = OperazioniCostanti.SERVLET_NAME_OPERAZIONI;
 						i++;
 					}
-					if (this.isModalitaAvanzata() && pu.isCodeMessaggi()) {
+					if (this.isModalitaAvanzata() && showCodaMessaggi) {
 						entries[i][0] = MonitorCostanti.LABEL_MONITOR;
 						entries[i][1] = MonitorCostanti.SERVLET_NAME_MONITOR;
 						i++;
