@@ -503,6 +503,18 @@ public class ControlStationCore {
 	public boolean isAuditingRegistrazioneElementiBinari() {
 		return this.isAuditingRegistrazioneElementiBinari;
 	}
+	
+	/** IntegrationManager */
+	private boolean isIntegrationManagerEnabled;
+	public boolean isIntegrationManagerEnabled() {
+		return this.isIntegrationManagerEnabled;
+	}
+	
+	/** Accordi di Cooperazione */
+	private boolean isAccordiCooperazioneEnabled;
+	public boolean isAccordiCooperazioneEnabled() {
+		return this.isAccordiCooperazioneEnabled;
+	}
 
 	/** Parametri pdd */
 	private int portaPubblica = 80;
@@ -641,6 +653,9 @@ public class ControlStationCore {
 	}
 	public Integer getLunghezzaMassimaLabelSoggettiOperativiMenuUtente() {
 		return this.selectListSoggettiOperativi_dimensioneMassimaLabel;
+	}
+	public boolean showCodaMessage() {
+		return this.isShowJ2eeOptions() || this.isIntegrationManagerEnabled();
 	}
 
 	/** Motori di Sincronizzazione */
@@ -1500,6 +1515,12 @@ public class ControlStationCore {
 		/** Auditing */
 		this.isAuditingRegistrazioneElementiBinari = core.isAuditingRegistrazioneElementiBinari;
 		
+		/** IntegrationManager */
+		this.isIntegrationManagerEnabled = core.isIntegrationManagerEnabled;
+		
+		/** Accordi di Cooperazione */
+		this.isAccordiCooperazioneEnabled = core.isAccordiCooperazioneEnabled;
+		
 		/** Parametri pdd */
 		this.portaPubblica = core.portaPubblica;
 		this.portaGestione = core.portaGestione;
@@ -1761,6 +1782,8 @@ public class ControlStationCore {
 			this.messageSecurityPropertiesSourceConfiguration = consoleProperties.getMessageSecurityPropertiesSourceConfiguration();
 			this.policyGestioneTokenPropertiesSourceConfiguration = consoleProperties.getPolicyGestioneTokenPropertiesSourceConfiguration();
 			this.isAuditingRegistrazioneElementiBinari = consoleProperties.isAuditingRegistrazioneElementiBinari();
+			this.isIntegrationManagerEnabled = consoleProperties.isIntegrationManagerEnabled();
+			this.isAccordiCooperazioneEnabled = consoleProperties.isAccordiCooperazioneEnabled();
 			
 			// Impostazioni grafiche
 			this.consoleNomeSintesi = consoleProperties.getConsoleNomeSintesi();
@@ -5116,11 +5139,12 @@ public class ControlStationCore {
 		}
 	}
 
-	public IDSoggetto getSoggettoOperativo(String userLogin, String protocollo) throws DriverRegistroServiziException{
+	public IDSoggetto getSoggettoOperativoDefault(String userLogin, String protocollo) throws DriverRegistroServiziException{
 		Search s = new Search();
 		s.setPageSize(Liste.SOGGETTI, 1); // serve solo per il count
 		s.addFilter(Liste.SOGGETTI, Filtri.FILTRO_PROTOCOLLO, protocollo); // imposto protocollo
 		s.addFilter(Liste.SOGGETTI, Filtri.FILTRO_DOMINIO, PddTipologia.OPERATIVO.toString()); // imposto dominio
+		s.addFilter(Liste.SOGGETTI, Filtri.FILTRO_SOGGETTO_DEFAULT, "true"); // imposto indicazione di volere il soggetto operativo di default
 		List<org.openspcoop2.core.registry.Soggetto> lista = null;
 		if(this.isVisioneOggettiGlobale(userLogin)){
 			lista = this.soggettiRegistroList(null, s);

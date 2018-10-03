@@ -14128,10 +14128,17 @@ IDriverWS ,IMonitoraggioRisorsa{
 			pddTipologia = PddTipologia.toPddTipologia(filterDominio);
 		}
 		
+		String filterSoggettoDefaultTmp = SearchUtils.getFilter(ricerca, idLista,  Filtri.FILTRO_SOGGETTO_DEFAULT);
+		boolean filterSoggettoDefault = false;
+		if(filterSoggettoDefaultTmp!=null) {
+			filterSoggettoDefault = "true".equalsIgnoreCase(filterSoggettoDefaultTmp.trim());
+		}
+		
 		this.log.debug("search : " + search);
 		this.log.debug("filterProtocollo : " + filterProtocollo);
 		this.log.debug("filterProtocolli : " + filterProtocolli);
 		this.log.debug("filterDominio : " + filterDominio);
+		this.log.debug("filterSoggettoDefault : " + filterSoggettoDefault);
 		
 		Connection con = null;
 		boolean error = false;
@@ -14176,6 +14183,9 @@ IDriverWS ,IMonitoraggioRisorsa{
 				ISQLQueryObject sqlQueryObject = SQLObjectFactory.createSQLQueryObject(this.tipoDB);
 				sqlQueryObject.addFromTable(CostantiDB.SOGGETTI);
 				sqlQueryObject.addSelectCountField("*", "cont");
+				if(filterSoggettoDefault) {
+					sqlQueryObject.addWhereCondition("is_default = ?");
+				}
 				if (superuser!=null && (!superuser.equals("")))
 					sqlQueryObject.addWhereCondition("superuser = ?");
 				if(tipoSoggetto!=null){
@@ -14205,6 +14215,9 @@ IDriverWS ,IMonitoraggioRisorsa{
 				ISQLQueryObject sqlQueryObject = SQLObjectFactory.createSQLQueryObject(this.tipoDB);
 				sqlQueryObject.addFromTable(CostantiDB.SOGGETTI);
 				sqlQueryObject.addSelectCountField("*", "cont");
+				if(filterSoggettoDefault) {
+					sqlQueryObject.addWhereCondition("is_default = ?");
+				}
 				if (superuser!=null && (!superuser.equals("")))
 					sqlQueryObject.addWhereCondition("superuser = ?");
 				if(tipoSoggetto!=null)
@@ -14226,6 +14239,9 @@ IDriverWS ,IMonitoraggioRisorsa{
 			}
 			stmt = con.prepareStatement(queryString);
 			int index = 1;
+			if(filterSoggettoDefault) {
+				stmt.setInt(index++, 1);
+			}
 			if (superuser!=null && (!superuser.equals(""))){
 				stmt.setString(index++, superuser);
 			}
@@ -14261,6 +14277,9 @@ IDriverWS ,IMonitoraggioRisorsa{
 				sqlQueryObject.addSelectField("server");
 				sqlQueryObject.addSelectField("id_connettore");
 				sqlQueryObject.addSelectField("codice_ipa");
+				if(filterSoggettoDefault) {
+					sqlQueryObject.addWhereCondition("is_default = ?");
+				}
 				if (superuser!=null && (!superuser.equals("")))
 					sqlQueryObject.addWhereCondition("superuser = ?");
 				if(tipoSoggetto!=null){
@@ -14303,6 +14322,9 @@ IDriverWS ,IMonitoraggioRisorsa{
 				sqlQueryObject.addSelectField("server");
 				sqlQueryObject.addSelectField("id_connettore");
 				sqlQueryObject.addSelectField("codice_ipa");
+				if(filterSoggettoDefault) {
+					sqlQueryObject.addWhereCondition("is_default = ?");
+				}
 				if (superuser!=null && (!superuser.equals("")))
 					sqlQueryObject.addWhereCondition("superuser = ?");
 				if(tipoSoggetto!=null)
@@ -14329,6 +14351,9 @@ IDriverWS ,IMonitoraggioRisorsa{
 			}
 			stmt = con.prepareStatement(queryString);
 			index = 1;
+			if(filterSoggettoDefault) {
+				stmt.setInt(index++, 1);
+			}
 			if (superuser!=null && (!superuser.equals(""))){
 				stmt.setString(index++, superuser);
 			}

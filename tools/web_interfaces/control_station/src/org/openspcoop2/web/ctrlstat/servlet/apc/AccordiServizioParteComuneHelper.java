@@ -4518,7 +4518,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 				}
 			}
 			else {
-				soggettoReferente = this.apcCore.getSoggettoOperativo(ServletUtils.getUserLoginFromSession(this.session), tipoProtocollo);
+				soggettoReferente = this.apcCore.getSoggettoOperativoDefault(ServletUtils.getUserLoginFromSession(this.session), tipoProtocollo);
 			}
 			//	}
 

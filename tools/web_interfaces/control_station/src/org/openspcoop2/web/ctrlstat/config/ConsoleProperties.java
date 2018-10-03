@@ -298,6 +298,14 @@ public class ConsoleProperties {
 		return this.readBooleanProperty(true, "auditing.registrazioneElementiBinari");
 	}
 	
+	public boolean isIntegrationManagerEnabled() throws UtilsException{
+		return this.readBooleanProperty(true, "integrationManager.enabled");
+	}
+	
+	public boolean isAccordiCooperazioneEnabled() throws UtilsException{
+		return this.readBooleanProperty(true, "accordiCooperazione.enabled");
+	}
+	
 	
 	/* ----- Impostazioni grafiche ------- */
 	

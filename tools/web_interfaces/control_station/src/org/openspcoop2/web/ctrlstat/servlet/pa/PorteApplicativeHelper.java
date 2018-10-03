@@ -3147,10 +3147,12 @@ public class PorteApplicativeHelper extends ConnettoriHelper {
 
 					Long idSoggetto =this.soggettiCore.getIdSoggetto(sog.getNome(), sog.getTipo());
 					DataElement de = new DataElement();
-					de.setUrl(SoggettiCostanti.SERVLET_NAME_SOGGETTI_CHANGE,
-							new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_ID,idSoggetto+""),
-							new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_NOME,sog.getNome()),
-							new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_TIPO,sog.getTipo()));
+					if(this.isModalitaCompleta()) {
+						de.setUrl(SoggettiCostanti.SERVLET_NAME_SOGGETTI_CHANGE,
+								new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_ID,idSoggetto+""),
+								new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_NOME,sog.getNome()),
+								new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_TIPO,sog.getTipo()));
+					}
 					de.setValue(this.getLabelNomeSoggetto(protocollo, sog.getTipo() , sog.getNome()));
 					de.setIdToRemove(sog.getTipo() + "/" + sog.getNome());
 					e.addElement(de);
