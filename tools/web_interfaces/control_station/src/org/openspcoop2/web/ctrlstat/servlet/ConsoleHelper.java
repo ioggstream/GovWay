@@ -2098,12 +2098,18 @@ public class ConsoleHelper {
 		
 		if(servizioApplicativoList!=null && servizioApplicativoList.length>0){
 		
-			DataElement de = new DataElement();
 			String labelApplicativo = CostantiControlStation.LABEL_PARAMETRO_SERVIZIO_APPLICATIVO;
 			if(!this.isModalitaCompleta()) {
 				labelApplicativo = CostantiControlStation.LABEL_PARAMETRO_APPLICATIVO;
 			}
-			de.setLabel(labelApplicativo );
+			
+			DataElement de = new DataElement();
+			de.setType(DataElementType.TITLE);
+			de.setLabel(labelApplicativo);
+			dati.addElement(de);
+			
+			de = new DataElement();
+			de.setLabel( CostantiControlStation.LABEL_PARAMETRO_NOME );
 			de.setType(DataElementType.SELECT);
 			de.setName(CostantiControlStation.PARAMETRO_SERVIZIO_APPLICATIVO);
 			de.setValues(servizioApplicativoList);
@@ -2132,7 +2138,12 @@ public class ConsoleHelper {
 			if(soggettiList!=null && soggettiList.length>0){
 			
 				DataElement de = new DataElement();
+				de.setType(DataElementType.TITLE);
 				de.setLabel(CostantiControlStation.LABEL_PARAMETRO_SOGGETTO);
+				dati.addElement(de);
+				
+				de = new DataElement();
+				de.setLabel(CostantiControlStation.LABEL_PARAMETRO_NOME);
 				de.setType(DataElementType.SELECT);
 				de.setName(CostantiControlStation.PARAMETRO_SOGGETTO);
 				de.setLabels(soggettiLabelList);
@@ -2143,10 +2154,10 @@ public class ConsoleHelper {
 			}else{
 				if(addMsgSoggettiNonDisponibili){
 					if(sizeAttuale>0){
-						this.pd.setMessage("Non esistono ulteriori soggetti associabili alla porta",org.openspcoop2.web.lib.mvc.MessageType.INFO);
+						this.pd.setMessage("Non esistono ulteriori soggetti associabili",org.openspcoop2.web.lib.mvc.MessageType.INFO);
 					}
 					else{
-						this.pd.setMessage("Non esistono soggetti associabili alla porta",org.openspcoop2.web.lib.mvc.MessageType.INFO);
+						this.pd.setMessage("Non esistono soggetti associabili",org.openspcoop2.web.lib.mvc.MessageType.INFO);
 					}
 					this.pd.disableEditMode();
 				}
