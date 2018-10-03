@@ -44,6 +44,8 @@ public final class Filtri
 	public final static String FILTRO_PROTOCOLLO = "filtroProtocollo";
 	public final static String FILTRO_PROTOCOLLI = "filtroProtocolli";
 	
+	public final static String FILTRO_SOGGETTO_DEFAULT = "filtroSoggettoDefault";
+	
 	public final static String FILTRO_DOMINIO = "filtroDominio";
 	
 	public final static String FILTRO_STATO_ACCORDO = "filtroStatoAccordo";

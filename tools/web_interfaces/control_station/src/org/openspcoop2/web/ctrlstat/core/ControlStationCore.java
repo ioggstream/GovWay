@@ -5139,11 +5139,12 @@ public class ControlStationCore {
 		}
 	}
 
-	public IDSoggetto getSoggettoOperativo(String userLogin, String protocollo) throws DriverRegistroServiziException{
+	public IDSoggetto getSoggettoOperativoDefault(String userLogin, String protocollo) throws DriverRegistroServiziException{
 		Search s = new Search();
 		s.setPageSize(Liste.SOGGETTI, 1); // serve solo per il count
 		s.addFilter(Liste.SOGGETTI, Filtri.FILTRO_PROTOCOLLO, protocollo); // imposto protocollo
 		s.addFilter(Liste.SOGGETTI, Filtri.FILTRO_DOMINIO, PddTipologia.OPERATIVO.toString()); // imposto dominio
+		s.addFilter(Liste.SOGGETTI, Filtri.FILTRO_SOGGETTO_DEFAULT, "true"); // imposto indicazione di volere il soggetto operativo di default
 		List<org.openspcoop2.core.registry.Soggetto> lista = null;
 		if(this.isVisioneOggettiGlobale(userLogin)){
 			lista = this.soggettiRegistroList(null, s);

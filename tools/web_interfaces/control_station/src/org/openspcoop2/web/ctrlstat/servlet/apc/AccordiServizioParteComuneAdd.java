@@ -684,7 +684,7 @@ public final class AccordiServizioParteComuneAdd extends Action {
 			}else{				
 				if(!showReferente) {
 					// Recupero Soggetto Default
-					IDSoggetto idSoggetto = apcCore.getSoggettoOperativo(userLogin, this.tipoProtocollo);
+					IDSoggetto idSoggetto = apcCore.getSoggettoOperativoDefault(userLogin, this.tipoProtocollo);
 					Soggetto s = soggettiCore.getSoggetto(idSoggetto);
 					IdSoggetto assr = new IdSoggetto();
 					assr.setTipo(s.getTipo());

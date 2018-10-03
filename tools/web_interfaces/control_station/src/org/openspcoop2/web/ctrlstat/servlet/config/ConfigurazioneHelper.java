@@ -3418,7 +3418,7 @@ public class ConfigurazioneHelper extends ConsoleHelper{
 			dati.addElement(de);
 					
 			if(!multitenantEnabled) {
-				IDSoggetto idSoggetto = this.soggettiCore.getSoggettoOperativo(userLogin, protocollo);
+				IDSoggetto idSoggetto = this.soggettiCore.getSoggettoOperativoDefault(userLogin, protocollo);
 				long idSoggettoLong = this.soggettiCore.getIdSoggetto(idSoggetto.getNome(), idSoggetto.getTipo());
 						
 				de = new DataElement();

@@ -273,7 +273,9 @@ public class ServiziApplicativiHelper extends ConnettoriHelper {
 			de = new DataElement();
 			de.setLabel(ServiziApplicativiCostanti.LABEL_PARAMETRO_SERVIZI_APPLICATIVI_PROTOCOLLO);
 	
-			if(listaTipiProtocollo != null && listaTipiProtocollo.size() > 1){
+			boolean showProtocolli = TipoOperazione.CHANGE.equals(tipoOperazione) && (this.core.countProtocolli(this.session)>1);
+			
+			if( (listaTipiProtocollo != null && listaTipiProtocollo.size() > 1) || showProtocolli){
 				if(TipoOperazione.CHANGE.equals(tipoOperazione)){
 					
 					DataElement deLABEL = new DataElement();
@@ -303,6 +305,107 @@ public class ServiziApplicativiHelper extends ConnettoriHelper {
 			de.setSize(this.getSize());
 			dati.addElement(de);
 		}
+		
+		
+		
+		ServizioApplicativo sa = null;
+		String nomePdd = null;
+		// se operazione change visualizzo i link per invocazione servizio,
+		// risposta asincrona
+		// e ruoli
+		if (TipoOperazione.CHANGE.equals(tipoOperazione)) {
+
+			sa = this.saCore.getServizioApplicativo(idSA);
+			String tipoSoggetto = null;
+			String nomeSoggetto = null;
+			if(this.core.isRegistroServiziLocale()){
+				Soggetto soggetto = this.soggettiCore.getSoggettoRegistro(sa.getIdSoggetto());
+				tipoSoggetto = soggetto.getTipo();
+				nomeSoggetto = soggetto.getNome();
+				nomePdd = soggetto.getPortaDominio();
+			}
+			else{
+				org.openspcoop2.core.config.Soggetto soggetto = this.soggettiCore.getSoggetto(sa.getIdSoggetto());
+				tipoSoggetto = soggetto.getTipo();
+				nomeSoggetto = soggetto.getNome();
+			}
+
+			// soggetto proprietario
+			de = new DataElement();
+			if(multitenant && !this.isSoggettoMultitenantSelezionato()) {
+				de.setType(DataElementType.TEXT);
+			}
+			else {
+				de.setType(DataElementType.HIDDEN);
+			}
+			de.setLabel(ServiziApplicativiCostanti.LABEL_PARAMETRO_SERVIZI_APPLICATIVI_PROVIDER);
+			de.setValue(tipoENomeSoggetto);
+			dati.addElement(de);
+			
+			if(this.isModalitaCompleta()) {
+				de = new DataElement();
+				de.setType(DataElementType.LINK);
+				de.setValue(ServiziApplicativiCostanti.LABEL_PARAMETRO_SERVIZI_APPLICATIVI_VISUALIZZA_DATI_PROVIDER);
+				de.setUrl(SoggettiCostanti.SERVLET_NAME_SOGGETTI_CHANGE,
+						new Parameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_ID, sa.getIdSoggetto()+""),
+						new Parameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_TIPO_SOGGETTO, tipoSoggetto),
+						new Parameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_NOME_SOGGETTO, nomeSoggetto)
+						);
+				dati.addElement(de);
+			}
+
+			de = new DataElement();
+			de.setType(DataElementType.HIDDEN);
+			de.setName(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_PROVIDER);				
+			de.setValue(provider);
+			dati.addElement(de);
+			
+		}else{
+			de = new DataElement();
+			de.setLabel(ServiziApplicativiCostanti.LABEL_PARAMETRO_SERVIZI_APPLICATIVI_PROVIDER);
+			de.setName(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_PROVIDER);				
+			// Aggiunta di un servizio applicativo passando dal menu' 
+			if(!useIdSogg){
+				
+				if(multitenant && !this.isSoggettoMultitenantSelezionato()) {
+					de.setType(DataElementType.SELECT);
+					de.setPostBack(true);
+				
+					de.setValues(soggettiList);
+					de.setLabels(soggettiListLabel);
+					// selezion il provider (se)/che era stato precedentemente
+					// selezionato
+					// fix 2866
+					if ((provider != null) && !provider.equals("")) {
+						de.setSelected(provider);
+					}
+				}
+				else {
+					de.setType(DataElementType.HIDDEN);
+					de.setValue(provider);
+				}
+								
+			} else {
+				de.setType(DataElementType.HIDDEN);
+				de.setValue(provider);
+				dati.addElement(de);
+
+				de = new DataElement();
+				de.setLabel(ServiziApplicativiCostanti.LABEL_PARAMETRO_SERVIZI_APPLICATIVI_PROVIDER);
+
+				// Aggiunta di un servizio applicativo passando dalla schermata soggetti
+				org.openspcoop2.core.config.Soggetto sog = this.soggettiCore.getSoggetto(Integer.parseInt(provider));
+				
+				de.setType(DataElementType.TEXT);
+				de.setValue(this.getLabelNomeSoggetto(tipoProtocollo, sog.getTipo(), sog.getNome()));
+				de.setSize(this.getSize());
+
+			}
+			dati.addElement(de);
+
+		}
+		
+		
 		
 				
 		de = new DataElement();
@@ -403,102 +506,7 @@ public class ServiziApplicativiHelper extends ConnettoriHelper {
 		
 		
 		
-		ServizioApplicativo sa = null;
-		String nomePdd = null;
-		// se operazione change visualizzo i link per invocazione servizio,
-		// risposta asincrona
-		// e ruoli
-		if (TipoOperazione.CHANGE.equals(tipoOperazione)) {
 
-			sa = this.saCore.getServizioApplicativo(idSA);
-			String tipoSoggetto = null;
-			String nomeSoggetto = null;
-			if(this.core.isRegistroServiziLocale()){
-				Soggetto soggetto = this.soggettiCore.getSoggettoRegistro(sa.getIdSoggetto());
-				tipoSoggetto = soggetto.getTipo();
-				nomeSoggetto = soggetto.getNome();
-				nomePdd = soggetto.getPortaDominio();
-			}
-			else{
-				org.openspcoop2.core.config.Soggetto soggetto = this.soggettiCore.getSoggetto(sa.getIdSoggetto());
-				tipoSoggetto = soggetto.getTipo();
-				nomeSoggetto = soggetto.getNome();
-			}
-
-			// soggetto proprietario
-			de = new DataElement();
-			if(multitenant) {
-				de.setType(DataElementType.TEXT);
-			}
-			else {
-				de.setType(DataElementType.HIDDEN);
-			}
-			de.setLabel(ServiziApplicativiCostanti.LABEL_PARAMETRO_SERVIZI_APPLICATIVI_PROVIDER);
-			de.setValue(tipoENomeSoggetto);
-			dati.addElement(de);
-			
-			if(this.isModalitaCompleta()) {
-				de = new DataElement();
-				de.setType(DataElementType.LINK);
-				de.setValue(ServiziApplicativiCostanti.LABEL_PARAMETRO_SERVIZI_APPLICATIVI_VISUALIZZA_DATI_PROVIDER);
-				de.setUrl(SoggettiCostanti.SERVLET_NAME_SOGGETTI_CHANGE,
-						new Parameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_ID, sa.getIdSoggetto()+""),
-						new Parameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_TIPO_SOGGETTO, tipoSoggetto),
-						new Parameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_NOME_SOGGETTO, nomeSoggetto)
-						);
-				dati.addElement(de);
-			}
-
-			de = new DataElement();
-			de.setType(DataElementType.HIDDEN);
-			de.setName(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_PROVIDER);				
-			de.setValue(provider);
-			dati.addElement(de);
-			
-		}else{
-			de = new DataElement();
-			de.setLabel(ServiziApplicativiCostanti.LABEL_PARAMETRO_SERVIZI_APPLICATIVI_PROVIDER);
-			de.setName(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_PROVIDER);				
-			// Aggiunta di un servizio applicativo passando dal menu' 
-			if(!useIdSogg){
-				
-				if(multitenant) {
-					de.setType(DataElementType.SELECT);
-					de.setPostBack(true);
-				
-					de.setValues(soggettiList);
-					de.setLabels(soggettiListLabel);
-					// selezion il provider (se)/che era stato precedentemente
-					// selezionato
-					// fix 2866
-					if ((provider != null) && !provider.equals("")) {
-						de.setSelected(provider);
-					}
-				}
-				else {
-					de.setType(DataElementType.HIDDEN);
-					de.setValue(provider);
-				}
-								
-			} else {
-				de.setType(DataElementType.HIDDEN);
-				de.setValue(provider);
-				dati.addElement(de);
-
-				de = new DataElement();
-				de.setLabel(ServiziApplicativiCostanti.LABEL_PARAMETRO_SERVIZI_APPLICATIVI_PROVIDER);
-
-				// Aggiunta di un servizio applicativo passando dalla schermata soggetti
-				org.openspcoop2.core.config.Soggetto sog = this.soggettiCore.getSoggetto(Integer.parseInt(provider));
-				
-				de.setType(DataElementType.TEXT);
-				de.setValue(this.getLabelNomeSoggetto(tipoProtocollo, sog.getTipo(), sog.getNome()));
-				de.setSize(this.getSize());
-
-			}
-			dati.addElement(de);
-
-		}
 		
 		
 		
