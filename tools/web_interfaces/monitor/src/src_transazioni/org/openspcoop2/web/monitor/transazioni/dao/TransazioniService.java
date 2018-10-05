@@ -1484,7 +1484,7 @@ public class TransazioniService implements ITransazioniService {
 	}
 
 	@Override
-	public ResLive getEsiti(PermessiUtenteOperatore permessiUtente, Date min, Date max, String esitoContesto, String protocollo) {
+	public ResLive getEsiti(PermessiUtenteOperatore permessiUtente, Date min, Date max, String esitoContesto, String protocollo, TipologiaRicerca tipologiaRicerca) {
 		// StringBuffer pezzoIdPorta = new StringBuffer();
 
 		this.log.debug("Get Esiti [permessiUtenti: " + permessiUtente + "],[ Date Min: " + min + "], [Date Max: " + max + "]");
@@ -1507,6 +1507,14 @@ public class TransazioniService implements ITransazioniService {
 				exprOk.and(permessi);
 			}
 			esitoUtils.setExpressionContesto(exprOk, Transazione.model().ESITO_CONTESTO, esitoContesto);
+			if(tipologiaRicerca!=null) {
+				if (TipologiaRicerca.ingresso.equals(tipologiaRicerca)) {
+					exprOk.and().equals(Transazione.model().PDD_RUOLO, PddRuolo.APPLICATIVA);
+				}
+				else if (TipologiaRicerca.uscita.equals(tipologiaRicerca)) {
+					exprOk.and().equals(Transazione.model().PDD_RUOLO, PddRuolo.DELEGATA);
+				}
+			}
 			
 			// Fault
 			IExpression exprFault = this.transazioniSearchDAO.newExpression();
@@ -1519,6 +1527,14 @@ public class TransazioniService implements ITransazioniService {
 				exprFault.and(permessi);
 			}
 			esitoUtils.setExpressionContesto(exprFault, Transazione.model().ESITO_CONTESTO, esitoContesto);
+			if(tipologiaRicerca!=null) {
+				if (TipologiaRicerca.ingresso.equals(tipologiaRicerca)) {
+					exprFault.and().equals(Transazione.model().PDD_RUOLO, PddRuolo.APPLICATIVA);
+				}
+				else if (TipologiaRicerca.uscita.equals(tipologiaRicerca)) {
+					exprFault.and().equals(Transazione.model().PDD_RUOLO, PddRuolo.DELEGATA);
+				}
+			}
 			
 			// Ko
 			IExpression exprKo = this.transazioniSearchDAO.newExpression();
@@ -1531,6 +1547,14 @@ public class TransazioniService implements ITransazioniService {
 				exprKo.and(permessi);
 			}
 			esitoUtils.setExpressionContesto(exprKo, Transazione.model().ESITO_CONTESTO, esitoContesto);
+			if(tipologiaRicerca!=null) {
+				if (TipologiaRicerca.ingresso.equals(tipologiaRicerca)) {
+					exprKo.and().equals(Transazione.model().PDD_RUOLO, PddRuolo.APPLICATIVA);
+				}
+				else if (TipologiaRicerca.uscita.equals(tipologiaRicerca)) {
+					exprKo.and().equals(Transazione.model().PDD_RUOLO, PddRuolo.DELEGATA);
+				}
+			}
 			
 			exprOk.and().equals(Transazione.model().PROTOCOLLO,	protocollo);
 			exprFault.and().equals(Transazione.model().PROTOCOLLO,	protocollo);

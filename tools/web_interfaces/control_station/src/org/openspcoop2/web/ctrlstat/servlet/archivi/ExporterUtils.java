@@ -472,9 +472,9 @@ public class ExporterUtils {
 							}
 						}
 					}
-					if(pa.getServiziApplicativiAutorizzati()!=null && pa.getServiziApplicativiAutorizzati().sizeSoggettoList()>0) {
-						for (int j = 0; j < pa.getServiziApplicativiAutorizzati().sizeSoggettoList(); j++) {
-							PortaApplicativaAutorizzazioneServizioApplicativo authSA = pa.getServiziApplicativiAutorizzati().getSoggetto(j);
+					if(pa.getServiziApplicativiAutorizzati()!=null && pa.getServiziApplicativiAutorizzati().sizeServizioApplicativoList()>0) {
+						for (int j = 0; j < pa.getServiziApplicativiAutorizzati().sizeServizioApplicativoList(); j++) {
+							PortaApplicativaAutorizzazioneServizioApplicativo authSA = pa.getServiziApplicativiAutorizzati().getServizioApplicativo(j);
 							IDSoggetto idSoggettoProprietarioSAAutorizzato = new IDSoggetto(authSA.getTipoSoggettoProprietario(), authSA.getNomeSoggettoProprietario());
 							if(idSoggettiCoinvolti.contains(idSoggettoProprietarioSAAutorizzato)==false) {
 								idSoggettiCoinvolti.add(idSoggettoProprietarioSAAutorizzato);

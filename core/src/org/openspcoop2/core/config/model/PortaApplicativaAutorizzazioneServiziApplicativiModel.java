@@ -42,7 +42,7 @@ public class PortaApplicativaAutorizzazioneServiziApplicativiModel extends Abstr
 	
 		super();
 	
-		this.SOGGETTO = new org.openspcoop2.core.config.model.PortaApplicativaAutorizzazioneServizioApplicativoModel(new Field("soggetto",org.openspcoop2.core.config.PortaApplicativaAutorizzazioneServizioApplicativo.class,"porta-applicativa-autorizzazione-servizi-applicativi",PortaApplicativaAutorizzazioneServiziApplicativi.class));
+		this.SERVIZIO_APPLICATIVO = new org.openspcoop2.core.config.model.PortaApplicativaAutorizzazioneServizioApplicativoModel(new Field("servizio-applicativo",org.openspcoop2.core.config.PortaApplicativaAutorizzazioneServizioApplicativo.class,"porta-applicativa-autorizzazione-servizi-applicativi",PortaApplicativaAutorizzazioneServiziApplicativi.class));
 	
 	}
 	
@@ -50,13 +50,13 @@ public class PortaApplicativaAutorizzazioneServiziApplicativiModel extends Abstr
 	
 		super(father);
 	
-		this.SOGGETTO = new org.openspcoop2.core.config.model.PortaApplicativaAutorizzazioneServizioApplicativoModel(new ComplexField(father,"soggetto",org.openspcoop2.core.config.PortaApplicativaAutorizzazioneServizioApplicativo.class,"porta-applicativa-autorizzazione-servizi-applicativi",PortaApplicativaAutorizzazioneServiziApplicativi.class));
+		this.SERVIZIO_APPLICATIVO = new org.openspcoop2.core.config.model.PortaApplicativaAutorizzazioneServizioApplicativoModel(new ComplexField(father,"servizio-applicativo",org.openspcoop2.core.config.PortaApplicativaAutorizzazioneServizioApplicativo.class,"porta-applicativa-autorizzazione-servizi-applicativi",PortaApplicativaAutorizzazioneServiziApplicativi.class));
 	
 	}
 	
 	
 
-	public org.openspcoop2.core.config.model.PortaApplicativaAutorizzazioneServizioApplicativoModel SOGGETTO = null;
+	public org.openspcoop2.core.config.model.PortaApplicativaAutorizzazioneServizioApplicativoModel SERVIZIO_APPLICATIVO = null;
 	 
 
 	@Override

@@ -127,7 +127,7 @@ import org.openspcoop2.core.config.constants.GestioneErroreComportamento;
 import org.openspcoop2.core.config.constants.InvocazioneServizioTipoAutenticazione;
 import org.openspcoop2.core.config.constants.MTOMProcessorType;
 import org.openspcoop2.core.config.constants.PortaApplicativaAzioneIdentificazione;
-import org.openspcoop2.core.config.constants.PortaApplicativaSoggettiAutenticati;
+import org.openspcoop2.core.config.constants.PortaApplicativaSoggettiFruitori;
 import org.openspcoop2.core.config.constants.PortaDelegataAzioneIdentificazione;
 import org.openspcoop2.core.config.constants.PortaDelegataSoggettiErogatori;
 import org.openspcoop2.core.config.constants.ProprietaProtocolloValore;
@@ -325,7 +325,7 @@ public class DriverConfigurazioneDB_LIB {
 			return valore.getValue();
 		}
 	}
-	public static String getValue(PortaApplicativaSoggettiAutenticati valore){
+	public static String getValue(PortaApplicativaSoggettiFruitori valore){
 		if(valore==null){
 			return null;
 		}
@@ -471,12 +471,12 @@ public class DriverConfigurazioneDB_LIB {
 			return TipoConnessioneRisposte.toEnumConstant(value);
 		}
 	}
-	public static PortaApplicativaSoggettiAutenticati getEnumPortaApplicativaSoggettiAutenticati(String value){
+	public static PortaApplicativaSoggettiFruitori getEnumPortaApplicativaSoggettiFruitori(String value){
 		if(value==null){
 			return null;
 		}
 		else{
-			return PortaApplicativaSoggettiAutenticati.toEnumConstant(value);
+			return PortaApplicativaSoggettiFruitori.toEnumConstant(value);
 		}
 	}
 	public static PortaDelegataSoggettiErogatori getEnumPortaDelegataSoggettiErogatori(String value){
@@ -6925,7 +6925,7 @@ public class DriverConfigurazioneDB_LIB {
 				// multitenant
 				updateStmt.setString(index++, multitenant!=null ? getValue(multitenant.getStato()) : null);
 				updateStmt.setString(index++, multitenant!=null ? getValue(multitenant.getFruizioneSceltaSoggettiErogatori()) : null);
-				updateStmt.setString(index++, multitenant!=null ? getValue(multitenant.getErogazioneSceltaSoggettiAutenticati()) : null);
+				updateStmt.setString(index++, multitenant!=null ? getValue(multitenant.getErogazioneSceltaSoggettiFruitori()) : null);
 
 				DriverConfigurazioneDB_LIB.log.debug("eseguo query :" + 
 						DBUtils.formatSQLString(updateQuery, 
@@ -6945,7 +6945,7 @@ public class DriverConfigurazioneDB_LIB {
 								token_statoCache, token_dimensioneCache, token_algoritmoCache, token_idleCache, token_lifeCache,
 								(multitenant!=null ? getValue(multitenant.getStato()) : null),
 								(multitenant!=null ? getValue(multitenant.getFruizioneSceltaSoggettiErogatori()) : null),
-								(multitenant!=null ? getValue(multitenant.getErogazioneSceltaSoggettiAutenticati()) : null)));
+								(multitenant!=null ? getValue(multitenant.getErogazioneSceltaSoggettiFruitori()) : null)));
 
 				n = updateStmt.executeUpdate();
 				updateStmt.close();
@@ -7370,7 +7370,7 @@ public class DriverConfigurazioneDB_LIB {
 				// multitenant
 				updateStmt.setString(index++, multitenant!=null ? getValue(multitenant.getStato()) : null);
 				updateStmt.setString(index++, multitenant!=null ? getValue(multitenant.getFruizioneSceltaSoggettiErogatori()) : null);
-				updateStmt.setString(index++, multitenant!=null ? getValue(multitenant.getErogazioneSceltaSoggettiAutenticati()) : null);
+				updateStmt.setString(index++, multitenant!=null ? getValue(multitenant.getErogazioneSceltaSoggettiFruitori()) : null);
 
 				DriverConfigurazioneDB_LIB.log.debug("eseguo query :" + 
 						DBUtils.formatSQLString(updateQuery, 
@@ -7391,7 +7391,7 @@ public class DriverConfigurazioneDB_LIB {
 								token_statoCache, token_dimensioneCache, token_algoritmoCache, token_idleCache, token_lifeCache,
 								(multitenant!=null ? getValue(multitenant.getStato()) : null),
 								(multitenant!=null ? getValue(multitenant.getFruizioneSceltaSoggettiErogatori()) : null),
-								(multitenant!=null ? getValue(multitenant.getErogazioneSceltaSoggettiAutenticati()) : null)));
+								(multitenant!=null ? getValue(multitenant.getErogazioneSceltaSoggettiFruitori()) : null)));
 
 				n = updateStmt.executeUpdate();
 				updateStmt.close();

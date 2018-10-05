@@ -1389,8 +1389,8 @@ public class ControlStationCore {
 				
 				this.multitenant = StatoFunzionalita.ABILITATO.equals(confMultitenant.getStato());
 				
-				if(confMultitenant.getErogazioneSceltaSoggettiAutenticati()!=null) {
-					switch (confMultitenant.getErogazioneSceltaSoggettiAutenticati()) {
+				if(confMultitenant.getErogazioneSceltaSoggettiFruitori()!=null) {
+					switch (confMultitenant.getErogazioneSceltaSoggettiFruitori()) {
 					case SOGGETTI_ESTERNI:
 						this.multitenantSoggettiErogazioni = MultitenantSoggettiErogazioni.SOLO_SOGGETTI_ESTERNI;
 						break;

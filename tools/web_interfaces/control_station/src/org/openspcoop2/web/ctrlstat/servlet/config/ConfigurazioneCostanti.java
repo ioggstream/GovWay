@@ -400,7 +400,7 @@ public class ConfigurazioneCostanti {
 	public final static String LABEL_CONFIGURAZIONE_URL_INVOCAZIONE = "Modalit&agrave;"; //"URL di Invocazione dei Servizi";
 	public final static String LABEL_CONFIGURAZIONE_MULTITENANT = "Multi-Tenant";
 	public final static String LABEL_CONFIGURAZIONE_MULTITENANT_FRUIZIONI = "Fruizioni";
-	public final static String LABEL_CONFIGURAZIONE_MULTITENANT_EROGAZIONI = "Erogazioni (Controllo Accesso)";
+	public final static String LABEL_CONFIGURAZIONE_MULTITENANT_EROGAZIONI = "Erogazioni";
 	public final static String LABEL_CONFIGURAZIONE_REGISTRO_SERVIZI = "Registro dei Servizi";
 	
 	public final static String LABEL_CONFIGURAZIONE_CACHE_REGISTRY = "Cache";
@@ -783,7 +783,7 @@ public class ConfigurazioneCostanti {
 	
 	public final static String PARAMETRO_CONFIGURAZIONE_MULTITENANT_STATO = "ConfMTStato";
 	public final static String PARAMETRO_CONFIGURAZIONE_MULTITENANT_FRUIZIONI_SOGGETTO_EROGATORE = "ConfMTFruSoggEro";
-	public final static String PARAMETRO_CONFIGURAZIONE_MULTITENANT_EROGAZIONI_SOGGETTI_AUTENTICATI = "ConfMTEroSoggAutenticati";
+	public final static String PARAMETRO_CONFIGURAZIONE_MULTITENANT_EROGAZIONI_SOGGETTI_FRUITORI = "ConfMTEroSoggFru";
 		
 	/* LABEL PARAMETRI */
 	
@@ -1063,7 +1063,7 @@ public class ConfigurazioneCostanti {
 	public final static String LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_STATO = "Stato";
 	public final static String LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_SOGGETTI = "Soggetti";
 	public final static String LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_FRUIZIONI_SOGGETTO_EROGATORE = "Soggetto Erogatore";
-	public final static String LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_EROGAZIONI_SOGGETTI_AUTENTICATI = "Soggetti Autenticati";
+	public final static String LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_EROGAZIONI_SOGGETTI_FRUITORI = "Soggetti Fruitori";
 	
 	/* DEFAULT VALUE PARAMETRI */
 	public final static String DEFAULT_VALUE_PARAMETRO_CONFIGURAZIONE_TIPO_XML = "xml";

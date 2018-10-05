@@ -669,7 +669,7 @@
 	<!-- PortaApplicativa Autorizzazione per Servizi Applicativi -->
 	<xsd:complexType name="porta-applicativa-autorizzazione-servizi-applicativi">
 		<xsd:sequence>
-			<xsd:element name="soggetto" type="porta-applicativa-autorizzazione-servizio-applicativo" minOccurs="1" maxOccurs="unbounded"/>
+			<xsd:element name="servizio-applicativo" type="porta-applicativa-autorizzazione-servizio-applicativo" minOccurs="1" maxOccurs="unbounded"/>
 		</xsd:sequence>
 	</xsd:complexType>
 	<xsd:complexType name="porta-applicativa-autorizzazione-servizio-applicativo">
@@ -1447,7 +1447,7 @@
 	<xsd:complexType name="configurazione-multitenant">
 		<xsd:attribute name="stato" type="StatoFunzionalita" default="disabilitato"/>
 		<xsd:attribute name="fruizioneSceltaSoggettiErogatori" type="PortaDelegataSoggettiErogatori" default="soggettiEsterni"/>
-		<xsd:attribute name="erogazioneSceltaSoggettiAutenticati" type="PortaApplicativaSoggettiAutenticati" default="soggettiEsterni"/>
+		<xsd:attribute name="erogazioneSceltaSoggettiFruitori" type="PortaApplicativaSoggettiFruitori" default="soggettiEsterni"/>
 	</xsd:complexType>
 
 	<!-- Configurazione Protocolli -->
@@ -1565,8 +1565,8 @@
 	<!-- Gestione Errore -->
 	<xsd:complexType name="configurazione-gestione-errore">
 		<xsd:sequence>
-			<xsd:element name="componente-cooperazione"	type="gestione-errore" maxOccurs="1" minOccurs="0" />
-			<xsd:element name="componente-integrazione"	type="gestione-errore" maxOccurs="1" minOccurs="0" />
+			<xsd:element name="componente-cooperazione" type="gestione-errore" maxOccurs="1" minOccurs="0" />
+			<xsd:element name="componente-integrazione" type="gestione-errore" maxOccurs="1" minOccurs="0" />
 		</xsd:sequence>
 	</xsd:complexType>
 	
@@ -1818,7 +1818,7 @@
 			<xsd:enumeration value="tutti"/>
 		</xsd:restriction>
 	</xsd:simpleType>
-	<xsd:simpleType name="PortaApplicativaSoggettiAutenticati">
+	<xsd:simpleType name="PortaApplicativaSoggettiFruitori">
 		<xsd:restriction base="xsd:string">
 			<xsd:enumeration value="soggettiEsterni"/>
 			<xsd:enumeration value="escludiSoggettoErogatore"/>

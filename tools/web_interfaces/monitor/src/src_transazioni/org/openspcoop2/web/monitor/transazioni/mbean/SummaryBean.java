@@ -65,6 +65,7 @@ import org.openspcoop2.web.monitor.core.bean.UserDetailsBean;
 import org.openspcoop2.web.monitor.core.constants.Costanti;
 import org.openspcoop2.web.monitor.core.constants.CostantiGrafici;
 import org.openspcoop2.web.monitor.core.constants.NomiTabelle;
+import org.openspcoop2.web.monitor.core.constants.TipologiaRicerca;
 import org.openspcoop2.web.monitor.core.core.PddMonitorProperties;
 import org.openspcoop2.web.monitor.core.core.PermessiUtenteOperatore;
 import org.openspcoop2.web.monitor.core.core.Utility;
@@ -134,6 +135,11 @@ public class SummaryBean implements Serializable{
 	
 	private boolean soggettiAssociatiSelectItemsWidthCheck = false;
 	private boolean soggettiSelectItemsWidthCheck = false;
+	
+	private boolean showTipologiaRicerca;
+	private boolean tipologiaRicercaEntrambiEnabled;
+	private TipologiaRicerca defaultTipologiaRicerca;
+	private TipologiaRicerca tipologiaRicerca;	
 	
 	private Integer maxSelectItemsWidth = 900;
 
@@ -224,6 +230,13 @@ public class SummaryBean implements Serializable{
 			}
 			
 			this.protocollo = protocolFactory.getProtocol();
+			
+			this.showTipologiaRicerca = govwayMonitorProperties.isVisualizzaFiltroRuoloSummary();
+			if(this.showTipologiaRicerca) {
+				this.tipologiaRicercaEntrambiEnabled = govwayMonitorProperties.isVisualizzaVoceEntrambiFiltroRuoloSummary();
+				this.tipologiaRicerca = this.getDefaultTipologiaRicercaEnum();
+			}
+			
 		} catch (Exception e) {
 			SummaryBean.log.error("Errore durante la init del SummaryBean: "+e.getMessage(),e); 
 		}
@@ -266,6 +279,76 @@ public class SummaryBean implements Serializable{
 	public void setEsitoContesto(String esitoContesto) {
 		this.esitoContesto = esitoContesto;
 	}
+	
+	public boolean isShowTipologiaRicerca() {
+		return this.showTipologiaRicerca;
+	}
+	public void setShowTipologiaRicerca(boolean showTipologiaRicerca) {
+		this.showTipologiaRicerca = showTipologiaRicerca;
+	}
+
+	public String getTipologiaRicerca() {
+		return this.getTipologiaRicercaEnum() != null ? this.getTipologiaRicercaEnum().toString() : "";
+	}
+
+	public void setTipologiaRicerca(String tipologiaRicerca) {
+		if (StringUtils.isEmpty(tipologiaRicerca) || "--".equals(tipologiaRicerca))
+			this.tipologiaRicerca = null;
+		else 
+			this.setTipologiaRicerca(TipologiaRicerca.valueOf(tipologiaRicerca));
+		
+	}
+
+	public TipologiaRicerca getTipologiaRicercaEnum() {
+		return this.tipologiaRicerca;
+	}
+
+	public void setTipologiaRicerca(TipologiaRicerca tipologiaRicerca) {
+		this.tipologiaRicerca = tipologiaRicerca;
+	}
+	
+	public String getDefaultTipologiaRicerca() {
+		return this.getDefaultTipologiaRicercaEnum() != null ? this.getDefaultTipologiaRicercaEnum().toString() : "";
+	}
+	
+	public TipologiaRicerca getDefaultTipologiaRicercaEnum() {
+		if(this.defaultTipologiaRicerca != null) {
+			return this.defaultTipologiaRicerca;
+		} else {
+			if(this.tipologiaRicercaEntrambiEnabled) 
+				return TipologiaRicerca.all;
+			else 
+				return TipologiaRicerca.ingresso;
+		}
+	}
+	
+	public void setDefaultTipologiaRicerca(TipologiaRicerca defaultTipologiaRicerca) {
+		this.defaultTipologiaRicerca = defaultTipologiaRicerca;
+	}
+
+	public void setDefaultTipologiaRicerca(String defaultTipologiaRicerca) {
+		if (StringUtils.isEmpty(defaultTipologiaRicerca) || "--".equals(defaultTipologiaRicerca))
+			this.defaultTipologiaRicerca = null;
+		else 
+			this.setDefaultTipologiaRicerca(TipologiaRicerca.valueOf(defaultTipologiaRicerca));
+	}
+	
+	public List<SelectItem> getTipologieRicerca() throws Exception {
+		List<SelectItem> listaTipologie = new ArrayList<SelectItem>();
+		
+		listaTipologie.add(new SelectItem(TipologiaRicerca.ingresso.toString(),"Erogazione"));
+		listaTipologie.add(new SelectItem(TipologiaRicerca.uscita.toString(),"Fruizione"));
+		if(this.tipologiaRicercaEntrambiEnabled)
+			listaTipologie.add(new SelectItem(TipologiaRicerca.all.toString(),"Erogazione/Fruizione"));
+		
+		return listaTipologie;
+	}
+	
+	public void tipologiaRicercaListener(ActionEvent ae) {
+		// se cambia la tipologia di ricerca devo azzerare le scelte precedenti
+		this.soggettoLocale = null;
+	}
+
 	
 	private Date startDateForLabel;
 	private Date endDateForLabel;
@@ -408,7 +491,7 @@ public class SummaryBean implements Serializable{
 			ResLive r = null;
 			try{
 				// L'xml del Summary Bean viene generato dal report selezionato all'avvio del bean.
-				r = this.report.getEsiti(this.getPermessiUtenteOperatore(), s, e, this.periodo, this.esitoContesto, this.protocollo);
+				r = this.report.getEsiti(this.getPermessiUtenteOperatore(), s, e, this.periodo, this.esitoContesto, this.protocollo, this.tipologiaRicerca);
 			} catch (CoreException er) {
 				MessageUtils.addErrorMsg("Si e' verificato un errore durante il recupero degli esiti");
 				SummaryBean.log.error(er.getMessage(), er);
@@ -602,7 +685,7 @@ public class SummaryBean implements Serializable{
 
 					ResLive r = null;
 					try{
-						r = this.report.getEsiti(this.getPermessiUtenteOperatore(), s, e, this.periodo, this.esitoContesto, this.protocollo);
+						r = this.report.getEsiti(this.getPermessiUtenteOperatore(), s, e, this.periodo, this.esitoContesto, this.protocollo, this.tipologiaRicerca);
 					} catch (CoreException er) {
 						MessageUtils.addErrorMsg("Si e' verificato un errore durante il recupero degli esiti");
 						SummaryBean.log.error(er.getMessage(),er);
@@ -1165,11 +1248,13 @@ public class SummaryBean implements Serializable{
 					}
 				}
 			} else {
-				// TODO POLI devo filtra i servizi per il soggetto locale bloccato?
-				String loggedUtenteSoggettoPddMonitor = Utility.getLoggedUtenteSoggettoPddMonitor();
-				if(!Costanti.VALUE_PARAMETRO_MODALITA_ALL.equals(loggedUtenteSoggettoPddMonitor)) {
-					tipoSoggetto = Utility.parseTipoSoggetto(loggedUtenteSoggettoPddMonitor);
-					nomeSoggetto = Utility.parseNomeSoggetto(loggedUtenteSoggettoPddMonitor);
+				// devo filtra i servizi per il soggetto locale
+				if(this.tipologiaRicerca!=null && TipologiaRicerca.ingresso.equals(this.tipologiaRicerca)) {
+					String loggedUtenteSoggettoPddMonitor = Utility.getLoggedUtenteSoggettoPddMonitor();
+					if(!Costanti.VALUE_PARAMETRO_MODALITA_ALL.equals(loggedUtenteSoggettoPddMonitor)) {
+						tipoSoggetto = Utility.parseTipoSoggetto(loggedUtenteSoggettoPddMonitor);
+						nomeSoggetto = Utility.parseNomeSoggetto(loggedUtenteSoggettoPddMonitor);
+					}	
 				}
 			}
 			

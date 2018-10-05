@@ -28,15 +28,15 @@ import org.openspcoop2.generic_project.beans.IEnumeration;
 import org.openspcoop2.generic_project.exception.NotFoundException;
 
 /**     
- * Enumeration dell'elemento PortaApplicativaSoggettiAutenticati xsd (tipo:string) 
+ * Enumeration dell'elemento PortaApplicativaSoggettiFruitori xsd (tipo:string) 
  *
  * @author Poli Andrea (poli@link.it)
  * @author $Author$
  * @version $Rev$, $Date$
  */
-@javax.xml.bind.annotation.XmlType(name = "PortaApplicativaSoggettiAutenticati")
+@javax.xml.bind.annotation.XmlType(name = "PortaApplicativaSoggettiFruitori")
 @javax.xml.bind.annotation.XmlEnum(String.class)
-public enum PortaApplicativaSoggettiAutenticati implements IEnumeration , Serializable , Cloneable {
+public enum PortaApplicativaSoggettiFruitori implements IEnumeration , Serializable , Cloneable {
 
 	@javax.xml.bind.annotation.XmlEnumValue("soggettiEsterni")
 	SOGGETTI_ESTERNI ("soggettiEsterni"),
@@ -56,7 +56,7 @@ public enum PortaApplicativaSoggettiAutenticati implements IEnumeration , Serial
 
 
 	/** Official Constructor */
-	PortaApplicativaSoggettiAutenticati(String value)
+	PortaApplicativaSoggettiFruitori(String value)
 	{
 		this.value = value;
 	}
@@ -67,7 +67,7 @@ public enum PortaApplicativaSoggettiAutenticati implements IEnumeration , Serial
 	public String toString(){
 		return this.value;
 	}
-	public boolean equals(PortaApplicativaSoggettiAutenticati object){
+	public boolean equals(PortaApplicativaSoggettiFruitori object){
 		if(object==null)
 			return false;
 		if(object.getValue()==null)
@@ -84,10 +84,10 @@ public enum PortaApplicativaSoggettiAutenticati implements IEnumeration , Serial
 	
 	/** compatibility with the generated bean (reflection) */
 	public boolean equals(Object object,List<String> fieldsNotCheck){
-		if( !(object instanceof PortaApplicativaSoggettiAutenticati) ){
+		if( !(object instanceof PortaApplicativaSoggettiFruitori) ){
 			throw new RuntimeException("Wrong type: "+object.getClass().getName());
 		}
-		return this.equals(((PortaApplicativaSoggettiAutenticati)object));
+		return this.equals(((PortaApplicativaSoggettiFruitori)object));
 	}
 	public String toString(boolean reportHTML){
 		return toString();
@@ -108,7 +108,7 @@ public enum PortaApplicativaSoggettiAutenticati implements IEnumeration , Serial
 	public static String[] toArray(){
 		String[] res = new String[values().length];
 		int i=0;
-		for (PortaApplicativaSoggettiAutenticati tmp : values()) {
+		for (PortaApplicativaSoggettiFruitori tmp : values()) {
 			res[i]=tmp.getValue();
 			i++;
 		}
@@ -117,7 +117,7 @@ public enum PortaApplicativaSoggettiAutenticati implements IEnumeration , Serial
 	public static String[] toStringArray(){
 		String[] res = new String[values().length];
 		int i=0;
-		for (PortaApplicativaSoggettiAutenticati tmp : values()) {
+		for (PortaApplicativaSoggettiFruitori tmp : values()) {
 			res[i]=tmp.toString();
 			i++;
 		}
@@ -126,7 +126,7 @@ public enum PortaApplicativaSoggettiAutenticati implements IEnumeration , Serial
 	public static String[] toEnumNameArray(){
 		String[] res = new String[values().length];
 		int i=0;
-		for (PortaApplicativaSoggettiAutenticati tmp : values()) {
+		for (PortaApplicativaSoggettiFruitori tmp : values()) {
 			res[i]=tmp.name();
 			i++;
 		}
@@ -137,16 +137,16 @@ public enum PortaApplicativaSoggettiAutenticati implements IEnumeration , Serial
 		return toEnumConstant(value)!=null;
 	}
 	
-	public static PortaApplicativaSoggettiAutenticati toEnumConstant(String value){
+	public static PortaApplicativaSoggettiFruitori toEnumConstant(String value){
 		try{
 			return toEnumConstant(value,false);
 		}catch(NotFoundException notFound){
 			return null;
 		}
 	}
-	public static PortaApplicativaSoggettiAutenticati toEnumConstant(String value, boolean throwNotFoundException) throws NotFoundException{
-		PortaApplicativaSoggettiAutenticati res = null;
-		for (PortaApplicativaSoggettiAutenticati tmp : values()) {
+	public static PortaApplicativaSoggettiFruitori toEnumConstant(String value, boolean throwNotFoundException) throws NotFoundException{
+		PortaApplicativaSoggettiFruitori res = null;
+		for (PortaApplicativaSoggettiFruitori tmp : values()) {
 			if(tmp.getValue().equals(value)){
 				res = tmp;
 				break;
@@ -166,8 +166,8 @@ public enum PortaApplicativaSoggettiAutenticati implements IEnumeration , Serial
 		}
 	}
 	public static IEnumeration toEnumConstantFromString(String value, boolean throwNotFoundException) throws NotFoundException{
-		PortaApplicativaSoggettiAutenticati res = null;
-		for (PortaApplicativaSoggettiAutenticati tmp : values()) {
+		PortaApplicativaSoggettiFruitori res = null;
+		for (PortaApplicativaSoggettiFruitori tmp : values()) {
 			if(tmp.toString().equals(value)){
 				res = tmp;
 				break;

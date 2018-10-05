@@ -38,6 +38,7 @@ import org.openspcoop2.protocol.engine.utils.NamingUtils;
 import org.openspcoop2.web.monitor.core.bean.BaseSearchForm;
 import org.openspcoop2.web.monitor.core.bean.UserDetailsBean;
 import org.openspcoop2.web.monitor.core.constants.TipologiaRicerca;
+import org.openspcoop2.web.monitor.core.core.ConfigurazioneSoggettiVisualizzatiSearchForm;
 import org.openspcoop2.web.monitor.core.core.Utility;
 import org.openspcoop2.web.monitor.core.dao.IService;
 import org.openspcoop2.web.monitor.core.logger.LoggerManager;
@@ -247,6 +248,9 @@ public class DynamicPdDBean<T,K,ServiceType extends IService> extends PdDBaseBea
 	}
 
 	public List<SelectItem> _getSoggetti(boolean includiOperativi,boolean includiEsterni, String input) throws Exception {
+		return this._getSoggetti(includiOperativi, includiEsterni, false, input);
+	}
+	public List<SelectItem> _getSoggetti(boolean includiOperativi,boolean includiEsterni, boolean escludiSoggettoSelezionato, String input) throws Exception {
 		if(this.search==null){
 			return new ArrayList<SelectItem>();
 		}
@@ -268,6 +272,22 @@ public class DynamicPdDBean<T,K,ServiceType extends IService> extends PdDBaseBea
 					if(includiEsterni) {
 						String nomePddFromSoggetto = this.dynamicUtils.getServerFromSoggetto(soggetto.getTipoSoggetto(), soggetto.getNomeSoggetto());
 						add = this.dynamicUtils.checkTipoPdd(nomePddFromSoggetto, TipoPdD.ESTERNO);
+					}
+				}
+				
+				if(escludiSoggettoSelezionato) {
+					if(this.search!=null && this.search.getUser()!=null) {
+						String soggettoSelezionato = this.search.getUser().getSoggettoSelezionatoPddMonitor();
+						if(soggettoSelezionato==null || "".equals(soggettoSelezionato)) {
+							soggettoSelezionato = this.search.getTipoNomeSoggettoLocale();
+						}
+						if(soggettoSelezionato!=null && !"".equals(soggettoSelezionato) && soggettoSelezionato.contains("/")) {
+							String tipo = soggettoSelezionato.split("/")[0];
+							String nome = soggettoSelezionato.split("/")[1];
+							if(tipo.equals(soggetto.getTipoSoggetto()) && nome.equals(soggetto.getNomeSoggetto())) {
+								add = false;
+							}
+						}
 					}
 				}
 				
@@ -423,9 +443,8 @@ public class DynamicPdDBean<T,K,ServiceType extends IService> extends PdDBaseBea
 		List<SelectItem> listaSoggettiTmp = new ArrayList<>();
 		if(val==null || StringUtils.isEmpty((String)val)) {
 		}else{
-			// TODO Poli quali soggetti vengono visualizzati nelle select list del soggetto destinatario?
-			boolean multiTenant = Utility.isMultitenantAbilitato();
-			listaSoggettiTmp = this._getSoggetti(false,!multiTenant, (String)val);
+			ConfigurazioneSoggettiVisualizzatiSearchForm config = Utility.getMultitenantAbilitato_soggettiConfig(this.search!=null ? this.search.getTipologiaRicercaEnum() : null);
+			listaSoggettiTmp = this._getSoggetti(config.isIncludiSoloOperativi(), config.isIncludiSoloEsterni(), config.isEscludiSoggettoSelezionato(), (String)val);
 		}
 		
 		listaSoggettiTmp.add(0, new SelectItem("--", "--"));
@@ -442,9 +461,8 @@ public class DynamicPdDBean<T,K,ServiceType extends IService> extends PdDBaseBea
 	}
 
 	public List<SelectItem> getSoggetti()  throws Exception{
-		// TODO Poli quali soggetti vengono visualizzati nelle select list del soggetto destinatario?
-		boolean multiTenant = Utility.isMultitenantAbilitato();
-		return _getSoggetti(false,!multiTenant,null);
+		ConfigurazioneSoggettiVisualizzatiSearchForm config = Utility.getMultitenantAbilitato_soggettiConfig(this.search!=null ? this.search.getTipologiaRicercaEnum() : null);
+		return _getSoggetti(config.isIncludiSoloOperativi(), config.isIncludiSoloEsterni(), config.isEscludiSoggettoSelezionato(),null);
 	}
 
 	public List<SelectItem> getTipiNomiSoggettiAssociati() throws Exception {
@@ -707,3 +725,4 @@ public class DynamicPdDBean<T,K,ServiceType extends IService> extends PdDBaseBea
 			return this.search.getProtocollo();
 	}
 }
+

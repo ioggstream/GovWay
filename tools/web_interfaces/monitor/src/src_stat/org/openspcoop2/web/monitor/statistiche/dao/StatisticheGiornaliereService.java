@@ -1040,7 +1040,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 			// protocollo e' impostato anche scegliendo la modalita'
 			if (this.andamentoTemporaleSearch.isSetFiltroProtocollo()) {
 				protocollo = this.andamentoTemporaleSearch.getProtocollo();
-				impostaTipiCompatibiliConProtocollo(dao, model, expr, protocollo);
+				impostaTipiCompatibiliConProtocollo(dao, model, expr, protocollo, this.andamentoTemporaleSearch.getTipologiaRicercaEnum());
 			}
 
 			// permessi utente operatore
@@ -1319,7 +1319,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 	// ********** ESITI LIVE ******************
 	
 	@Override
-	public ResLive getEsiti(PermessiUtenteOperatore permessiUtente, Date min, Date max,	String periodo, String esitoContesto,String protocollo) {
+	public ResLive getEsiti(PermessiUtenteOperatore permessiUtente, Date min, Date max,	String periodo, String esitoContesto,String protocollo, TipologiaRicerca tipologiaRicerca) {
 
 		// StringBuffer pezzoIdPorta = new StringBuffer();
 		StatisticheGiornaliereService.log.debug("Get Esiti [id porta: " + permessiUtente + "],[ Date Min: " + min + "], [Date Max: " + max + "]");
@@ -1373,6 +1373,14 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 				exprOk.and(permessi);
 			}
 			esitoUtils.setExpressionContesto(exprOk, model.ESITO_CONTESTO, esitoContesto);
+			if(tipologiaRicerca!=null) {
+				if (TipologiaRicerca.ingresso.equals(tipologiaRicerca)) {
+					exprOk.and().equals(model.TIPO_PORTA, "applicativa");
+				}
+				else if (TipologiaRicerca.uscita.equals(tipologiaRicerca)) {
+					exprOk.and().equals(model.TIPO_PORTA, "delegata");
+				}
+			}
 			exprOk.addGroupBy(model.DATA);
 
 			// fault
@@ -1386,6 +1394,14 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 				exprFault.and(permessi);
 			}
 			esitoUtils.setExpressionContesto(exprFault, model.ESITO_CONTESTO, esitoContesto);
+			if(tipologiaRicerca!=null) {
+				if (TipologiaRicerca.ingresso.equals(tipologiaRicerca)) {
+					exprFault.and().equals(model.TIPO_PORTA, "applicativa");
+				}
+				else if (TipologiaRicerca.uscita.equals(tipologiaRicerca)) {
+					exprFault.and().equals(model.TIPO_PORTA, "delegata");
+				}
+			}
 			exprFault.addGroupBy(model.DATA);
 
 			// ko
@@ -1399,11 +1415,19 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 				exprKo.and(permessi);
 			}
 			esitoUtils.setExpressionContesto(exprKo, model.ESITO_CONTESTO, esitoContesto);
+			if(tipologiaRicerca!=null) {
+				if (TipologiaRicerca.ingresso.equals(tipologiaRicerca)) {
+					exprKo.and().equals(model.TIPO_PORTA, "applicativa");
+				}
+				else if (TipologiaRicerca.uscita.equals(tipologiaRicerca)) {
+					exprKo.and().equals(model.TIPO_PORTA, "delegata");
+				}
+			}
 			exprKo.addGroupBy(model.DATA);
 
-			impostaTipiCompatibiliConProtocollo(dao, model, exprOk, protocollo);
-			impostaTipiCompatibiliConProtocollo(dao, model, exprFault, protocollo);
-			impostaTipiCompatibiliConProtocollo(dao, model, exprKo, protocollo);
+			impostaTipiCompatibiliConProtocollo(dao, model, exprOk, protocollo, null);
+			impostaTipiCompatibiliConProtocollo(dao, model, exprFault, protocollo, null);
+			impostaTipiCompatibiliConProtocollo(dao, model, exprKo, protocollo, null);
 			
 			if(forceIndexes!=null && forceIndexes.size()>0){
 				for (Index index : forceIndexes) {
@@ -1687,7 +1711,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 					//					mitExpr.and().equals(model.PROTOCOLLO,	this.distribSoggettoSearch.getProtocollo());
 					protocollo = this.distribSoggettoSearch.getProtocollo();
 
-					impostaTipiCompatibiliConProtocollo(dao, model, mitExpr, protocollo);
+					impostaTipiCompatibiliConProtocollo(dao, model, mitExpr, protocollo, this.distribSoggettoSearch.getTipologiaRicercaEnum());
 
 				}
 
@@ -1777,7 +1801,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 					//					destExpr.and().equals(model.PROTOCOLLO,	this.distribSoggettoSearch.getProtocollo());
 					protocollo = this.distribSoggettoSearch.getProtocollo();
 
-					impostaTipiCompatibiliConProtocollo(dao, model, destExpr, protocollo);
+					impostaTipiCompatibiliConProtocollo(dao, model, destExpr, protocollo, this.distribSoggettoSearch.getTipologiaRicercaEnum());
 
 				}
 
@@ -1911,7 +1935,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 					//					mitExpr.and().equals(model.PROTOCOLLO,	this.distribSoggettoSearch.getProtocollo());
 					protocollo = this.distribSoggettoSearch.getProtocollo();
 
-					impostaTipiCompatibiliConProtocollo(dao, model, mitExpr, protocollo);
+					impostaTipiCompatibiliConProtocollo(dao, model, mitExpr, protocollo, this.distribSoggettoSearch.getTipologiaRicercaEnum());
 
 				}
 
@@ -2037,7 +2061,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 					//					destExpr.and().equals(model.PROTOCOLLO,	this.distribSoggettoSearch.getProtocollo());
 					protocollo = this.distribSoggettoSearch.getProtocollo();
 
-					impostaTipiCompatibiliConProtocollo(dao, model, destExpr, protocollo);
+					impostaTipiCompatibiliConProtocollo(dao, model, destExpr, protocollo, this.distribSoggettoSearch.getTipologiaRicercaEnum());
 
 				}
 
@@ -2221,7 +2245,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 				//				mitExpr.and().equals(model.PROTOCOLLO,	this.distribSoggettoSearch.getProtocollo());
 				protocollo = this.distribSoggettoSearch.getProtocollo();
 
-				impostaTipiCompatibiliConProtocollo(dao, model, erogazione_portaApplicativa_Expr, protocollo);
+				impostaTipiCompatibiliConProtocollo(dao, model, erogazione_portaApplicativa_Expr, protocollo, this.distribSoggettoSearch.getTipologiaRicercaEnum());
 
 			}
 
@@ -2316,7 +2340,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 				//				destExpr.and().equals(model.PROTOCOLLO,	this.distribSoggettoSearch.getProtocollo());
 				protocollo = this.distribSoggettoSearch.getProtocollo();
 
-				impostaTipiCompatibiliConProtocollo(dao, model, fruizione_portaDelegata_Expr, protocollo);
+				impostaTipiCompatibiliConProtocollo(dao, model, fruizione_portaDelegata_Expr, protocollo, this.distribSoggettoSearch.getTipologiaRicercaEnum());
 
 			}
 
@@ -2615,7 +2639,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 				//				mitExpr.and().equals(model.PROTOCOLLO,	this.distribSoggettoSearch.getProtocollo());
 				protocollo = this.distribSoggettoSearch.getProtocollo();
 
-				impostaTipiCompatibiliConProtocollo(dao, model, erogazione_portaApplicativa_Expr, protocollo);
+				impostaTipiCompatibiliConProtocollo(dao, model, erogazione_portaApplicativa_Expr, protocollo, this.distribSoggettoSearch.getTipologiaRicercaEnum());
 
 			}
 
@@ -2893,7 +2917,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 				//				destExpr.and().equals(model.PROTOCOLLO,	this.distribSoggettoSearch.getProtocollo());
 				protocollo = this.distribSoggettoSearch.getProtocollo();
 
-				impostaTipiCompatibiliConProtocollo(dao, model, fruizione_portaDelegata_Expr, protocollo);
+				impostaTipiCompatibiliConProtocollo(dao, model, fruizione_portaDelegata_Expr, protocollo, this.distribSoggettoSearch.getTipologiaRicercaEnum());
 
 			}
 
@@ -3500,7 +3524,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 				//				expr.and().equals(model.PROTOCOLLO,	this.distribServizioSearch.getProtocollo());
 				protocollo = this.distribServizioSearch.getProtocollo();
 
-				impostaTipiCompatibiliConProtocollo(dao, model, expr, protocollo);
+				impostaTipiCompatibiliConProtocollo(dao, model, expr, protocollo, this.distribServizioSearch.getTipologiaRicercaEnum());
 
 			}
 
@@ -3867,7 +3891,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 				//				expr.and().equals(model.PROTOCOLLO,	this.distribAzioneSearch.getProtocollo());
 				protocollo = this.distribAzioneSearch.getProtocollo();
 
-				impostaTipiCompatibiliConProtocollo(dao, model, expr, protocollo);
+				impostaTipiCompatibiliConProtocollo(dao, model, expr, protocollo, this.distribAzioneSearch.getTipologiaRicercaEnum());
 
 			}
 
@@ -4977,7 +5001,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 				//				expr.and().equals(model.PROTOCOLLO,	this.distribSaSearch.getProtocollo());
 				protocollo = this.distribSaSearch.getProtocollo();
 
-				impostaTipiCompatibiliConProtocollo(dao, model, expr, protocollo);
+				impostaTipiCompatibiliConProtocollo(dao, model, expr, protocollo, this.distribSaSearch.getTipologiaRicercaEnum());
 
 			}
 
@@ -6081,7 +6105,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 				//				expr.and().equals(model.PROTOCOLLO,	this.statistichePersonalizzateSearch.getProtocollo());
 				protocollo = this.statistichePersonalizzateSearch.getProtocollo();
 
-				impostaTipiCompatibiliConProtocollo(dao, model, expr, protocollo);
+				impostaTipiCompatibiliConProtocollo(dao, model, expr, protocollo, this.statistichePersonalizzateSearch.getTipologiaRicercaEnum());
 
 			}
 
@@ -6427,7 +6451,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 		return valori;
 	}
 
-	private void impostaTipiCompatibiliConProtocollo(IServiceSearchWithoutId<?> dao, StatisticaModel model,	IExpression expr, String protocollo) throws ExpressionNotImplementedException, ExpressionException {
+	private void impostaTipiCompatibiliConProtocollo(IServiceSearchWithoutId<?> dao, StatisticaModel model,	IExpression expr, String protocollo, TipologiaRicerca tipologiaRicercaParam) throws ExpressionNotImplementedException, ExpressionException {
 		// Se ho selezionato il protocollo il tipo dei servizi da includere nei risultati deve essere compatibile col protocollo scelto.
 		IExpression expressionTipoServiziCompatibili = null;
 		try {
@@ -6445,7 +6469,17 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 		IExpression expressionTipoSoggettiMittenteCompatibili = null;
 		try {
 			if(protocollo != null) {
-				expressionTipoSoggettiMittenteCompatibili = DynamicUtilsService.getExpressionTipiSoggettiCompatibiliConProtocollo(dao, model.TIPO_MITTENTE, protocollo);
+				if(tipologiaRicercaParam==null || TipologiaRicerca.all.equals(tipologiaRicercaParam) || TipologiaRicerca.ingresso.equals(tipologiaRicercaParam)) {
+					// devo prendere anche le transazioni in cui il mittente non e' definito poiche' e' possibile nelle porte applicative avere una autenticazione anonima.
+					expressionTipoSoggettiMittenteCompatibili = dao.newExpression();
+					expressionTipoSoggettiMittenteCompatibili.or();
+					expressionTipoSoggettiMittenteCompatibili.isNull(model.TIPO_MITTENTE);
+					expressionTipoSoggettiMittenteCompatibili.equals(model.TIPO_MITTENTE, Costanti.INFORMAZIONE_NON_DISPONIBILE);
+					expressionTipoSoggettiMittenteCompatibili.and(DynamicUtilsService.getExpressionTipiSoggettiCompatibiliConProtocollo(dao, model.TIPO_MITTENTE, protocollo));
+				}
+				else {
+					expressionTipoSoggettiMittenteCompatibili = DynamicUtilsService.getExpressionTipiSoggettiCompatibiliConProtocollo(dao, model.TIPO_MITTENTE, protocollo);
+				}
 			}
 		} catch (Exception e) {
 			StatisticheGiornaliereService.log.error("Si e' verificato un errore durante il calcolo dei tipi soggetto mittente compatibili con il protocollo scelto: "+ e.getMessage(), e);

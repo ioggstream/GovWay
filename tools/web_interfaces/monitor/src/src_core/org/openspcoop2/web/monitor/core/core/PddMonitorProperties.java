@@ -831,6 +831,14 @@ public class PddMonitorProperties {
 		return "true".equalsIgnoreCase(this.appProperties.getProperty("console.filtri.ruolo.selectList.visualizzaVoceEntrambi", true, true));
 	}
 	
+	public boolean isVisualizzaFiltroRuoloSummary() throws Exception{
+		return "true".equalsIgnoreCase(this.appProperties.getProperty("console.filtri.summary.ruolo.enabled", true, true));
+	}
+	
+	public boolean isVisualizzaVoceEntrambiFiltroRuoloSummary() throws Exception{
+		return "true".equalsIgnoreCase(this.appProperties.getProperty("console.filtri.summary.ruolo.selectList.visualizzaVoceEntrambi", true, true));
+	}
+	
 	public Integer getNumeroMassimoSoggettiOperativiMenuUtente() throws Exception{
 		return new Integer(this.appProperties.getProperty("console.selectListSoggettiOperativi.numeroMassimoSoggettiVisualizzati",true,true));
 	}

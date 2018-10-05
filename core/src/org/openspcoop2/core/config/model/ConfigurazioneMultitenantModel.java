@@ -44,7 +44,7 @@ public class ConfigurazioneMultitenantModel extends AbstractModel<Configurazione
 	
 		this.STATO = new Field("stato",java.lang.String.class,"configurazione-multitenant",ConfigurazioneMultitenant.class);
 		this.FRUIZIONE_SCELTA_SOGGETTI_EROGATORI = new Field("fruizioneSceltaSoggettiErogatori",java.lang.String.class,"configurazione-multitenant",ConfigurazioneMultitenant.class);
-		this.EROGAZIONE_SCELTA_SOGGETTI_AUTENTICATI = new Field("erogazioneSceltaSoggettiAutenticati",java.lang.String.class,"configurazione-multitenant",ConfigurazioneMultitenant.class);
+		this.EROGAZIONE_SCELTA_SOGGETTI_FRUITORI = new Field("erogazioneSceltaSoggettiFruitori",java.lang.String.class,"configurazione-multitenant",ConfigurazioneMultitenant.class);
 	
 	}
 	
@@ -54,7 +54,7 @@ public class ConfigurazioneMultitenantModel extends AbstractModel<Configurazione
 	
 		this.STATO = new ComplexField(father,"stato",java.lang.String.class,"configurazione-multitenant",ConfigurazioneMultitenant.class);
 		this.FRUIZIONE_SCELTA_SOGGETTI_EROGATORI = new ComplexField(father,"fruizioneSceltaSoggettiErogatori",java.lang.String.class,"configurazione-multitenant",ConfigurazioneMultitenant.class);
-		this.EROGAZIONE_SCELTA_SOGGETTI_AUTENTICATI = new ComplexField(father,"erogazioneSceltaSoggettiAutenticati",java.lang.String.class,"configurazione-multitenant",ConfigurazioneMultitenant.class);
+		this.EROGAZIONE_SCELTA_SOGGETTI_FRUITORI = new ComplexField(father,"erogazioneSceltaSoggettiFruitori",java.lang.String.class,"configurazione-multitenant",ConfigurazioneMultitenant.class);
 	
 	}
 	
@@ -64,7 +64,7 @@ public class ConfigurazioneMultitenantModel extends AbstractModel<Configurazione
 	 
 	public IField FRUIZIONE_SCELTA_SOGGETTI_EROGATORI = null;
 	 
-	public IField EROGAZIONE_SCELTA_SOGGETTI_AUTENTICATI = null;
+	public IField EROGAZIONE_SCELTA_SOGGETTI_FRUITORI = null;
 	 
 
 	@Override

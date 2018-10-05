@@ -58,7 +58,7 @@ import org.openspcoop2.core.config.ValidazioneBuste;
 import org.openspcoop2.core.config.ValidazioneContenutiApplicativi;
 import org.openspcoop2.core.config.constants.AlgoritmoCache;
 import org.openspcoop2.core.config.constants.CostantiConfigurazione;
-import org.openspcoop2.core.config.constants.PortaApplicativaSoggettiAutenticati;
+import org.openspcoop2.core.config.constants.PortaApplicativaSoggettiFruitori;
 import org.openspcoop2.core.config.constants.PortaDelegataSoggettiErogatori;
 import org.openspcoop2.core.config.constants.Severita;
 import org.openspcoop2.core.config.constants.StatoFunzionalita;
@@ -166,7 +166,7 @@ public final class ConfigurazioneGenerale extends Action {
 			String multitenantStatoTmp = confHelper.getParameter(ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_MULTITENANT_STATO);
 			boolean multitenantEnabled = CostantiConfigurazione.ABILITATO.getValue().equals(multitenantStatoTmp);
 			String multitenantSoggettiFruizioni = confHelper.getParameter(ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_MULTITENANT_FRUIZIONI_SOGGETTO_EROGATORE);
-			String multitenantSoggettiErogazioni = confHelper.getParameter(ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_MULTITENANT_EROGAZIONI_SOGGETTI_AUTENTICATI);
+			String multitenantSoggettiErogazioni = confHelper.getParameter(ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_MULTITENANT_EROGAZIONI_SOGGETTI_FRUITORI);
 			
 			Boolean confPersB = ServletUtils.getConfigurazioniPersonalizzateFromSession(session); 
 			String confPers = confPersB ? "true" : "false";
@@ -490,18 +490,18 @@ public final class ConfigurazioneGenerale extends Action {
 				if(multitenantSoggettiErogazioniEnum!=null) {
 					switch (multitenantSoggettiErogazioniEnum) {
 					case SOLO_SOGGETTI_ESTERNI:
-						newConfigurazione.getMultitenant().setErogazioneSceltaSoggettiAutenticati(PortaApplicativaSoggettiAutenticati.SOGGETTI_ESTERNI);
+						newConfigurazione.getMultitenant().setErogazioneSceltaSoggettiFruitori(PortaApplicativaSoggettiFruitori.SOGGETTI_ESTERNI);
 						break;
 					case ESCLUDI_SOGGETTO_EROGATORE:
-						newConfigurazione.getMultitenant().setErogazioneSceltaSoggettiAutenticati(PortaApplicativaSoggettiAutenticati.ESCLUDI_SOGGETTO_EROGATORE);
+						newConfigurazione.getMultitenant().setErogazioneSceltaSoggettiFruitori(PortaApplicativaSoggettiFruitori.ESCLUDI_SOGGETTO_EROGATORE);
 						break;
 					case TUTTI:
-						newConfigurazione.getMultitenant().setErogazioneSceltaSoggettiAutenticati(PortaApplicativaSoggettiAutenticati.TUTTI);
+						newConfigurazione.getMultitenant().setErogazioneSceltaSoggettiFruitori(PortaApplicativaSoggettiFruitori.TUTTI);
 						break;
 					}
 				}
 				else {
-					newConfigurazione.getMultitenant().setErogazioneSceltaSoggettiAutenticati(PortaApplicativaSoggettiAutenticati.SOGGETTI_ESTERNI); // default
+					newConfigurazione.getMultitenant().setErogazioneSceltaSoggettiFruitori(PortaApplicativaSoggettiFruitori.SOGGETTI_ESTERNI); // default
 				}
 				
 				newConfigurazione.setProtocolli(null); // aggiorno i protocolli
@@ -736,8 +736,8 @@ public final class ConfigurazioneGenerale extends Action {
 							break;
 						}
 					}
-					if(configurazione.getMultitenant().getErogazioneSceltaSoggettiAutenticati()!=null) {
-						switch (configurazione.getMultitenant().getErogazioneSceltaSoggettiAutenticati()) {
+					if(configurazione.getMultitenant().getErogazioneSceltaSoggettiFruitori()!=null) {
+						switch (configurazione.getMultitenant().getErogazioneSceltaSoggettiFruitori()) {
 						case SOGGETTI_ESTERNI:
 							multitenantSoggettiErogazioni = MultitenantSoggettiErogazioni.SOLO_SOGGETTI_ESTERNI.name();
 							break;

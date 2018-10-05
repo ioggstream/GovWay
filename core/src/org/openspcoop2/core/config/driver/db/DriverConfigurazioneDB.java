@@ -6739,7 +6739,7 @@ implements IDriverConfigurazioneGet, IDriverConfigurazioneCRUD, IDriverWS, IMoni
 				config.setMultitenant(new ConfigurazioneMultitenant());
 				config.getMultitenant().setStato(DriverConfigurazioneDB_LIB.getEnumStatoFunzionalita(multitenantStato));
 				config.getMultitenant().setFruizioneSceltaSoggettiErogatori(DriverConfigurazioneDB_LIB.getEnumPortaDelegataSoggettiErogatori(multitenantStatoSoggettiFruitori));
-				config.getMultitenant().setErogazioneSceltaSoggettiAutenticati(DriverConfigurazioneDB_LIB.getEnumPortaApplicativaSoggettiAutenticati(multitenantStatoSoggettiErogatori));
+				config.getMultitenant().setErogazioneSceltaSoggettiFruitori(DriverConfigurazioneDB_LIB.getEnumPortaApplicativaSoggettiFruitori(multitenantStatoSoggettiErogatori));
 
 				String msg_diag_severita = rs.getString("msg_diag_severita");
 				String msg_diag_severita_log4j = rs.getString("msg_diag_severita_log4j");

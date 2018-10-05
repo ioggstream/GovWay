@@ -764,7 +764,7 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 			if(this.tipologiaRicercaEntrambiEnabled) 
 				return TipologiaRicerca.all;
 			else 
-				return TipologiaRicerca.uscita;
+				return TipologiaRicerca.ingresso;
 		}
 	}
 	

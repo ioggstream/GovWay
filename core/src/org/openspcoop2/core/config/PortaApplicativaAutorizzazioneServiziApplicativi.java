@@ -39,7 +39,7 @@ import java.util.List;
  * <pre>
  * &lt;complexType name="porta-applicativa-autorizzazione-servizi-applicativi">
  * 		&lt;sequence>
- * 			&lt;element name="soggetto" type="{http://www.openspcoop2.org/core/config}porta-applicativa-autorizzazione-servizio-applicativo" minOccurs="1" maxOccurs="unbounded"/>
+ * 			&lt;element name="servizio-applicativo" type="{http://www.openspcoop2.org/core/config}porta-applicativa-autorizzazione-servizio-applicativo" minOccurs="1" maxOccurs="unbounded"/>
  * 		&lt;/sequence>
  * &lt;/complexType>
  * </pre>
@@ -53,7 +53,7 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "porta-applicativa-autorizzazione-servizi-applicativi", 
   propOrder = {
-  	"soggetto"
+  	"servizioApplicativo"
   }
 )
 
@@ -77,28 +77,28 @@ public class PortaApplicativaAutorizzazioneServiziApplicativi extends org.opensp
 		this.id=Long.valueOf(-1);
   }
 
-  public void addSoggetto(PortaApplicativaAutorizzazioneServizioApplicativo soggetto) {
-    this.soggetto.add(soggetto);
+  public void addServizioApplicativo(PortaApplicativaAutorizzazioneServizioApplicativo servizioApplicativo) {
+    this.servizioApplicativo.add(servizioApplicativo);
   }
 
-  public PortaApplicativaAutorizzazioneServizioApplicativo getSoggetto(int index) {
-    return this.soggetto.get( index );
+  public PortaApplicativaAutorizzazioneServizioApplicativo getServizioApplicativo(int index) {
+    return this.servizioApplicativo.get( index );
   }
 
-  public PortaApplicativaAutorizzazioneServizioApplicativo removeSoggetto(int index) {
-    return this.soggetto.remove( index );
+  public PortaApplicativaAutorizzazioneServizioApplicativo removeServizioApplicativo(int index) {
+    return this.servizioApplicativo.remove( index );
   }
 
-  public List<PortaApplicativaAutorizzazioneServizioApplicativo> getSoggettoList() {
-    return this.soggetto;
+  public List<PortaApplicativaAutorizzazioneServizioApplicativo> getServizioApplicativoList() {
+    return this.servizioApplicativo;
   }
 
-  public void setSoggettoList(List<PortaApplicativaAutorizzazioneServizioApplicativo> soggetto) {
-    this.soggetto=soggetto;
+  public void setServizioApplicativoList(List<PortaApplicativaAutorizzazioneServizioApplicativo> servizioApplicativo) {
+    this.servizioApplicativo=servizioApplicativo;
   }
 
-  public int sizeSoggettoList() {
-    return this.soggetto.size();
+  public int sizeServizioApplicativoList() {
+    return this.servizioApplicativo.size();
   }
 
   private static final long serialVersionUID = 1L;
@@ -108,34 +108,34 @@ public class PortaApplicativaAutorizzazioneServiziApplicativi extends org.opensp
 
 
 
-  @XmlElement(name="soggetto",required=true,nillable=false)
-  protected List<PortaApplicativaAutorizzazioneServizioApplicativo> soggetto = new ArrayList<PortaApplicativaAutorizzazioneServizioApplicativo>();
+  @XmlElement(name="servizio-applicativo",required=true,nillable=false)
+  protected List<PortaApplicativaAutorizzazioneServizioApplicativo> servizioApplicativo = new ArrayList<PortaApplicativaAutorizzazioneServizioApplicativo>();
 
   /**
-   * @deprecated Use method getSoggettoList
+   * @deprecated Use method getServizioApplicativoList
    * @return List<PortaApplicativaAutorizzazioneServizioApplicativo>
   */
   @Deprecated
-  public List<PortaApplicativaAutorizzazioneServizioApplicativo> getSoggetto() {
-  	return this.soggetto;
+  public List<PortaApplicativaAutorizzazioneServizioApplicativo> getServizioApplicativo() {
+  	return this.servizioApplicativo;
   }
 
   /**
-   * @deprecated Use method setSoggettoList
-   * @param soggetto List<PortaApplicativaAutorizzazioneServizioApplicativo>
+   * @deprecated Use method setServizioApplicativoList
+   * @param servizioApplicativo List<PortaApplicativaAutorizzazioneServizioApplicativo>
   */
   @Deprecated
-  public void setSoggetto(List<PortaApplicativaAutorizzazioneServizioApplicativo> soggetto) {
-  	this.soggetto=soggetto;
+  public void setServizioApplicativo(List<PortaApplicativaAutorizzazioneServizioApplicativo> servizioApplicativo) {
+  	this.servizioApplicativo=servizioApplicativo;
   }
 
   /**
-   * @deprecated Use method sizeSoggettoList
+   * @deprecated Use method sizeServizioApplicativoList
    * @return lunghezza della lista
   */
   @Deprecated
-  public int sizeSoggetto() {
-  	return this.soggetto.size();
+  public int sizeServizioApplicativo() {
+  	return this.servizioApplicativo.size();
   }
 
 }

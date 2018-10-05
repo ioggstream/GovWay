@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
-import org.openspcoop2.core.config.constants.PortaApplicativaSoggettiAutenticati;
+import org.openspcoop2.core.config.constants.PortaApplicativaSoggettiFruitori;
 import org.openspcoop2.core.config.constants.PortaDelegataSoggettiErogatori;
 import org.openspcoop2.core.config.constants.StatoFunzionalita;
 import java.io.Serializable;
@@ -41,7 +41,7 @@ import java.io.Serializable;
  * &lt;complexType name="configurazione-multitenant">
  * 		&lt;attribute name="stato" type="{http://www.openspcoop2.org/core/config}StatoFunzionalita" use="optional" default="disabilitato"/>
  * 		&lt;attribute name="fruizioneSceltaSoggettiErogatori" type="{http://www.openspcoop2.org/core/config}PortaDelegataSoggettiErogatori" use="optional" default="soggettiEsterni"/>
- * 		&lt;attribute name="erogazioneSceltaSoggettiAutenticati" type="{http://www.openspcoop2.org/core/config}PortaApplicativaSoggettiAutenticati" use="optional" default="soggettiEsterni"/>
+ * 		&lt;attribute name="erogazioneSceltaSoggettiFruitori" type="{http://www.openspcoop2.org/core/config}PortaApplicativaSoggettiFruitori" use="optional" default="soggettiEsterni"/>
  * &lt;/complexType>
  * </pre>
  * 
@@ -114,24 +114,24 @@ public class ConfigurazioneMultitenant extends org.openspcoop2.utils.beans.BaseB
     this.fruizioneSceltaSoggettiErogatori = fruizioneSceltaSoggettiErogatori;
   }
 
-  public void set_value_erogazioneSceltaSoggettiAutenticati(String value) {
-    this.erogazioneSceltaSoggettiAutenticati = (PortaApplicativaSoggettiAutenticati) PortaApplicativaSoggettiAutenticati.toEnumConstantFromString(value);
+  public void set_value_erogazioneSceltaSoggettiFruitori(String value) {
+    this.erogazioneSceltaSoggettiFruitori = (PortaApplicativaSoggettiFruitori) PortaApplicativaSoggettiFruitori.toEnumConstantFromString(value);
   }
 
-  public String get_value_erogazioneSceltaSoggettiAutenticati() {
-    if(this.erogazioneSceltaSoggettiAutenticati == null){
+  public String get_value_erogazioneSceltaSoggettiFruitori() {
+    if(this.erogazioneSceltaSoggettiFruitori == null){
     	return null;
     }else{
-    	return this.erogazioneSceltaSoggettiAutenticati.toString();
+    	return this.erogazioneSceltaSoggettiFruitori.toString();
     }
   }
 
-  public org.openspcoop2.core.config.constants.PortaApplicativaSoggettiAutenticati getErogazioneSceltaSoggettiAutenticati() {
-    return this.erogazioneSceltaSoggettiAutenticati;
+  public org.openspcoop2.core.config.constants.PortaApplicativaSoggettiFruitori getErogazioneSceltaSoggettiFruitori() {
+    return this.erogazioneSceltaSoggettiFruitori;
   }
 
-  public void setErogazioneSceltaSoggettiAutenticati(org.openspcoop2.core.config.constants.PortaApplicativaSoggettiAutenticati erogazioneSceltaSoggettiAutenticati) {
-    this.erogazioneSceltaSoggettiAutenticati = erogazioneSceltaSoggettiAutenticati;
+  public void setErogazioneSceltaSoggettiFruitori(org.openspcoop2.core.config.constants.PortaApplicativaSoggettiFruitori erogazioneSceltaSoggettiFruitori) {
+    this.erogazioneSceltaSoggettiFruitori = erogazioneSceltaSoggettiFruitori;
   }
 
   private static final long serialVersionUID = 1L;
@@ -154,9 +154,9 @@ public class ConfigurazioneMultitenant extends org.openspcoop2.utils.beans.BaseB
   protected PortaDelegataSoggettiErogatori fruizioneSceltaSoggettiErogatori = (PortaDelegataSoggettiErogatori) PortaDelegataSoggettiErogatori.toEnumConstantFromString("soggettiEsterni");
 
   @javax.xml.bind.annotation.XmlTransient
-  protected java.lang.String _value_erogazioneSceltaSoggettiAutenticati;
+  protected java.lang.String _value_erogazioneSceltaSoggettiFruitori;
 
-  @XmlAttribute(name="erogazioneSceltaSoggettiAutenticati",required=false)
-  protected PortaApplicativaSoggettiAutenticati erogazioneSceltaSoggettiAutenticati = (PortaApplicativaSoggettiAutenticati) PortaApplicativaSoggettiAutenticati.toEnumConstantFromString("soggettiEsterni");
+  @XmlAttribute(name="erogazioneSceltaSoggettiFruitori",required=false)
+  protected PortaApplicativaSoggettiFruitori erogazioneSceltaSoggettiFruitori = (PortaApplicativaSoggettiFruitori) PortaApplicativaSoggettiFruitori.toEnumConstantFromString("soggettiEsterni");
 
 }

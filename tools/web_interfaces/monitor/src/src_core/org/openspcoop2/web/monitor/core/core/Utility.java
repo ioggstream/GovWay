@@ -43,6 +43,8 @@ import org.openspcoop2.core.commons.dao.DAOFactory;
 import org.openspcoop2.core.commons.search.IdSoggetto;
 import org.openspcoop2.core.commons.search.Soggetto;
 import org.openspcoop2.core.config.Configurazione;
+import org.openspcoop2.core.config.constants.PortaApplicativaSoggettiFruitori;
+import org.openspcoop2.core.config.constants.PortaDelegataSoggettiErogatori;
 import org.openspcoop2.core.config.constants.StatoFunzionalita;
 import org.openspcoop2.core.id.IDServizio;
 import org.openspcoop2.core.id.IDSoggetto;
@@ -54,6 +56,7 @@ import org.openspcoop2.utils.resources.MapReader;
 import org.openspcoop2.web.lib.users.dao.User;
 import org.openspcoop2.web.monitor.core.bean.LoginBean;
 import org.openspcoop2.web.monitor.core.bean.UserDetailsBean;
+import org.openspcoop2.web.monitor.core.constants.TipologiaRicerca;
 import org.openspcoop2.web.monitor.core.logger.LoggerManager;
 import org.openspcoop2.web.monitor.core.utils.DynamicPdDBeanUtils;
 import org.openspcoop2.web.monitor.core.utils.ParseUtility;
@@ -368,6 +371,97 @@ public class Utility {
 		}
 
 		return false;
+	}
+	
+	public static PortaDelegataSoggettiErogatori getMultitenantAbilitato_fruizione_sceltaSoggettiErogatori() {
+		LoginBean lb = getLoginBean();
+
+		if(lb!= null && lb.isLoggedIn()){
+			Configurazione configurazioneGenerale = lb.getConfigurazioneGenerale();
+
+			if(configurazioneGenerale.getMultitenant() != null) {
+				return configurazioneGenerale.getMultitenant().getFruizioneSceltaSoggettiErogatori();
+			}
+		}
+
+		return null;
+	}
+	
+	public static PortaApplicativaSoggettiFruitori getMultitenantAbilitato_erogazione_sceltaSoggettiFruitori() {
+		LoginBean lb = getLoginBean();
+
+		if(lb!= null && lb.isLoggedIn()){
+			Configurazione configurazioneGenerale = lb.getConfigurazioneGenerale();
+
+			if(configurazioneGenerale.getMultitenant() != null) {
+				return configurazioneGenerale.getMultitenant().getErogazioneSceltaSoggettiFruitori();
+			}
+		}
+
+		return null;
+	}
+	
+	public static ConfigurazioneSoggettiVisualizzatiSearchForm getMultitenantAbilitato_soggettiConfig(TipologiaRicerca ricercaParam) {
+		boolean multiTenant = Utility.isMultitenantAbilitato();
+		boolean includiSoloOperativi = false;
+		boolean includiSoloEsterni = false;
+		boolean escludiSoggettoSelezionato = false;
+		TipologiaRicerca ricerca = ricercaParam;
+		if(ricerca==null) {
+			ricerca = TipologiaRicerca.all;
+		}
+		switch (ricerca) {
+		case all:
+			break;
+		case uscita:
+			if(multiTenant) {
+				PortaDelegataSoggettiErogatori scelta = Utility.getMultitenantAbilitato_fruizione_sceltaSoggettiErogatori();
+				if(scelta==null) {
+					scelta = PortaDelegataSoggettiErogatori.SOGGETTI_ESTERNI;
+				}
+				switch (scelta) {
+				case SOGGETTI_ESTERNI:
+					includiSoloEsterni = true;
+					break;
+				case ESCLUDI_SOGGETTO_FRUITORE:
+					escludiSoggettoSelezionato = true;
+					break;
+				case TUTTI:
+					break;
+				}
+			}
+			else {
+				includiSoloEsterni = true;
+			}
+			break;
+		case ingresso:
+			if(multiTenant) {
+				PortaApplicativaSoggettiFruitori scelta = Utility.getMultitenantAbilitato_erogazione_sceltaSoggettiFruitori();
+				if(scelta==null) {
+					scelta = PortaApplicativaSoggettiFruitori.SOGGETTI_ESTERNI;
+				}
+				switch (scelta) {
+				case SOGGETTI_ESTERNI:
+					includiSoloEsterni = true;
+					break;
+				case ESCLUDI_SOGGETTO_EROGATORE:
+					escludiSoggettoSelezionato = true;
+					break;
+				case TUTTI:
+					break;
+				}
+			}
+			else {
+				includiSoloEsterni = true;
+			}
+			break;
+		}
+		
+		ConfigurazioneSoggettiVisualizzatiSearchForm config = new ConfigurazioneSoggettiVisualizzatiSearchForm();
+		config.setIncludiSoloOperativi(includiSoloOperativi);
+		config.setIncludiSoloEsterni(includiSoloEsterni);
+		config.setEscludiSoggettoSelezionato(escludiSoggettoSelezionato);
+		return config;
 	}
 
 	public static String fileSizeConverter(Number bytes) {
