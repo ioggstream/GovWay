@@ -4373,7 +4373,11 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 
 		User user = ServletUtils.getUserFromSession(this.session);
 
-		boolean visualizzaVersione = this.apsCore.isSupportatoVersionamentoAccordiServizioParteSpecifica(tipoProtocollo);
+		boolean creaDataElementVersione = this.apsCore.isSupportatoVersionamentoAccordiServizioParteSpecifica(tipoProtocollo);
+		boolean visualizzaSceltaVersioneServizio = creaDataElementVersione;
+		if(this.isModalitaStandard() && TipoOperazione.ADD.equals(tipoOp)) {
+			visualizzaSceltaVersioneServizio = false;
+		}
 
 		boolean modificaAbilitata = ( (this.isShowGestioneWorkflowStatoDocumenti()==false) || (StatiAccordo.finale.toString().equals(oldStato)==false) );
 
@@ -4506,7 +4510,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 			}
 		}
 		
-		if(this.isModalitaCompleta()) {
+		if(this.isModalitaCompleta() || tipoOp.equals(TipoOperazione.ADD)) {
 			de = new DataElement();
 			de.setLabel(asLabel);
 			de.setType(DataElementType.SUBTITLE);
@@ -4802,7 +4806,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 		boolean showLabelServizio = this.isModalitaAvanzata() || 
 				showTipoServizio ||
 				(!showSceltaNomeServizioDisabilitata) ||
-				visualizzaVersione ||
+				visualizzaSceltaVersioneServizio ||
 				showInfoCorrelata ||
 				showFlagPrivato ||
 				showFlagPrivatoLabel ||
@@ -4932,7 +4936,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 			dati.addElement(de);
 		}
 		
-		if(visualizzaVersione){
+		if(creaDataElementVersione){
 
 			de = new DataElement();
 			de.setLabel(AccordiServizioParteSpecificaCostanti.LABEL_PARAMETRO_APS_VERSIONE);
@@ -4950,7 +4954,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 			}
 			
 			de.setValue(versioneSelezionata);
-			if(visualizzaVersione){
+			if(visualizzaSceltaVersioneServizio){
 				if((showInformazioniGeneraliErogazioniFruizioniView==null || showInformazioniGeneraliErogazioniFruizioniView)) {
 					if( modificaAbilitata ){
 						if(this.isModalitaStandard() && versioneAllineataAccordoParteComune) {
