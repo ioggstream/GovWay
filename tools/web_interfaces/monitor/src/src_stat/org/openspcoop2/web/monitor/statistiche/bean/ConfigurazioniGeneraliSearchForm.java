@@ -31,7 +31,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.openspcoop2.core.transazioni.constants.PddRuolo;
 import org.openspcoop2.web.monitor.core.bean.BaseSearchForm;
-import org.openspcoop2.web.monitor.core.constants.TipologiaRicerca;
 import org.openspcoop2.web.monitor.core.core.PddMonitorProperties;
 import org.openspcoop2.web.monitor.core.logger.LoggerManager;
 

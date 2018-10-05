@@ -21,11 +21,9 @@
  */
 package org.openspcoop2.web.monitor.core.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.openspcoop2.core.commons.dao.DAOFactory;
-import org.openspcoop2.core.id.IDSoggetto;
 import org.openspcoop2.generic_project.exception.NotImplementedException;
 import org.openspcoop2.web.lib.users.DriverUsersDBException;
 import org.openspcoop2.web.lib.users.dao.Stato;
