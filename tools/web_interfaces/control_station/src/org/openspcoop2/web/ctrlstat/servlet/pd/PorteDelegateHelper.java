@@ -127,7 +127,7 @@ public class PorteDelegateHelper extends ConnettoriHelper {
 			String gestioneTokenPolicy, String gestioneTokenOpzionale, 
 			String gestioneTokenValidazioneInput, String gestioneTokenIntrospection, String gestioneTokenUserInfo, String gestioneTokenForward,
 			String autenticazioneTokenIssuer,String autenticazioneTokenClientId,String autenticazioneTokenSubject,String autenticazioneTokenUsername,String autenticazioneTokenEMail,
-			String autorizzazione_tokenOptions,
+			String autorizzazione_token, String autorizzazione_tokenOptions,
 			String autorizzazioneScope, int numScope, String autorizzazioneScopeMatch, BinaryParameter allegatoXacmlPolicy) throws Exception {
 
 		boolean multitenant = this.pddCore.isMultitenant();
@@ -767,7 +767,9 @@ public class PorteDelegateHelper extends ConnettoriHelper {
 					autorizzazioneRuoli,  urlAutorizzazioneRuoli, numRuoli, null,
 					autorizzazioneRuoliTipologia, ruoloMatch,
 					confPers, isSupportatoAutenticazioneSoggetti, contaListe, true, false,autorizzazioneScope,urlAutorizzazioneScope,numScope,null,autorizzazioneScopeMatch,
-					gestioneToken, gestioneTokenPolicy, autorizzazione_tokenOptions,allegatoXacmlPolicy);
+					gestioneToken, gestioneTokenPolicy, 
+					autorizzazione_token, autorizzazione_tokenOptions,allegatoXacmlPolicy,
+					null, 0);
 			
 				
 			this.controlloAccessiAutorizzazioneContenuti(dati, autorizzazioneContenuti);
@@ -1625,6 +1627,7 @@ public class PorteDelegateHelper extends ConnettoriHelper {
 				String gestioneTokenIntrospection = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_GESTIONE_TOKEN_INTROSPECTION);
 				String gestioneTokenUserInfo = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_GESTIONE_TOKEN_USERINFO);
 				String gestioneTokenTokenForward = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_GESTIONE_TOKEN_TOKEN_FORWARD);
+				String autorizzazione_token = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_AUTORIZZAZIONE_TOKEN);
 				String autorizzazione_tokenOptions = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_AUTORIZZAZIONE_TOKEN_OPTIONS);
 				String autorizzazioneScope = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_AUTORIZZAZIONE_SCOPE);
 				String autorizzazioneScopeMatch = this.getParameter(CostantiControlStation.PARAMETRO_SCOPE_MATCH);
@@ -1643,7 +1646,7 @@ public class PorteDelegateHelper extends ConnettoriHelper {
 						autorizzazioneRuoliTipologia, ruoloMatch, 
 						true, true, null, ruoli,gestioneToken, gestioneTokenPolicy, 
 						gestioneTokenValidazioneInput, gestioneTokenIntrospection, gestioneTokenUserInfo, gestioneTokenTokenForward,
-						autorizzazione_tokenOptions,
+						autorizzazione_token,autorizzazione_tokenOptions,
 						autorizzazioneScope,autorizzazioneScopeMatch,allegatoXacmlPolicy,
 						autorizzazioneContenuti,
 						protocollo)==false){

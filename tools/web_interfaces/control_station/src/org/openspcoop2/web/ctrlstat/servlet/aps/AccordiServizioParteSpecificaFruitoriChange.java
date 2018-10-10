@@ -850,7 +850,7 @@ public final class AccordiServizioParteSpecificaFruitoriChange extends Action {
 							apcCore.toMessageServiceBinding(as.getServiceBinding()), apcCore.formatoSpecifica2InterfaceType(as.getFormatoSpecifica()),
 							azioneConnettore, azioneConnettoreIdPorta, accessoDaAPSParametro, parentPD,null,null,null,null,null,null,null,null,null,
 							null,null,null,null,null,
-							null,
+							null,null,
 							null,null,null,null);
 
 					dati = apsHelper.addFruitoreToDati(tipoOp, versioniLabel, versioniValues, dati, 
@@ -963,7 +963,7 @@ public final class AccordiServizioParteSpecificaFruitoriChange extends Action {
 						apcCore.toMessageServiceBinding(as.getServiceBinding()), apcCore.formatoSpecifica2InterfaceType(as.getFormatoSpecifica()),
 						azioneConnettore, azioneConnettoreIdPorta, accessoDaAPSParametro, parentPD,null,null,null,null,null,null,null,null,null,
 						null,null,null,null,null,
-						null,
+						null,null,
 						null,null,null,null);
 
 				dati = apsHelper.addFruitoreToDati(tipoOp, versioniLabel, versioniValues, dati, 
@@ -1028,7 +1028,7 @@ public final class AccordiServizioParteSpecificaFruitoriChange extends Action {
 							apcCore.toMessageServiceBinding(as.getServiceBinding()), apcCore.formatoSpecifica2InterfaceType(as.getFormatoSpecifica()),
 							azioneConnettore, azioneConnettoreIdPorta, accessoDaAPSParametro, parentPD,null,null,null,null,null,null,null,null,null,
 							null,null,null,null,null,
-							null,
+							null,null,
 							null,null,null,null);
 
 					dati = apsHelper.addFruitoreToDati(tipoOp, versioniLabel, versioniValues, dati, 
@@ -1238,7 +1238,7 @@ public final class AccordiServizioParteSpecificaFruitoriChange extends Action {
 							apcCore.toMessageServiceBinding(as.getServiceBinding()), apcCore.formatoSpecifica2InterfaceType(as.getFormatoSpecifica()),
 							azioneConnettore, azioneConnettoreIdPorta, accessoDaAPSParametro, parentPD,null,null,null,null,null,null,null,null,null,
 							null,null,null,null,null,
-							null,
+							null,null,
 							null,null,null,null);
 
 					dati = apsHelper.addFruitoreToDati(tipoOp, versioniLabel, versioniValues, dati, 

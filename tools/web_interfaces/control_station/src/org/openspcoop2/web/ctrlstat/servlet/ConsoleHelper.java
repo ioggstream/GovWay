@@ -66,6 +66,7 @@ import org.openspcoop2.core.config.MtomProcessor;
 import org.openspcoop2.core.config.MtomProcessorFlowParameter;
 import org.openspcoop2.core.config.PortaApplicativa;
 import org.openspcoop2.core.config.PortaDelegata;
+import org.openspcoop2.core.config.ServizioApplicativo;
 import org.openspcoop2.core.config.Soggetto;
 import org.openspcoop2.core.config.constants.RuoloTipoMatch;
 import org.openspcoop2.core.config.constants.ScopeTipoMatch;
@@ -2166,6 +2167,81 @@ public class ConsoleHelper {
 			return dati;
 		}
 
+	public Vector<DataElement> addPorteServizioApplicativoAutorizzatiToDati(TipoOperazione tipoOp, Vector<DataElement> dati, 
+			String[] soggettiLabelList, String[] soggettiList, String soggetto, int sizeAttuale, 
+			Map<String,List<ServizioApplicativo>> listServiziApplicativi, String sa,
+				boolean addMsgApplicativiNonDisponibili) {
+			
+			if(soggettiList!=null && soggettiList.length>0 && listServiziApplicativi!=null && listServiziApplicativi.size()>0){
+			
+				DataElement de = new DataElement();
+				de.setType(DataElementType.TITLE);
+				de.setLabel(CostantiControlStation.LABEL_PARAMETRO_APPLICATIVO);
+				dati.addElement(de);
+				
+				de = new DataElement();
+				de.setLabel(CostantiControlStation.LABEL_PARAMETRO_SOGGETTO);
+				de.setName(CostantiControlStation.PARAMETRO_SOGGETTO);
+				de.setValue(soggetto);
+				if(this.core.isMultitenant()) {
+					de.setType(DataElementType.SELECT);
+					de.setLabels(soggettiLabelList);
+					de.setValues(soggettiList);
+					de.setSelected(soggetto);
+					de.setPostBack(true);
+				}
+				else {
+					de.setType(DataElementType.HIDDEN);
+				}
+				dati.addElement(de);
+				
+				List<ServizioApplicativo> listSA = null;
+				if(soggetto!=null && !"".equals(soggetto)) {
+					listSA = listServiziApplicativi.get(soggetto);
+				}
+				
+				if(listSA!=null && !listSA.isEmpty()) {
+					
+					String [] saValues = new String[listSA.size()];
+					String [] saLabels = new String[listSA.size()];
+					int index =0;
+					for (ServizioApplicativo saObject : listSA) {
+						saValues[index] = saObject.getId().longValue()+"";
+						saLabels[index] = saObject.getNome();
+						index++;
+					}
+					
+					de = new DataElement();
+					de.setLabel(CostantiControlStation.LABEL_PARAMETRO_NOME);
+					de.setType(DataElementType.SELECT);
+					de.setName(CostantiControlStation.PARAMETRO_SERVIZIO_APPLICATIVO_AUTORIZZATO);
+					de.setLabels(saLabels);
+					de.setValues(saValues);
+					de.setSelected(sa);
+					dati.addElement(de);
+					
+				}
+				else {
+					this.pd.setMessage("Non esistono applicativi associabili per il soggetto selezionato",org.openspcoop2.web.lib.mvc.MessageType.INFO);
+					this.pd.disableEditMode();
+				}
+				
+			}else{
+				if(addMsgApplicativiNonDisponibili){
+					if(sizeAttuale>0){
+						this.pd.setMessage("Non esistono ulteriori applicativi associabili",org.openspcoop2.web.lib.mvc.MessageType.INFO);
+					}
+					else{
+						this.pd.setMessage("Non esistono applicativi associabili",org.openspcoop2.web.lib.mvc.MessageType.INFO);
+					}
+					this.pd.disableEditMode();
+				}
+			}
+
+			return dati;
+		}
+
+	
 	// Controlla i dati del Message-Security
 	public boolean WSCheckData(TipoOperazione tipoOp) throws Exception {
 		try{
@@ -3620,13 +3696,15 @@ public class ConsoleHelper {
 			String autorizzazioneRuoli,  String urlAutorizzazioneRuoli, int numRuoli, String ruolo, String autorizzazioneRuoliTipologia, String autorizzazioneRuoliMatch,
 			boolean confPers, boolean isSupportatoAutenticazione, boolean contaListe, boolean isPortaDelegata,
 			boolean addTitoloSezione,String autorizzazioneScope,  String urlAutorizzazioneScope, int numScope, String scope, String autorizzazioneScopeMatch,
-			String gestioneToken, String gestioneTokenPolicy, String autorizzazione_tokenOptions,BinaryParameter allegatoXacmlPolicy) throws Exception{
+			String gestioneToken, String gestioneTokenPolicy, String autorizzazione_token, String autorizzazione_tokenOptions,BinaryParameter allegatoXacmlPolicy,
+			String urlAutorizzazioneErogazioneApplicativiAutenticati, int numErogazioneApplicativiAutenticati) throws Exception{
 		this.controlloAccessiAutorizzazione(dati, tipoOperazione, servletChiamante, oggetto, 
 				autenticazione, autorizzazione, autorizzazioneCustom, 
 				autorizzazioneAutenticati, urlAutorizzazioneAutenticati, numAutenticati, autenticati, null, autenticato, 
 				autorizzazioneRuoli, urlAutorizzazioneRuoli, numRuoli, ruolo, autorizzazioneRuoliTipologia, autorizzazioneRuoliMatch, 
 				confPers, isSupportatoAutenticazione, contaListe, isPortaDelegata, addTitoloSezione,autorizzazioneScope,urlAutorizzazioneScope,numScope,scope,autorizzazioneScopeMatch,
-				gestioneToken, gestioneTokenPolicy, autorizzazione_tokenOptions,allegatoXacmlPolicy);
+				gestioneToken, gestioneTokenPolicy, autorizzazione_token, autorizzazione_tokenOptions,allegatoXacmlPolicy,
+				urlAutorizzazioneErogazioneApplicativiAutenticati, numErogazioneApplicativiAutenticati);
 		
 	}
 	
@@ -3636,7 +3714,8 @@ public class ConsoleHelper {
 			String autorizzazioneRuoli,  String urlAutorizzazioneRuoli, int numRuoli, String ruolo, String autorizzazioneRuoliTipologia, String autorizzazioneRuoliMatch,
 			boolean confPers, boolean isSupportatoAutenticazione, boolean contaListe, boolean isPortaDelegata, boolean addTitoloSezione,
 			String autorizzazioneScope,  String urlAutorizzazioneScope, int numScope, String scope, String autorizzazioneScopeMatch,
-			String gestioneToken, String gestioneTokenPolicy, String autorizzazione_tokenOptions, BinaryParameter allegatoXacmlPolicy) throws Exception{
+			String gestioneToken, String gestioneTokenPolicy, String autorizzazione_token, String autorizzazione_tokenOptions, BinaryParameter allegatoXacmlPolicy,
+			String urlAutorizzazioneErogazioneApplicativiAutenticati, int numErogazioneApplicativiAutenticati) throws Exception{
 		
 		String protocollo = null;
 		if(oggetto!=null){
@@ -3776,6 +3855,7 @@ public class ConsoleHelper {
 				}
 				
 				if(TipoOperazione.CHANGE.equals(tipoOperazione)){
+					
 					if(urlAutorizzazioneAutenticati!=null && autorizzazione_autenticazione && (old_autorizzazione_autenticazione || CostantiControlStation.DEFAULT_VALUE_PARAMETRO_PORTE_AUTORIZZAZIONE_CUSTOM.equals(old_autorizzazione)) ){
 						de = new DataElement();
 						de.setType(DataElementType.LINK);
@@ -3797,6 +3877,24 @@ public class ConsoleHelper {
 								ServletUtils.setDataElementCustomLabel(de,PorteApplicativeCostanti.LABEL_PARAMETRO_PORTE_APPLICATIVE_SOGGETTI);
 						}
 						dati.addElement(de);
+					}
+					
+					if(!isPortaDelegata && this.saCore.isSupportatoAutenticazioneApplicativiErogazione(protocollo)){
+						if(urlAutorizzazioneErogazioneApplicativiAutenticati!=null && autorizzazione_autenticazione && (old_autorizzazione_autenticazione || CostantiControlStation.DEFAULT_VALUE_PARAMETRO_PORTE_AUTORIZZAZIONE_CUSTOM.equals(old_autorizzazione)) ){
+							de = new DataElement();
+							de.setType(DataElementType.LINK);
+							de.setUrl(urlAutorizzazioneErogazioneApplicativiAutenticati);
+							String labelApplicativi = PorteDelegateCostanti.LABEL_PARAMETRO_PORTE_DELEGATE_SERVIZI_APPLICATIVI; // uso cmq label PD
+							if(!this.isModalitaCompleta()) {
+								labelApplicativi = PorteDelegateCostanti.LABEL_PARAMETRO_PORTE_DELEGATE_APPLICATIVI;// uso cmq label PD
+							}
+							if (contaListe) {
+								ServletUtils.setDataElementCustomLabel(de,labelApplicativi,Long.valueOf(numErogazioneApplicativiAutenticati));
+							} else {
+								ServletUtils.setDataElementCustomLabel(de,labelApplicativi);
+							}
+							dati.addElement(de);
+						}
 					}
 				}
 				else{
@@ -4032,16 +4130,28 @@ public class ConsoleHelper {
 					de.setType(DataElementType.SUBTITLE);
 					de.setLabel(CostantiControlStation.LABEL_PARAMETRO_PORTE_AUTORIZZAZIONE_TOKEN_SUBTITLE);
 					dati.addElement(de);
+
+					boolean autorizzazioneTokenEnabled = ServletUtils.isCheckBoxEnabled(autorizzazione_token);
 					
 					de = new DataElement();
-					de.setLabel(CostantiControlStation.LABEL_PARAMETRO_PORTE_AUTORIZZAZIONE_TOKEN);
-					de.setNote(CostantiControlStation.LABEL_PARAMETRO_PORTE_AUTORIZZAZIONE_TOKEN_NOTE);
-					de.setName(CostantiControlStation.PARAMETRO_PORTE_AUTORIZZAZIONE_TOKEN_OPTIONS);
-					de.setType(DataElementType.TEXT_AREA);
-					de.setRows(6);
-					de.setCols(55);
-					de.setValue(autorizzazione_tokenOptions);
+					de.setLabel(CostantiControlStation.LABEL_ABILITATO);
+					de.setName(CostantiControlStation.PARAMETRO_PORTE_AUTORIZZAZIONE_TOKEN);
+					de.setType(DataElementType.CHECKBOX);
+					de.setSelected(autorizzazioneTokenEnabled);
+					de.setPostBack(true);
 					dati.addElement(de);
+					
+					if(autorizzazioneTokenEnabled) {
+						de = new DataElement();
+						de.setLabel(CostantiControlStation.LABEL_PARAMETRO_PORTE_AUTORIZZAZIONE_TOKEN);
+						de.setNote(CostantiControlStation.LABEL_PARAMETRO_PORTE_AUTORIZZAZIONE_TOKEN_NOTE);
+						de.setName(CostantiControlStation.PARAMETRO_PORTE_AUTORIZZAZIONE_TOKEN_OPTIONS);
+						de.setType(DataElementType.TEXT_AREA);
+						de.setRows(6);
+						de.setCols(55);
+						de.setValue(autorizzazione_tokenOptions);
+						dati.addElement(de);
+					}
 				}
 			}
 		} else {
@@ -4082,7 +4192,7 @@ public class ConsoleHelper {
 			boolean isSupportatoAutenticazione, boolean isPortaDelegata, Object oggetto,
 			List<String> ruoli,String gestioneToken, 
 			String policy, String validazioneInput, String introspection, String userInfo, String forward,
-			String autorizzazione_tokenOptions,
+			String autorizzazione_token, String autorizzazione_tokenOptions,
 			String autorizzazioneScope, String autorizzazioneScopeMatch, BinaryParameter allegatoXacmlPolicy,
 			String autorizzazioneContenuto,
 			String protocollo) throws Exception{
@@ -4166,6 +4276,12 @@ public class ConsoleHelper {
 					}
 				}
 				
+				if(ServletUtils.isCheckBoxEnabled(autorizzazione_token)) {
+					if(autorizzazione_tokenOptions==null || "".equals(autorizzazione_tokenOptions)) {
+						this.pd.setMessage(CostantiControlStation.MESSAGGIO_ERRORE_TOKEN_OPTIONS_NON_INDICATI);
+						return false;
+					}
+				}
 				if(autorizzazione_tokenOptions!=null) {
 					Scanner scanner = new Scanner(autorizzazione_tokenOptions);
 					try {
@@ -4336,6 +4452,10 @@ public class ConsoleHelper {
 						// modiifcata autenticazione
 						if(pa.getSoggetti()!=null && pa.getSoggetti().sizeSoggettoList()>0) {
 							this.pd.setMessage(CostantiControlStation.MESSAGGIO_ERRORE_SOGGETTI_PRESENTI_AUTENTICAZIONE_MODIFICATA);
+							return false;
+						}
+						if(pa.getServiziApplicativiAutorizzati()!=null && pa.getServiziApplicativiAutorizzati().sizeServizioApplicativoList()>0) {
+							this.pd.setMessage(CostantiControlStation.MESSAGGIO_ERRORE_APPLICATIVI_PRESENTI_AUTENTICAZIONE_MODIFICATA);
 							return false;
 						}
 					}

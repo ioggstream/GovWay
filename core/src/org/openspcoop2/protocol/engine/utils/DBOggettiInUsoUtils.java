@@ -692,12 +692,12 @@ public class DBOggettiInUsoUtils  {
 				break;
 			case IN_USO_IN_MAPPING_EROGAZIONE_PA:
 				if ( messages!=null && messages.size() > 0) {
-					msg += "utilizzato nelle Erogazioni di Servizio: " + formatList(messages,separator) + separator;
+					msg += "utilizzato nelle Erogazioni: " + formatList(messages,separator) + separator;
 				}
 				break;
 			case IN_USO_IN_MAPPING_FRUIZIONE_PD:
 				if ( messages!=null && messages.size() > 0) {
-					msg += "utilizzato nelle Fruizioni di Servizio: " + formatList(messages,separator) + separator;
+					msg += "utilizzato nelle Fruizioni: " + formatList(messages,separator) + separator;
 				}
 				break;
 			case CONTROLLO_TRAFFICO:
@@ -893,12 +893,12 @@ public class DBOggettiInUsoUtils  {
 				break;
 			case IN_USO_IN_MAPPING_EROGAZIONE_PA:
 				if ( messages!=null && messages.size() > 0) {
-					msg += "utilizzato nelle Erogazioni di Servizio: " + formatList(messages,separator) + separator;
+					msg += "utilizzato nelle Erogazioni: " + formatList(messages,separator) + separator;
 				}
 				break;
 			case IN_USO_IN_MAPPING_FRUIZIONE_PD:
 				if ( messages!=null && messages.size() > 0) {
-					msg += "utilizzato nelle Fruizioni di Servizio: " + formatList(messages,separator) + separator;
+					msg += "utilizzato nelle Fruizioni: " + formatList(messages,separator) + separator;
 				}
 				break;
 				
@@ -1514,12 +1514,12 @@ public class DBOggettiInUsoUtils  {
 				break;
 			case IN_USO_IN_MAPPING_EROGAZIONE_PA:
 				if ( messages!=null && messages.size() > 0) {
-					msg += "utilizzato nelle Erogazioni di Servizio: " + formatList(messages,separator) + separator;
+					msg += "utilizzato nelle Erogazioni: " + formatList(messages,separator) + separator;
 				}
 				break;
 			case IN_USO_IN_MAPPING_FRUIZIONE_PD:
 				if ( messages!=null && messages.size() > 0) {
-					msg += "utilizzato nelle Fruizioni di Servizio: " + formatList(messages,separator) + separator;
+					msg += "utilizzato nelle Fruizioni: " + formatList(messages,separator) + separator;
 				}
 				break;
 			case IS_REFERENTE:
@@ -1549,7 +1549,7 @@ public class DBOggettiInUsoUtils  {
 				break;
 			case AUTORIZZAZIONE_MAPPING:
 				if ( messages!=null && messages.size() > 0) {
-					msg += "utilizzato nel Controllo degli Accessi (Soggetti Autenticati) delle Erogazioni di Servizio: " + formatList(messages,separator) + separator;
+					msg += "utilizzato nel Controllo degli Accessi (Soggetti Autenticati) delle Erogazioni: " + formatList(messages,separator) + separator;
 				}
 				break;
 			case AUTORIZZAZIONE:
@@ -1957,12 +1957,12 @@ public class DBOggettiInUsoUtils  {
 				break;
 			case IN_USO_IN_MAPPING_EROGAZIONE_PA:
 				if ( messages!=null && messages.size() > 0) {
-					msg += "implementato nelle Erogazioni di Servizio: " + formatList(messages,separator) + separator;
+					msg += "implementato nelle Erogazioni: " + formatList(messages,separator) + separator;
 				}
 				break;
 			case IN_USO_IN_MAPPING_FRUIZIONE_PD:
 				if ( messages!=null && messages.size() > 0) {
-					msg += "implementato nelle Fruizioni di Servizio: " + formatList(messages,separator) + separator;
+					msg += "implementato nelle Fruizioni: " + formatList(messages,separator) + separator;
 				}
 				break;
 			default:
@@ -2635,12 +2635,12 @@ public class DBOggettiInUsoUtils  {
 				break;
 			case IN_USO_IN_MAPPING_EROGAZIONE_PA:
 				if ( messages!=null && messages.size() > 0) {
-					msg += "utilizzato nelle Erogazioni di Servizio: " + formatList(messages,separator) + separator;
+					msg += "utilizzato nelle Erogazioni: " + formatList(messages,separator) + separator;
 				}
 				break;
 			case IN_USO_IN_MAPPING_FRUIZIONE_PD:
 				if ( messages!=null && messages.size() > 0) {
-					msg += "utilizzato nelle Fruizioni di Servizio: " + formatList(messages,separator) + separator;
+					msg += "utilizzato nelle Fruizioni: " + formatList(messages,separator) + separator;
 				}
 				break;
 			case UTENTE:
@@ -2698,9 +2698,11 @@ public class DBOggettiInUsoUtils  {
 
 			List<String> autorizzazionePD_mapping_list = whereIsInUso.get(ErrorsHandlerCostant.AUTORIZZAZIONE_MAPPING);
 			List<String> autorizzazionePD_list = whereIsInUso.get(ErrorsHandlerCostant.AUTORIZZAZIONE);
+			List<String> autorizzazionePA_mapping_list = whereIsInUso.get(ErrorsHandlerCostant.AUTORIZZAZIONE_MAPPING_PA);
+			List<String> autorizzazionePA_list = whereIsInUso.get(ErrorsHandlerCostant.AUTORIZZAZIONE_PA);
 			List<String> porte_applicative_list = whereIsInUso.get(ErrorsHandlerCostant.IN_USO_IN_PORTE_APPLICATIVE);
 			List<String> ct_list = whereIsInUso.get(ErrorsHandlerCostant.CONTROLLO_TRAFFICO);
-
+			
 			if (autorizzazionePD_mapping_list == null) {
 				autorizzazionePD_mapping_list = new ArrayList<String>();
 				whereIsInUso.put(ErrorsHandlerCostant.AUTORIZZAZIONE_MAPPING, autorizzazionePD_mapping_list);
@@ -2708,6 +2710,14 @@ public class DBOggettiInUsoUtils  {
 			if (autorizzazionePD_list == null) {
 				autorizzazionePD_list = new ArrayList<String>();
 				whereIsInUso.put(ErrorsHandlerCostant.AUTORIZZAZIONE, autorizzazionePD_list);
+			}
+			if (autorizzazionePA_mapping_list == null) {
+				autorizzazionePA_mapping_list = new ArrayList<String>();
+				whereIsInUso.put(ErrorsHandlerCostant.AUTORIZZAZIONE_MAPPING_PA, autorizzazionePA_mapping_list);
+			}
+			if (autorizzazionePA_list == null) {
+				autorizzazionePA_list = new ArrayList<String>();
+				whereIsInUso.put(ErrorsHandlerCostant.AUTORIZZAZIONE_PA, autorizzazionePA_list);
 			}
 			if (porte_applicative_list == null) {
 				porte_applicative_list = new ArrayList<String>();
@@ -2739,6 +2749,33 @@ public class DBOggettiInUsoUtils  {
 				}
 				else {
 					autorizzazionePD_list.add(resultPorta.label);
+				}
+				isInUso = true;
+			}
+			risultato.close();
+			stmt.close();
+			
+			
+			// Porte applicative, autorizzazione
+			sqlQueryObject = SQLObjectFactory.createSQLQueryObject(tipoDB);
+			sqlQueryObject.addFromTable(CostantiDB.PORTE_APPLICATIVE_SA_AUTORIZZATI);
+			sqlQueryObject.addFromTable(CostantiDB.PORTE_APPLICATIVE);
+			sqlQueryObject.addSelectField("nome_porta");
+			sqlQueryObject.setANDLogicOperator(true);
+			sqlQueryObject.addWhereCondition(CostantiDB.PORTE_APPLICATIVE_SA_AUTORIZZATI+".id_porta="+CostantiDB.PORTE_DELEGATE+".id");
+			sqlQueryObject.addWhereCondition("id_servizio_applicativo=?");
+			queryString = sqlQueryObject.createSQLQuery();
+			stmt = con.prepareStatement(queryString);
+			stmt.setLong(1, idServizioApplicativoLong);
+			risultato = stmt.executeQuery();
+			while (risultato.next()){
+				String nome = risultato.getString("nome_porta");
+				ResultPorta resultPorta = formatPortaApplicativa(nome, tipoDB, con, normalizeObjectIds);
+				if(resultPorta.mapping) {
+					autorizzazionePA_mapping_list.add(resultPorta.label);
+				}
+				else {
+					autorizzazionePA_list.add(resultPorta.label);
 				}
 				isInUso = true;
 			}
@@ -2911,12 +2948,22 @@ public class DBOggettiInUsoUtils  {
 			switch (key) {
 			case AUTORIZZAZIONE_MAPPING:
 				if ( messages!=null && messages.size() > 0) {
-					msg += "utilizzato nel Controllo degli Accessi (Applicativi Autenticati) delle Fruizioni di Servizio: " + formatList(messages,separator) + separator;
+					msg += "utilizzato nel Controllo degli Accessi (Fruitori Autorizzati) delle Fruizioni: " + formatList(messages,separator) + separator;
 				}
 				break;
 			case AUTORIZZAZIONE:
 				if ( messages!=null && messages.size() > 0) {
-					msg += "utilizzato nelle Porte Outbound (Controllo degli Accessi - Applicativi Autenticati): " + formatList(messages,separator) + separator;
+					msg += "utilizzato nelle Porte Outbound (Controllo degli Accessi - Fruitori Autorizzati): " + formatList(messages,separator) + separator;
+				}
+				break;
+			case AUTORIZZAZIONE_MAPPING_PA:
+				if ( messages!=null && messages.size() > 0) {
+					msg += "utilizzato nel Controllo degli Accessi (Fruitori Autorizzati) delle Erogazioni: " + formatList(messages,separator) + separator;
+				}
+				break;
+			case AUTORIZZAZIONE_PA:
+				if ( messages!=null && messages.size() > 0) {
+					msg += "utilizzato nelle Porte Inbound (Controllo degli Accessi - Fruitori Autorizzati): " + formatList(messages,separator) + separator;
 				}
 				break;
 			case IN_USO_IN_PORTE_APPLICATIVE:

@@ -47,8 +47,10 @@ import org.openspcoop2.core.config.constants.CredenzialeTipo;
 import org.openspcoop2.core.config.constants.StatoFunzionalita;
 import org.openspcoop2.core.config.constants.TipologiaErogazione;
 import org.openspcoop2.core.config.constants.TipologiaFruizione;
+import org.openspcoop2.core.config.driver.FiltroRicercaPorteApplicative;
 import org.openspcoop2.core.config.driver.FiltroRicercaPorteDelegate;
 import org.openspcoop2.core.constants.TipiConnettore;
+import org.openspcoop2.core.id.IDPortaApplicativa;
 import org.openspcoop2.core.id.IDPortaDelegata;
 import org.openspcoop2.core.id.IDServizioApplicativo;
 import org.openspcoop2.core.id.IDSoggetto;
@@ -1085,10 +1087,23 @@ public class ServiziApplicativiHelper extends ConnettoriHelper {
 					List<IDPortaDelegata> list = this.porteDelegateCore.getAllIdPorteDelegate(filtro);
 					if(list!=null && list.size()>0) {
 						this.pd.setMessage("Non &egrave; possibile modificare il tipo di credenziali poich&egrave; l'applicativo viene utilizzato all'interno del controllo degli accessi di "+
-								list.size()+" configurazioni di fruizione di servizio");
+								list.size()+" fruizion"+(list.size()>1?"i":"e"));
+						return false;
+					}
+					
+					FiltroRicercaPorteApplicative filtroPA = new FiltroRicercaPorteApplicative();
+					IDServizioApplicativo idServizioApplicativoAutorizzato = new IDServizioApplicativo();
+					idServizioApplicativoAutorizzato.setIdSoggettoProprietario(new IDSoggetto(idSA.getIdSoggettoProprietario().getTipo(), idSA.getIdSoggettoProprietario().getNome()));
+					idServizioApplicativoAutorizzato.setNome(idSA.getNome());
+					filtroPA.setIdServizioApplicativoAutorizzato(idServizioApplicativoAutorizzato);
+					List<IDPortaApplicativa> listPA = this.porteApplicativeCore.getAllIdPorteApplicative(filtroPA);
+					if(listPA!=null && listPA.size()>0) {
+						this.pd.setMessage("Non &egrave; possibile modificare il tipo di credenziali poich&egrave; l'applicativo viene utilizzato all'interno del controllo degli accessi di "+
+								list.size()+" erogazion"+(listPA.size()>1?"i":"e"));
 						return false;
 					}
 				}
+				
 				
 			}
 			

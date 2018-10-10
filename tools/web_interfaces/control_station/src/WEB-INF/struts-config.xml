@@ -1832,6 +1832,26 @@
             <forward name="porteApplicativeSoggettoDel" path="/jsplib/listElement.jsp"/>
             <forward name="porteApplicativeSoggettoError" path="/jsplib/info.jsp"/>
         </action>
+                
+   		<!--  Porte Applicative (ServiziApplicativiAutorizzati) -->
+
+        <action path="/porteApplicativeServizioApplicativoAutorizzatoAdd" type="org.openspcoop2.web.ctrlstat.servlet.pa.PorteApplicativeServizioApplicativoAutorizzatoAdd"
+            scope="request" validate="true">
+            <forward name="porteApplicativeServizioApplicativoAutorizzatoAddForm" path="/jsplib/addElement.jsp"/>
+            <forward name="porteApplicativeServizioApplicativoAutorizzatoAddOk" path="/jsplib/listElement.jsp"/>
+            <forward name="porteApplicativeServizioApplicativoAutorizzatoAddCheckError" path="/jsplib/addElement.jsp"/>
+            <forward name="porteApplicativeServizioApplicativoAutorizzatoError" path="/jsplib/info.jsp"/>
+        </action>
+        <action path="/porteApplicativeServizioApplicativoAutorizzatoList" type="org.openspcoop2.web.ctrlstat.servlet.pa.PorteApplicativeServizioApplicativoAutorizzatoList"
+            scope="request" validate="true">
+            <forward name="porteApplicativeServizioApplicativoAutorizzatoList" path="/jsplib/listElement.jsp"/>
+            <forward name="porteApplicativeServizioApplicativoAutorizzatoError" path="/jsplib/info.jsp"/>
+        </action>
+        <action path="/porteApplicativeServizioApplicativoAutorizzatoDel" type="org.openspcoop2.web.ctrlstat.servlet.pa.PorteApplicativeServizioApplicativoAutorizzatoDel"
+            scope="request" validate="true">
+            <forward name="porteApplicativeServizioApplicativoAutorizzatoDel" path="/jsplib/listElement.jsp"/>
+            <forward name="porteApplicativeServizioApplicativoAutorizzatoError" path="/jsplib/info.jsp"/>
+        </action>
     
    		<!--  Porte Applicative (Validazione) -->
 

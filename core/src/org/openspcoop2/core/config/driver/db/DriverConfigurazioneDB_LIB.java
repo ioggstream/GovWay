@@ -82,6 +82,7 @@ import org.openspcoop2.core.config.MtomProcessorFlowParameter;
 import org.openspcoop2.core.config.OpenspcoopAppender;
 import org.openspcoop2.core.config.OpenspcoopSorgenteDati;
 import org.openspcoop2.core.config.PortaApplicativa;
+import org.openspcoop2.core.config.PortaApplicativaAutorizzazioneServizioApplicativo;
 import org.openspcoop2.core.config.PortaApplicativaAutorizzazioneSoggetto;
 import org.openspcoop2.core.config.PortaApplicativaAzione;
 import org.openspcoop2.core.config.PortaApplicativaServizio;
@@ -4252,6 +4253,42 @@ public class DriverConfigurazioneDB_LIB {
 				DriverConfigurazioneDB_LIB.log.debug("Aggiunti " + n + " soggetti alla PortaApplicativa[" + idPortaApplicativa + "]");
 				
 				
+				// serviziapplicativi autorizzati
+				if(aPA.getServiziApplicativiAutorizzati()!=null && aPA.getServiziApplicativiAutorizzati().sizeServizioApplicativoList()>0) {
+					sqlQueryObject = SQLObjectFactory.createSQLQueryObject(DriverConfigurazioneDB_LIB.tipoDB);
+					sqlQueryObject.addInsertTable(CostantiDB.PORTE_APPLICATIVE_SA_AUTORIZZATI);
+					sqlQueryObject.addInsertField("id_porta", "?");
+					sqlQueryObject.addInsertField("id_servizio_applicativo", "?");
+					sqlQuery = sqlQueryObject.createSQLInsert();
+					stm = con.prepareStatement(sqlQuery);
+	
+					for (i = 0; i < aPA.getServiziApplicativiAutorizzati().sizeServizioApplicativoList(); i++) {
+						PortaApplicativaAutorizzazioneServizioApplicativo servizioApplicativo = aPA.getServiziApplicativiAutorizzati().getServizioApplicativo(i);
+						String nomeSA = servizioApplicativo.getNome();
+						//nome/tipo soggetto proprietario servizio applicativo sono gli stessi della porta applicativa
+						String nomeProprietarioSA = aPA.getNomeSoggettoProprietario();//servizioApplicativo.getNomeSoggettoProprietario();
+						String tipoProprietarioSA = aPA.getTipoSoggettoProprietario();//servizioApplicativo.getTipoSoggettoProprietario();
+						if (nomeSA == null || nomeSA.equals(""))
+							throw new DriverConfigurazioneException("[CRUDPortaApplicativa(CREATE)[Auth]::Nome del ServizioApplicativo associato non valido.");
+						if (nomeProprietarioSA == null || nomeProprietarioSA.equals(""))
+							throw new DriverConfigurazioneException("[CRUDPortaApplicativa(CREATE)[Auth]::Nome Proprietario del ServizioApplicativo associato non valido.");
+						if (tipoProprietarioSA == null || tipoProprietarioSA.equals(""))
+							throw new DriverConfigurazioneException("[CRUDPortaApplicativa(CREATE)[Auth]::Tipo Proprietario del ServizioApplicativo associato non valido.");
+	
+						long idSA = DriverConfigurazioneDB_LIB.getIdServizioApplicativo(nomeSA, tipoProprietarioSA, nomeProprietarioSA, con, DriverConfigurazioneDB_LIB.tipoDB,DriverConfigurazioneDB_LIB.tabellaSoggetti);
+	
+						if (idSA <= 0)
+							throw new DriverConfigurazioneException("Impossibile recuperare l'id del Servizio Applicativo [" + nomeSA + "] di [" + tipoProprietarioSA + "/" + nomeProprietarioSA + "]");
+	
+						stm.setLong(1, idPortaApplicativa);
+						stm.setLong(2, idSA);
+						stm.executeUpdate();
+					}
+					stm.close();
+					DriverConfigurazioneDB_LIB.log.debug("Insererted " + i + " servizi applicativi autorizzati associati alla PortaApplicativa[" + idPortaApplicativa + "]");
+				}
+				
+				
 				// Azioni
 				n=0;
 				if(aPA.getAzione()!=null && aPA.getAzione().sizeAzioneDelegataList()>0){
@@ -4962,6 +4999,58 @@ public class DriverConfigurazioneDB_LIB {
 				
 				
 				
+				
+				//la lista dei servizi applicativi passata contiene tutti e soli i servizi applicativi necessari
+				//quindi nel db devono essere presenti tutti e solo quelli presenti nella lista
+
+				//TODO possibile ottimizzazione in termini di tempo
+				//cancello i servizi applicativi associati alla porta e inserisco tutti e soli quelli presenti in lista
+				sqlQueryObject = SQLObjectFactory.createSQLQueryObject(DriverConfigurazioneDB_LIB.tipoDB);
+				sqlQueryObject.addDeleteTable(CostantiDB.PORTE_APPLICATIVE_SA_AUTORIZZATI);
+				sqlQueryObject.addWhereCondition("id_porta=?");
+				sqlQuery = sqlQueryObject.createSQLDelete();
+				stm = con.prepareStatement(sqlQuery);
+				stm.setLong(1, idPortaApplicativa);
+				n=stm.executeUpdate();
+				stm.close();
+				DriverConfigurazioneDB_LIB.log.debug("Cancellati "+n+" servizi applicativi autorizzati associati alla Porta Applicativa "+idPortaApplicativa);
+				
+				//scrivo la lista nel db
+				if(aPA.getServiziApplicativiAutorizzati()!=null && aPA.getServiziApplicativiAutorizzati().sizeServizioApplicativoList()>0) {
+					sqlQueryObject = SQLObjectFactory.createSQLQueryObject(DriverConfigurazioneDB_LIB.tipoDB);
+					sqlQueryObject.addInsertTable(CostantiDB.PORTE_APPLICATIVE_SA_AUTORIZZATI);
+					sqlQueryObject.addInsertField("id_porta", "?");
+					sqlQueryObject.addInsertField("id_servizio_applicativo", "?");
+					sqlQuery = sqlQueryObject.createSQLInsert();
+					stm = con.prepareStatement(sqlQuery);
+	
+					for (i = 0; i < aPA.getServiziApplicativiAutorizzati().sizeServizioApplicativoList(); i++) {
+						PortaApplicativaAutorizzazioneServizioApplicativo servizioApplicativoAutorizzato = aPA.getServiziApplicativiAutorizzati().getServizioApplicativo(i);
+						String nomeSA = servizioApplicativoAutorizzato.getNome();
+						String nomeProprietarioSA = servizioApplicativoAutorizzato.getNomeSoggettoProprietario();
+						String tipoProprietarioSA = servizioApplicativoAutorizzato.getTipoSoggettoProprietario();
+						if (nomeSA == null || nomeSA.equals(""))
+							throw new DriverConfigurazioneException("[CRUDPortaApplicativa(CREATE)[Auth]::Nome del ServizioApplicativo associato non valido.");
+						if (nomeProprietarioSA == null || nomeProprietarioSA.equals(""))
+							throw new DriverConfigurazioneException("[CRUDPortaApplicativa(CREATE)[Auth]::Nome Proprietario del ServizioApplicativo associato non valido.");
+						if (tipoProprietarioSA == null || tipoProprietarioSA.equals(""))
+							throw new DriverConfigurazioneException("[CRUDPortaApplicativa(CREATE)[Auth]::Tipo Proprietario del ServizioApplicativo associato non valido.");
+	
+						long idSA = DriverConfigurazioneDB_LIB.getIdServizioApplicativo(nomeSA, tipoProprietarioSA, nomeProprietarioSA, con, DriverConfigurazioneDB_LIB.tipoDB,DriverConfigurazioneDB_LIB.tabellaSoggetti);
+	
+						if (idSA <= 0)
+							throw new DriverConfigurazioneException("Impossibile recuperare l'id del Servizio Applicativo [" + nomeSA + "] di [" + tipoProprietarioSA + "/" + nomeProprietarioSA + "]");
+	
+						stm.setLong(1, idPortaApplicativa);
+						stm.setLong(2, idSA);
+						stm.executeUpdate();
+					}
+					stm.close();
+					DriverConfigurazioneDB_LIB.log.debug("Insererted " + i + " servizi applicativi autorizzati associati alla PortaApplicativa[" + idPortaApplicativa + "]");
+				}
+				
+				
+				
 				// Azioni
 				
 				sqlQueryObject = SQLObjectFactory.createSQLQueryObject(DriverConfigurazioneDB_LIB.tipoDB);
@@ -5042,6 +5131,17 @@ public class DriverConfigurazioneDB_LIB {
 				n=stm.executeUpdate();
 				stm.close();
 				DriverConfigurazioneDB_LIB.log.debug("Cancellate "+n+" azioni delegate associate alla Porta Applicativa "+idPortaApplicativa);
+				
+				// sa autorizzati
+				sqlQueryObject = SQLObjectFactory.createSQLQueryObject(DriverConfigurazioneDB_LIB.tipoDB);
+				sqlQueryObject.addDeleteTable(CostantiDB.PORTE_APPLICATIVE_SA_AUTORIZZATI);
+				sqlQueryObject.addWhereCondition("id_porta=?");
+				sqlQuery = sqlQueryObject.createSQLDelete();
+				stm = con.prepareStatement(sqlQuery);
+				stm.setLong(1, idPortaApplicativa);
+				n=stm.executeUpdate();
+				stm.close();
+				DriverConfigurazioneDB_LIB.log.debug("Cancellati "+n+" servizi applicativi autorizzati associati alla Porta Applicativa "+idPortaApplicativa);
 				
 				// soggetti
 				sqlQueryObject = SQLObjectFactory.createSQLQueryObject(DriverConfigurazioneDB_LIB.tipoDB);

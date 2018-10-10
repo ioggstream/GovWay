@@ -1088,7 +1088,7 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 							null, null, null, null,
 							null,null,null,null,null,null,null,null,null,null,
 							null,null,null,null,null,
-							null,
+							null,null,
 							null,null,null,null,moreThenOneImplementation);
 
 					if(apsHelper.isModalitaCompleta() || (!soggettoOperativo && !gestioneFruitori)) {
@@ -1255,7 +1255,7 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 						null, null, null, null,
 						null,null,null,null,null,null,null,null,null,null,
 						null,null,null,null,null,
-						null,
+						null,null,
 						null,null,null,null,moreThenOneImplementation);
 
 				if(apsHelper.isModalitaCompleta() || (!soggettoOperativo && !gestioneFruitori)) {
@@ -1355,7 +1355,7 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 							null, null, null, null,
 							null,null,null,null,null,null,null,null,null,null,
 							null,null,null,null,null,
-							null,
+							null,null,
 							null,null,null,null,moreThenOneImplementation);
 
 					if(apsHelper.isModalitaCompleta() || (!soggettoOperativo && !gestioneFruitori)) {
@@ -1672,7 +1672,7 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 							null, null, null, null,
 							null,null,null,null,null,null,null,null,null,null,
 							null,null,null,null,null,
-							null,
+							null,null,
 							null,null,null,null,moreThenOneImplementation);
 
 					if(apsHelper.isModalitaCompleta() || (!soggettoOperativo && !gestioneFruitori)) {

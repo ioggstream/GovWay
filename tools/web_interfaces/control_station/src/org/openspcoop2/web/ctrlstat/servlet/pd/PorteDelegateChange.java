@@ -386,6 +386,7 @@ public final class PorteDelegateChange extends Action {
 			String autenticazioneTokenUsername = null;
 			String autenticazioneTokenEMail = null;
 			
+			String autorizzazione_token = null;
 			String autorizzazione_tokenOptions = null;
 			
 			if(pde.getGestioneToken() != null) {
@@ -433,6 +434,12 @@ public final class PorteDelegateChange extends Action {
 				}
 				
 				autorizzazione_tokenOptions = pde.getGestioneToken().getOptions();
+				if((autorizzazione_tokenOptions!=null && !"".equals(autorizzazione_tokenOptions))) {
+					autorizzazione_token = Costanti.CHECK_BOX_ENABLED;
+				}
+				else {
+					autorizzazione_token = Costanti.CHECK_BOX_DISABLED;
+				}
 				
 				if(pde.getGestioneToken().getAutenticazione() != null) {
 					
@@ -924,7 +931,7 @@ public final class PorteDelegateChange extends Action {
 						gestioneTokenPolicy,gestioneTokenOpzionale,
 						gestioneTokenValidazioneInput,gestioneTokenIntrospection,gestioneTokenUserInfo,gestioneTokenTokenForward,
 						autenticazioneTokenIssuer, autenticazioneTokenClientId, autenticazioneTokenSubject, autenticazioneTokenUsername, autenticazioneTokenEMail,
-						autorizzazione_tokenOptions,
+						autorizzazione_token,autorizzazione_tokenOptions,
 						autorizzazioneScope,numScope, autorizzazioneScopeMatch,allegatoXacmlPolicy);
 
 				dati = porteDelegateHelper.addHiddenFieldsToDati(TipoOperazione.CHANGE, null, null, null, idAsps, 
@@ -1086,7 +1093,7 @@ public final class PorteDelegateChange extends Action {
 						gestioneTokenPolicy,gestioneTokenOpzionale,
 						gestioneTokenValidazioneInput,gestioneTokenIntrospection,gestioneTokenUserInfo,gestioneTokenTokenForward,
 						autenticazioneTokenIssuer, autenticazioneTokenClientId, autenticazioneTokenSubject, autenticazioneTokenUsername, autenticazioneTokenEMail,
-						autorizzazione_tokenOptions,
+						autorizzazione_token,autorizzazione_tokenOptions,
 						autorizzazioneScope,numScope, autorizzazioneScopeMatch,allegatoXacmlPolicy);
 				
 				dati = porteDelegateHelper.addHiddenFieldsToDati(TipoOperazione.CHANGE, null, null, null, idAsps, 

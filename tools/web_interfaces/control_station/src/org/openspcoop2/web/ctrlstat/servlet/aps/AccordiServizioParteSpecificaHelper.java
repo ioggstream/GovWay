@@ -743,6 +743,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 				String gestioneTokenIntrospection = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_GESTIONE_TOKEN_INTROSPECTION);
 				String gestioneTokenUserInfo = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_GESTIONE_TOKEN_USERINFO);
 				String gestioneTokenTokenForward = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_GESTIONE_TOKEN_TOKEN_FORWARD);
+				String autorizzazione_token = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_AUTORIZZAZIONE_TOKEN);
 				String autorizzazione_tokenOptions = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_AUTORIZZAZIONE_TOKEN_OPTIONS);
 				String autorizzazioneScope = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_AUTORIZZAZIONE_SCOPE);
 				String autorizzazioneScopeMatch = this.getParameter(CostantiControlStation.PARAMETRO_SCOPE_MATCH);
@@ -756,7 +757,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 							fruizioneAutorizzazioneRuoliTipologia, fruizioneAutorizzazioneRuoliMatch,
 							true, true, null, null,gestioneToken, gestioneTokenPolicy, 
 							gestioneTokenValidazioneInput, gestioneTokenIntrospection, gestioneTokenUserInfo, gestioneTokenTokenForward,
-							autorizzazione_tokenOptions,
+							autorizzazione_token,autorizzazione_tokenOptions,
 							autorizzazioneScope,autorizzazioneScopeMatch,allegatoXacmlPolicy,
 							autorizzazioneContenuti,
 							protocollo)==false){
@@ -771,7 +772,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 							erogazioneAutorizzazioneRuoliTipologia, erogazioneAutorizzazioneRuoliMatch,
 							isSupportatoAutenticazione, false, null, null,gestioneToken, gestioneTokenPolicy, 
 							gestioneTokenValidazioneInput, gestioneTokenIntrospection, gestioneTokenUserInfo, gestioneTokenTokenForward,
-							autorizzazione_tokenOptions,
+							autorizzazione_token,autorizzazione_tokenOptions,
 							autorizzazioneScope,autorizzazioneScopeMatch,allegatoXacmlPolicy,
 							autorizzazioneContenuti,
 							protocollo)==false){
@@ -1008,6 +1009,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 				String gestioneTokenIntrospection = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_GESTIONE_TOKEN_INTROSPECTION);
 				String gestioneTokenUserInfo = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_GESTIONE_TOKEN_USERINFO);
 				String gestioneTokenTokenForward = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_GESTIONE_TOKEN_TOKEN_FORWARD);
+				String autorizzazione_token = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_AUTORIZZAZIONE_TOKEN);
 				String autorizzazione_tokenOptions = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_AUTORIZZAZIONE_TOKEN_OPTIONS);
 				String autorizzazioneScope = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_AUTORIZZAZIONE_SCOPE);
 				String autorizzazioneScopeMatch = this.getParameter(CostantiControlStation.PARAMETRO_SCOPE_MATCH);
@@ -1021,7 +1023,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 						fruizioneAutorizzazioneRuoliTipologia, fruizioneAutorizzazioneRuoliMatch,
 						true, true, null, null,gestioneToken, gestioneTokenPolicy, 
 						gestioneTokenValidazioneInput, gestioneTokenIntrospection, gestioneTokenUserInfo, gestioneTokenTokenForward,
-						autorizzazione_tokenOptions,
+						autorizzazione_token,autorizzazione_tokenOptions,
 						autorizzazioneScope,autorizzazioneScopeMatch,allegatoXacmlPolicy,
 						autorizzazioneContenuti,
 						protocollo)==false){
@@ -4280,7 +4282,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 			String gestioneTokenPolicy, String gestioneTokenOpzionale, 
 			String gestioneTokenValidazioneInput, String gestioneTokenIntrospection, String gestioneTokenUserInfo, String gestioneTokenForward,
 			String autenticazioneTokenIssuer,String autenticazioneTokenClientId,String autenticazioneTokenSubject,String autenticazioneTokenUsername,String autenticazioneTokenEMail,
-			String autorizzazione_tokenOptions,
+			String autorizzazione_token, String autorizzazione_tokenOptions,
 			String autorizzazioneScope,  String scope, String autorizzazioneScopeMatch,BinaryParameter allegatoXacmlPolicy,
 			boolean moreThenOneImplementation) throws Exception{
 
@@ -5358,7 +5360,9 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 					erogazioneAutorizzazioneRuoli, null, 0, erogazioneRuolo,
 					erogazioneAutorizzazioneRuoliTipologia, erogazioneAutorizzazioneRuoliMatch, 
 					false, erogazioneIsSupportatoAutenticazioneSoggetti, contaListe, false, false,autorizzazioneScope,null,0,scope,autorizzazioneScopeMatch,
-					gestioneToken, gestioneTokenPolicy, autorizzazione_tokenOptions,allegatoXacmlPolicy);
+					gestioneToken, gestioneTokenPolicy, 
+					autorizzazione_token, autorizzazione_tokenOptions,allegatoXacmlPolicy,
+					null, 0);
 			
 		}
 		
@@ -5384,7 +5388,9 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 					fruizioneAutorizzazioneRuoli, null, 0, fruizioneRuolo,
 					fruizioneAutorizzazioneRuoliTipologia, fruizioneAutorizzazioneRuoliMatch, 
 					false, true, contaListe, true, false,autorizzazioneScope,null,0,scope,autorizzazioneScopeMatch,
-					gestioneToken, gestioneTokenPolicy, autorizzazione_tokenOptions,allegatoXacmlPolicy);
+					gestioneToken, gestioneTokenPolicy, 
+					autorizzazione_token, autorizzazione_tokenOptions,allegatoXacmlPolicy,
+					null, 0);
 			
 		}
 
@@ -6124,7 +6130,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 			String gestioneTokenPolicy, String gestioneTokenOpzionale, 
 			String gestioneTokenValidazioneInput, String gestioneTokenIntrospection, String gestioneTokenUserInfo, String gestioneTokenForward,
 			String autenticazioneTokenIssuer,String autenticazioneTokenClientId,String autenticazioneTokenSubject,String autenticazioneTokenUsername,String autenticazioneTokenEMail,
-			String autorizzazione_tokenOptions,
+			String autorizzazione_token, String autorizzazione_tokenOptions,
 			String autorizzazioneScope,  String scope, String autorizzazioneScopeMatch,BinaryParameter allegatoXacmlPolicy) throws Exception {
 		
 		boolean isRuoloNormale = !(correlato != null && correlato.equals(AccordiServizioParteSpecificaCostanti.DEFAULT_VALUE_CORRELATO));
@@ -6243,7 +6249,9 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 						fruizioneAutorizzazioneRuoli, null, 0, fruizioneRuolo,
 						fruizioneAutorizzazioneRuoliTipologia, fruizioneAutorizzazioneRuoliMatch, 
 						false, true, contaListe, true, false,autorizzazioneScope,null,0,scope,autorizzazioneScopeMatch,
-						gestioneToken, gestioneTokenPolicy, autorizzazione_tokenOptions,allegatoXacmlPolicy);
+						gestioneToken, gestioneTokenPolicy, 
+						autorizzazione_token, autorizzazione_tokenOptions,allegatoXacmlPolicy,
+						null, 0);
 	
 			}
 
@@ -7034,7 +7042,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 			String gestioneTokenPolicy, String gestioneTokenOpzionale, 
 			String gestioneTokenValidazioneInput, String gestioneTokenIntrospection, String gestioneTokenUserInfo, String gestioneTokenForward,
 			String autenticazioneTokenIssuer,String autenticazioneTokenClientId,String autenticazioneTokenSubject,String autenticazioneTokenUsername,String autenticazioneTokenEMail,
-			String autorizzazione_tokenOptions,
+			String autorizzazione_token, String autorizzazione_tokenOptions,
 			String autorizzazioneScope, String scope, String autorizzazioneScopeMatch,BinaryParameter allegatoXacmlPolicy) throws Exception {
 		
 		Boolean contaListe = ServletUtils.getContaListeFromSession(this.session);
@@ -7142,7 +7150,9 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 					erogazioneAutorizzazioneRuoli, null, 0, erogazioneRuolo,
 					erogazioneAutorizzazioneRuoliTipologia, erogazioneAutorizzazioneRuoliMatch, 
 					false, erogazioneIsSupportatoAutenticazioneSoggetti, contaListe, false, false,autorizzazioneScope,null,0,scope,autorizzazioneScopeMatch,
-					gestioneToken, gestioneTokenPolicy, autorizzazione_tokenOptions,allegatoXacmlPolicy);
+					gestioneToken, gestioneTokenPolicy, 
+					autorizzazione_token, autorizzazione_tokenOptions,allegatoXacmlPolicy,
+					null, 0);
 		}
 		
 		
@@ -7231,6 +7241,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 			String gestioneTokenIntrospection = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_GESTIONE_TOKEN_INTROSPECTION);
 			String gestioneTokenUserInfo = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_GESTIONE_TOKEN_USERINFO);
 			String gestioneTokenTokenForward = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_GESTIONE_TOKEN_TOKEN_FORWARD);
+			String autorizzazione_token = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_AUTORIZZAZIONE_TOKEN);
 			String autorizzazione_tokenOptions = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_AUTORIZZAZIONE_TOKEN_OPTIONS);
 			String autorizzazioneScope = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_AUTORIZZAZIONE_SCOPE);
 			String autorizzazioneScopeMatch = this.getParameter(CostantiControlStation.PARAMETRO_SCOPE_MATCH);
@@ -7242,7 +7253,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 					autorizzazioneRuoliTipologia, ruoloMatch, 
 					isSupportatoAutenticazione, false, pa, ruoli,gestioneToken, gestioneTokenPolicy, 
 					gestioneTokenValidazioneInput, gestioneTokenIntrospection, gestioneTokenUserInfo, gestioneTokenTokenForward,
-					autorizzazione_tokenOptions,
+					autorizzazione_token,autorizzazione_tokenOptions,
 					autorizzazioneScope,autorizzazioneScopeMatch,allegatoXacmlPolicy,
 					autorizzazioneContenuti,
 					protocollo)==false){
@@ -7332,6 +7343,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 			String gestioneTokenIntrospection = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_GESTIONE_TOKEN_INTROSPECTION);
 			String gestioneTokenUserInfo = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_GESTIONE_TOKEN_USERINFO);
 			String gestioneTokenTokenForward = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_GESTIONE_TOKEN_TOKEN_FORWARD);
+			String autorizzazione_token = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_AUTORIZZAZIONE_TOKEN);
 			String autorizzazione_tokenOptions = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_AUTORIZZAZIONE_TOKEN_OPTIONS);
 			String autorizzazioneScope = this.getParameter(CostantiControlStation.PARAMETRO_PORTE_AUTORIZZAZIONE_SCOPE);
 			String autorizzazioneScopeMatch = this.getParameter(CostantiControlStation.PARAMETRO_SCOPE_MATCH);
@@ -7344,7 +7356,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 					autorizzazioneRuoliTipologia, ruoloMatch, 
 					isSupportatoAutenticazione, true, pd, ruoli,gestioneToken, gestioneTokenPolicy, 
 					gestioneTokenValidazioneInput, gestioneTokenIntrospection, gestioneTokenUserInfo, gestioneTokenTokenForward,
-					autorizzazione_tokenOptions,
+					autorizzazione_token,autorizzazione_tokenOptions,
 					autorizzazioneScope,autorizzazioneScopeMatch,allegatoXacmlPolicy,
 					autorizzazioneContenuti,
 					protocollo)==false){
@@ -7370,7 +7382,7 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 			String gestioneTokenPolicy, String gestioneTokenOpzionale, 
 			String gestioneTokenValidazioneInput, String gestioneTokenIntrospection, String gestioneTokenUserInfo, String gestioneTokenForward,
 			String autenticazioneTokenIssuer,String autenticazioneTokenClientId,String autenticazioneTokenSubject,String autenticazioneTokenUsername,String autenticazioneTokenEMail,
-			String autorizzazione_tokenOptions,
+			String autorizzazione_token, String autorizzazione_tokenOptions,
 			String autorizzazioneScope,  String scope, String autorizzazioneScopeMatch, BinaryParameter allegatoXacmlPolicy) throws Exception{
 		
 		String tipologia = ServletUtils.getObjectFromSession(this.session, String.class, AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_TIPO_EROGAZIONE);
@@ -7483,7 +7495,9 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 				fruizioneAutorizzazioneRuoli, null, 0, fruizioneRuolo,
 				fruizioneAutorizzazioneRuoliTipologia, fruizioneAutorizzazioneRuoliMatch, 
 				false, erogazioneIsSupportatoAutenticazioneSoggetti, contaListe, true, false,autorizzazioneScope,null,0,scope,autorizzazioneScopeMatch,
-				gestioneToken, gestioneTokenPolicy, autorizzazione_tokenOptions,allegatoXacmlPolicy);
+				gestioneToken, gestioneTokenPolicy, 
+				autorizzazione_token, autorizzazione_tokenOptions,allegatoXacmlPolicy,
+				null, 0);
 		}
 		
 		return dati;
