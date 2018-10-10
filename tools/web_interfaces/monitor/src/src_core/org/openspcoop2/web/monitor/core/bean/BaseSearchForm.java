@@ -1851,7 +1851,11 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 		
 		lst.add(new SelectItem("--", "--"));  
 		
-		if(!TipologiaRicerca.ingresso.equals(this.getTipologiaRicercaEnum())) {
+		String protocolloSelezionato = this.getProtocollo(); 
+		boolean protocolloSupportaApplicativoinErogazione = !TipologiaRicerca.ingresso.equals(this.getTipologiaRicercaEnum()) || true; // condizione sul protocollo
+		
+//		if(!TipologiaRicerca.ingresso.equals(this.getTipologiaRicercaEnum())) {
+		if(protocolloSupportaApplicativoinErogazione) {
 			lst.add(new SelectItem(Costanti.VALUE_TIPO_RICONOSCIMENTO_APPLICATIVO, "Applicativo"));  
 		}
 		lst.add(new SelectItem(Costanti.VALUE_TIPO_RICONOSCIMENTO_IDENTIFICATIVO_AUTENTICATO, "Identificativo Autenticato"));  

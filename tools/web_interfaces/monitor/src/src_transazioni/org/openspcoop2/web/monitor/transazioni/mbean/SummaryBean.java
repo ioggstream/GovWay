@@ -81,8 +81,10 @@ import org.openspcoop2.web.monitor.core.report.ILiveReport;
 import org.openspcoop2.web.monitor.core.report.ReportFactory;
 import org.openspcoop2.web.monitor.core.utils.BrowserInfo;
 import org.openspcoop2.web.monitor.core.utils.DynamicPdDBeanUtils;
+import org.openspcoop2.web.monitor.core.utils.MessageManager;
 import org.openspcoop2.web.monitor.core.utils.MessageUtils;
 import org.openspcoop2.web.monitor.core.utils.ParseUtility;
+import org.openspcoop2.web.monitor.transazioni.constants.TransazioniCostanti;
 import org.openspcoop2.web.monitor.transazioni.dao.ITransazioniService;
 import org.slf4j.Logger;
 
@@ -1543,7 +1545,9 @@ public class SummaryBean implements Serializable{
 	}
 	
 	public String getLabelServizio() {
-		return !this.isShowFiltroSoggettoLocale() ? "API" : "Soggetto Locale / API"; //this.labelServizio; //Soggetto Locale / Servizio
+		return !this.isShowFiltroSoggettoLocale() ? 
+				MessageManager.getInstance().getMessage(Costanti.SERVIZIO_LABEL_KEY) :
+					MessageManager.getInstance().getMessage(TransazioniCostanti.TRANSAZIONI_SUMMARY_SOGGETTO_LOCALE_SERVIZIO_LABEL_KEY);
 	}
 	
 	public boolean isShowFiltroSoggettoLocale(){
@@ -1556,13 +1560,13 @@ public class SummaryBean implements Serializable{
 		boolean foundServizi = utente.getServizi() !=  null && utente.getServizi().size() > 0;
 
 		if(foundSoggetti && foundServizi){
-			return "Soggetto Locale / API";
+			return MessageManager.getInstance().getMessage(TransazioniCostanti.TRANSAZIONI_SUMMARY_SOGGETTO_LOCALE_SERVIZIO_LABEL_KEY);
 		}
 		else if(foundServizi){
-			return "API";
+			return MessageManager.getInstance().getMessage(Costanti.SERVIZIO_LABEL_KEY);
 		}
 		else{
-			return "Soggetto Locale";
+			return MessageManager.getInstance().getMessage(Costanti.SOGGETTO_LOCALE_LABEL_KEY);
 		}
 	}
 }

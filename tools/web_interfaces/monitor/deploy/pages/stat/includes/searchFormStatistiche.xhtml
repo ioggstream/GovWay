@@ -179,10 +179,10 @@
 				
 				<a4j:outputPanel layout="block" id="tipoRiconoscimentoPnl" rendered="#{not empty sf_bean.riconoscimento}">
 					
-					<a4j:outputPanel layout="block" id="saComboCtr" rendered="#{sf_tipologiaRicerca != 'ingresso' and sf_bean.riconoscimento == 'applicativo'}">
+					<a4j:outputPanel layout="block" id="saComboCtr" rendered="#{sf_bean.riconoscimento == 'applicativo'}">
 						<link:prop label="Applicativo" required="true">
 							<rich:comboBox id="saCombo" value="#{sf_servizioApplicativo}"
-										defaultLabel="Selezione Applicativo" 
+										defaultLabel="#{not empty sf_soggettoLocale ? msg['stats.search.applicativo.defaultLabel'] : msg['stats.search.applicativo.defaultLabelNoSoggettoLocal']}"
 										directInputSuggestions="true" listWidth="#{sf_mbean.serviziApplicativiSelectItemsWidth}"
 										width="416" enableManualInput="false">
 								<f:selectItem itemValue="--"/>

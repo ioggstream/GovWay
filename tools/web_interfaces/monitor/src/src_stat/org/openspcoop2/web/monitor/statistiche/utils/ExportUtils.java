@@ -37,18 +37,20 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.Logger;
-
 import org.openspcoop2.core.statistiche.constants.TipoBanda;
 import org.openspcoop2.core.statistiche.constants.TipoLatenza;
 import org.openspcoop2.core.statistiche.constants.TipoStatistica;
 import org.openspcoop2.core.statistiche.constants.TipoVisualizzazione;
 import org.openspcoop2.monitor.sdk.constants.StatisticType;
+import org.openspcoop2.web.monitor.core.constants.Costanti;
 import org.openspcoop2.web.monitor.core.converter.DurataConverter;
 import org.openspcoop2.web.monitor.core.core.Utility;
 import org.openspcoop2.web.monitor.core.datamodel.Res;
 import org.openspcoop2.web.monitor.core.datamodel.ResDistribuzione;
 import org.openspcoop2.web.monitor.core.report.Templates;
+import org.openspcoop2.web.monitor.core.utils.MessageManager;
+import org.slf4j.Logger;
+
 import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
 import net.sf.dynamicreports.jasper.builder.export.JasperCsvExporterBuilder;
 import net.sf.dynamicreports.jasper.builder.export.JasperPdfExporterBuilder;
@@ -130,22 +132,22 @@ public class ExportUtils {
 			switch (tipoStatistica) {
 			case DISTRIBUZIONE_AZIONE:
 				headerValueCategory = "parent_0";
-				headerValueLabel = "Servizio";
+				headerValueLabel =  MessageManager.getInstance().getMessage(Costanti.SERVIZIO_LABEL_KEY);
 				colonne.add(col.column(headerValueLabel, headerValueCategory, type.stringType()));
 				
 				headerValueCategory = "parent_1";
-				headerValueLabel = "Erogatore";
+				headerValueLabel = MessageManager.getInstance().getMessage(Costanti.EROGATORE_LABEL_KEY);
 				colonne.add(col.column(headerValueLabel, headerValueCategory, type.stringType()));
 				break;
 			case DISTRIBUZIONE_SERVIZIO:
 				
 				headerValueCategory = "parent_0";
-				headerValueLabel = "Erogatore";
+				headerValueLabel = MessageManager.getInstance().getMessage(Costanti.EROGATORE_LABEL_KEY);
 				colonne.add(col.column(headerValueLabel, headerValueCategory, type.stringType()));
 				break;
 			case DISTRIBUZIONE_SERVIZIO_APPLICATIVO:
 				headerValueCategory = "parent_0";
-				headerValueLabel = "Soggetto";
+				headerValueLabel = MessageManager.getInstance().getMessage(Costanti.SOGGETTO_LABEL_KEY);
 				colonne.add(col.column(headerValueLabel, headerValueCategory, type.stringType()));
 				
 //				headerValueCategory = "parent_1";
@@ -262,22 +264,22 @@ public class ExportUtils {
 			switch (tipoStatistica) {
 			case DISTRIBUZIONE_AZIONE:
 				headerValueCategory = "parent_0";
-				headerValueLabel = "Servizio";
+				headerValueLabel =  MessageManager.getInstance().getMessage(Costanti.SERVIZIO_LABEL_KEY);
 				colonne.add(col.column(headerValueLabel, headerValueCategory, type.stringType()).setHorizontalTextAlignment(HorizontalTextAlignment.CENTER));
 				
 				headerValueCategory = "parent_1";
-				headerValueLabel = "Erogatore";
+				headerValueLabel = MessageManager.getInstance().getMessage(Costanti.EROGATORE_LABEL_KEY);
 				colonne.add(col.column(headerValueLabel, headerValueCategory, type.stringType()).setHorizontalTextAlignment(HorizontalTextAlignment.CENTER));
 				break;
 			case DISTRIBUZIONE_SERVIZIO:
 				
 				headerValueCategory = "parent_0";
-				headerValueLabel = "Erogatore";
+				headerValueLabel = MessageManager.getInstance().getMessage(Costanti.EROGATORE_LABEL_KEY);
 				colonne.add(col.column(headerValueLabel, headerValueCategory, type.stringType()).setHorizontalTextAlignment(HorizontalTextAlignment.CENTER));
 				break;
 			case DISTRIBUZIONE_SERVIZIO_APPLICATIVO:
 				headerValueCategory = "parent_0";
-				headerValueLabel = "Soggetto";
+				headerValueLabel = MessageManager.getInstance().getMessage(Costanti.SOGGETTO_LABEL_KEY);
 				colonne.add(col.column(headerValueLabel, headerValueCategory, type.stringType()).setHorizontalTextAlignment(HorizontalTextAlignment.CENTER));
 				
 //				headerValueCategory = "parent_1";
@@ -396,25 +398,25 @@ public class ExportUtils {
 			switch (tipoStatistica) {
 			case DISTRIBUZIONE_AZIONE:
 				headerValueCategory = "parent_0";
-				headerValueLabel = "Servizio";
+				headerValueLabel =  MessageManager.getInstance().getMessage(Costanti.SERVIZIO_LABEL_KEY);
 				colonne.add(col.column(headerValueLabel, headerValueCategory, type.stringType()).setStretchWithOverflow(false)
 						.addProperty(JasperProperty.PRINT_KEEP_FULL_TEXT, "true"));
 				
 				headerValueCategory = "parent_1";
-				headerValueLabel = "Erogatore";
+				headerValueLabel = MessageManager.getInstance().getMessage(Costanti.EROGATORE_LABEL_KEY);
 				colonne.add(col.column(headerValueLabel, headerValueCategory, type.stringType()).setStretchWithOverflow(false)
 						.addProperty(JasperProperty.PRINT_KEEP_FULL_TEXT, "true"));
 				break;
 			case DISTRIBUZIONE_SERVIZIO:
 				
 				headerValueCategory = "parent_0";
-				headerValueLabel = "Erogatore";
+				headerValueLabel = MessageManager.getInstance().getMessage(Costanti.EROGATORE_LABEL_KEY);
 				colonne.add(col.column(headerValueLabel, headerValueCategory, type.stringType()).setStretchWithOverflow(false)
 						.addProperty(JasperProperty.PRINT_KEEP_FULL_TEXT, "true"));
 				break;
 			case DISTRIBUZIONE_SERVIZIO_APPLICATIVO:
 				headerValueCategory = "parent_0";
-				headerValueLabel = "Soggetto";
+				headerValueLabel = MessageManager.getInstance().getMessage(Costanti.SOGGETTO_LABEL_KEY);
 				colonne.add(col.column(headerValueLabel, headerValueCategory, type.stringType()).setStretchWithOverflow(false)
 						.addProperty(JasperProperty.PRINT_KEEP_FULL_TEXT, "true"));
 				
