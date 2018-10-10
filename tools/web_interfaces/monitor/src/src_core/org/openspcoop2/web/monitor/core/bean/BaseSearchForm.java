@@ -1851,6 +1851,7 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 		
 		lst.add(new SelectItem("--", "--"));  
 		
+		// TODO Poli visualizzazione dell'applicativo in funzione del protocollo
 		String protocolloSelezionato = this.getProtocollo(); 
 		boolean protocolloSupportaApplicativoinErogazione = !TipologiaRicerca.ingresso.equals(this.getTipologiaRicercaEnum()) || true; // condizione sul protocollo
 		
