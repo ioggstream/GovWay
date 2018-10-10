@@ -5,8 +5,9 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j"
-      xmlns:c="http://java.sun.com/jstl/core"
-      xmlns:link="http://www.link.it">
+    xmlns:c="http://java.sun.com/jstl/core"
+    xmlns:link="http://www.link.it">
+      <f:loadBundle var="msg" basename="messages" />
 	<ui:define name="navbar">
 			<ul>
 				<li>
@@ -56,7 +57,7 @@
 							<h:outputLabel styleClass="outputFieldLabel" id="outLabelErogatore" value="Erogatore" rendered="#{not empty dettagliBean.dettaglio.nomeSoggettoErogatore}"/>
 							<h:outputText id="outErogatore" value="#{dettagliBean.dettaglio.soggettoErogatore}" rendered="#{not empty dettagliBean.dettaglio.nomeSoggettoErogatore}"/>
 							
-							<h:outputLabel styleClass="outputFieldLabel" id="outLabelServizio" value="Servizio" rendered="#{not empty dettagliBean.dettaglio.nomeServizio}"/>
+							<h:outputLabel styleClass="outputFieldLabel" id="outLabelServizio" value="#{msg['commons.servizio.label']}" rendered="#{not empty dettagliBean.dettaglio.nomeServizio}"/>
 							<h:outputText id="outServizio" value="#{dettagliBean.dettaglio.servizio}" rendered="#{not empty dettagliBean.dettaglio.nomeServizio}"/>
 							
 							<h:outputLabel styleClass="outputFieldLabel" id="outLabelAzione" value="Azione" rendered="#{not empty dettagliBean.dettaglio.azione}"/>

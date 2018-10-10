@@ -80,4 +80,20 @@ public class Costanti {
 	public static final String LABEL_STORICO_ID_APPLICATIVO = "Identificativo Applicativo";
 	public static final String LABEL_STORICO_ID_MESSAGGIO = "Identificativo Messaggio";
 	public static final String LABEL_STORICO_ID_TRANSAZIONE = "Identificativo Transazione";
+	
+	
+	
+	/* costanti properties file messages_it.properties*/ 
+	
+	public static final String DATA_LABEL_KEY = "commons.data.label";
+	public static final String AZIONE_LABEL_KEY = "commons.azione.label";
+	public static final String SERVIZIO_APPLICATIVO_LABEL_KEY = "commons.applicativo.label";
+	public static final String SERVIZIO_LABEL_KEY = "commons.servizio.label";
+	public static final String SOGGETTO_LABEL_KEY = "commons.soggetto.label";
+	public static final String SOGGETTO_LOCALE_LABEL_KEY = "commons.soggettoLocale.label";
+	public static final String SOGGETTO_REMOTO_LABEL_KEY = "commons.soggettoRemoto.label";
+	public static final String NOME_LABEL_KEY = "commons.nome.label";
+	public static final String RICHIESTA_LABEL_KEY = "commons.richiesta.label";
+	public static final String EROGATORE_LABEL_KEY = "commons.erogatore.label";
+	public static final String FRUITORE_LABEL_KEY = "commons.fruitore.label";
 }

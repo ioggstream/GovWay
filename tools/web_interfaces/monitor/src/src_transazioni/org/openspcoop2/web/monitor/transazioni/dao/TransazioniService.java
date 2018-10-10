@@ -2447,8 +2447,8 @@ public class TransazioniService implements ITransazioniService {
 					// sb.append("AND t.servizioApplicativo = :servizio_applicativo ");
 					IExpression saOr = transazioniSearchDAO.newExpression();
 					saOr.equals(model.SERVIZIO_APPLICATIVO_FRUITORE,	searchForm.getServizioApplicativo());
-					saOr.or();
-					saOr.equals(model.SERVIZIO_APPLICATIVO_EROGATORE,	searchForm.getServizioApplicativo());
+//					saOr.or();
+//					saOr.equals(model.SERVIZIO_APPLICATIVO_EROGATORE,	searchForm.getServizioApplicativo());
 					filter.and(saOr);
 				}
 			} else {
