@@ -1019,8 +1019,6 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 
 		try {
 
-			this.andamentoTemporaleSearch.getSoggettoLocale();
-
 			List<Soggetto> listaSoggettiGestione = this.andamentoTemporaleSearch
 					.getSoggettiGestione();
 
@@ -1052,7 +1050,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 			}
 			
 			// soggetto locale
-			if(this.andamentoTemporaleSearch.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.andamentoTemporaleSearch.getSoggettoLocale()) && 
+			if(Utility.isFiltroDominioAbilitato() && this.andamentoTemporaleSearch.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.andamentoTemporaleSearch.getSoggettoLocale()) && 
 					!"--".equals(this.andamentoTemporaleSearch.getSoggettoLocale())){
 				String tipoSoggettoLocale = this.andamentoTemporaleSearch.getTipoSoggettoLocale();
 				String nomeSoggettoLocale = this.andamentoTemporaleSearch.getSoggettoLocale();
@@ -1531,7 +1529,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 	public int countAllDistribuzioneSoggetto() throws ServiceException{
 
 		try {
-			this.distribSoggettoSearch.getSoggettoLocale();
+
 			StatisticType tipologia = this.distribSoggettoSearch.getModalitaTemporale();
 			StatisticaModel model = null;
 			IServiceSearchWithoutId<?> dao = null;
@@ -1567,7 +1565,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 	@Override
 	public List<ResDistribuzione> findAllDistribuzioneSoggetto() throws ServiceException{
 		try {
-			this.distribSoggettoSearch.getSoggettoLocale();
+
 			StatisticType tipologia = this.distribSoggettoSearch.getModalitaTemporale();
 			StatisticaModel model = null;
 			IServiceSearchWithoutId<?> dao = null;
@@ -1617,7 +1615,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 	@Override
 	public List<ResDistribuzione> findAllDistribuzioneSoggetto(int start,int limit)  throws ServiceException{
 		try {
-			this.distribSoggettoSearch.getSoggettoLocale();
+
 			StatisticType tipologia = this.distribSoggettoSearch.getModalitaTemporale();
 			StatisticaModel model = null;
 			IServiceSearchWithoutId<?> dao = null;
@@ -1724,7 +1722,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 				}
 
 				// soggetto locale
-				if(this.distribSoggettoSearch.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.distribSoggettoSearch.getSoggettoLocale()) && 
+				if(Utility.isFiltroDominioAbilitato() && this.distribSoggettoSearch.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.distribSoggettoSearch.getSoggettoLocale()) && 
 						!"--".equals(this.distribSoggettoSearch.getSoggettoLocale())){
 					String tipoSoggettoLocale = this.distribSoggettoSearch.getTipoSoggettoLocale();
 					String nomeSoggettoLocale = this.distribSoggettoSearch.getSoggettoLocale();
@@ -1814,7 +1812,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 				}
 				
 				// soggetto locale
-				if(this.distribSoggettoSearch.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.distribSoggettoSearch.getSoggettoLocale()) && 
+				if(Utility.isFiltroDominioAbilitato() && this.distribSoggettoSearch.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.distribSoggettoSearch.getSoggettoLocale()) && 
 						!"--".equals(this.distribSoggettoSearch.getSoggettoLocale())){
 					String tipoSoggettoLocale = this.distribSoggettoSearch.getTipoSoggettoLocale();
 					String nomeSoggettoLocale = this.distribSoggettoSearch.getSoggettoLocale();
@@ -1951,7 +1949,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 				}
 				
 				// soggetto locale
-				if(this.distribSoggettoSearch.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.distribSoggettoSearch.getSoggettoLocale()) && 
+				if(Utility.isFiltroDominioAbilitato() && this.distribSoggettoSearch.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.distribSoggettoSearch.getSoggettoLocale()) && 
 						!"--".equals(this.distribSoggettoSearch.getSoggettoLocale())){
 					String tipoSoggettoLocale = this.distribSoggettoSearch.getTipoSoggettoLocale();
 					String nomeSoggettoLocale = this.distribSoggettoSearch.getSoggettoLocale();
@@ -2077,7 +2075,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 				}
 				
 				// soggetto locale
-				if(this.distribSoggettoSearch.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.distribSoggettoSearch.getSoggettoLocale()) && 
+				if(Utility.isFiltroDominioAbilitato() && this.distribSoggettoSearch.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.distribSoggettoSearch.getSoggettoLocale()) && 
 						!"--".equals(this.distribSoggettoSearch.getSoggettoLocale())){
 					String tipoSoggettoLocale = this.distribSoggettoSearch.getTipoSoggettoLocale();
 					String nomeSoggettoLocale = this.distribSoggettoSearch.getSoggettoLocale();
@@ -2258,7 +2256,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 			}
 			
 			// soggetto locale
-			if(this.distribSoggettoSearch.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.distribSoggettoSearch.getSoggettoLocale()) && 
+			if(Utility.isFiltroDominioAbilitato() && this.distribSoggettoSearch.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.distribSoggettoSearch.getSoggettoLocale()) && 
 					!"--".equals(this.distribSoggettoSearch.getSoggettoLocale())){
 				String tipoSoggettoLocale = this.distribSoggettoSearch.getTipoSoggettoLocale();
 				String nomeSoggettoLocale = this.distribSoggettoSearch.getSoggettoLocale();
@@ -2353,7 +2351,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 			}
 			
 			// soggetto locale
-			if(this.distribSoggettoSearch.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.distribSoggettoSearch.getSoggettoLocale()) && 
+			if(Utility.isFiltroDominioAbilitato() && this.distribSoggettoSearch.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.distribSoggettoSearch.getSoggettoLocale()) && 
 					!"--".equals(this.distribSoggettoSearch.getSoggettoLocale())){
 				String tipoSoggettoLocale = this.distribSoggettoSearch.getTipoSoggettoLocale();
 				String nomeSoggettoLocale = this.distribSoggettoSearch.getSoggettoLocale();
@@ -2655,7 +2653,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 			}
 			
 			// soggetto locale
-			if(this.distribSoggettoSearch.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.distribSoggettoSearch.getSoggettoLocale()) && 
+			if(Utility.isFiltroDominioAbilitato() && this.distribSoggettoSearch.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.distribSoggettoSearch.getSoggettoLocale()) && 
 					!"--".equals(this.distribSoggettoSearch.getSoggettoLocale())){
 				String tipoSoggettoLocale = this.distribSoggettoSearch.getTipoSoggettoLocale();
 				String nomeSoggettoLocale = this.distribSoggettoSearch.getSoggettoLocale();
@@ -2932,7 +2930,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 			}
 			
 			// soggetto locale
-			if(this.distribSoggettoSearch.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.distribSoggettoSearch.getSoggettoLocale()) && 
+			if(Utility.isFiltroDominioAbilitato() && this.distribSoggettoSearch.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.distribSoggettoSearch.getSoggettoLocale()) && 
 					!"--".equals(this.distribSoggettoSearch.getSoggettoLocale())){
 				String tipoSoggettoLocale = this.distribSoggettoSearch.getTipoSoggettoLocale();
 				String nomeSoggettoLocale = this.distribSoggettoSearch.getSoggettoLocale();
@@ -3507,8 +3505,6 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 
 			EsitoUtils esitoUtils = new EsitoUtils(StatisticheGiornaliereService.log, this.distribServizioSearch.getProtocollo());
 			
-			this.distribServizioSearch.getSoggettoLocale();
-
 			expr = dao.newExpression();
 			// Data
 			expr.between(model.DATA,
@@ -3537,7 +3533,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 			}
 			
 			// soggetto locale
-			if(this.distribServizioSearch.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.distribServizioSearch.getSoggettoLocale()) && 
+			if(Utility.isFiltroDominioAbilitato() && this.distribServizioSearch.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.distribServizioSearch.getSoggettoLocale()) && 
 					!"--".equals(this.distribServizioSearch.getSoggettoLocale())){
 				String tipoSoggettoLocale = this.distribServizioSearch.getTipoSoggettoLocale();
 				String nomeSoggettoLocale = this.distribServizioSearch.getSoggettoLocale();
@@ -3873,8 +3869,6 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 		try {
 
 			EsitoUtils esitoUtils = new EsitoUtils(StatisticheGiornaliereService.log, this.distribAzioneSearch.getProtocollo());
-			
-			this.distribAzioneSearch.getSoggettoLocale();
 
 			expr = dao.newExpression();
 			// Data
@@ -3904,7 +3898,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 			}
 			
 			// soggetto locale
-			if(this.distribAzioneSearch.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.distribAzioneSearch.getSoggettoLocale()) && 
+			if(Utility.isFiltroDominioAbilitato() && this.distribAzioneSearch.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.distribAzioneSearch.getSoggettoLocale()) && 
 					!"--".equals(this.distribAzioneSearch.getSoggettoLocale())){
 				String tipoSoggettoLocale = this.distribAzioneSearch.getTipoSoggettoLocale();
 				String nomeSoggettoLocale = this.distribAzioneSearch.getSoggettoLocale();
@@ -5024,8 +5018,6 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 		try {
 			EsitoUtils esitoUtils = new EsitoUtils(StatisticheGiornaliereService.log, this.distribSaSearch.getProtocollo());
 			
-			this.distribSaSearch.getSoggettoLocale();
-
 			expr = dao.newExpression();
 			// Data
 			expr.between(model.DATA, this.distribSaSearch.getDataInizio(),	this.distribSaSearch.getDataFine());
@@ -5052,7 +5044,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 			}
 			
 			// soggetto locale
-			if(this.distribSaSearch.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.distribSaSearch.getSoggettoLocale()) && 
+			if(Utility.isFiltroDominioAbilitato() && this.distribSaSearch.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.distribSaSearch.getSoggettoLocale()) && 
 					!"--".equals(this.distribSaSearch.getSoggettoLocale())){
 				String tipoSoggettoLocale = this.distribSaSearch.getTipoSoggettoLocale();
 				String nomeSoggettoLocale = this.distribSaSearch.getSoggettoLocale();
@@ -6154,7 +6146,7 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 			}
 			
 			// soggetto locale
-			if(this.statistichePersonalizzateSearch.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.statistichePersonalizzateSearch.getSoggettoLocale()) && 
+			if(Utility.isFiltroDominioAbilitato() && this.statistichePersonalizzateSearch.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.statistichePersonalizzateSearch.getSoggettoLocale()) && 
 					!"--".equals(this.statistichePersonalizzateSearch.getSoggettoLocale())){
 				String tipoSoggettoLocale = this.statistichePersonalizzateSearch.getTipoSoggettoLocale();
 				String nomeSoggettoLocale = this.statistichePersonalizzateSearch.getSoggettoLocale();

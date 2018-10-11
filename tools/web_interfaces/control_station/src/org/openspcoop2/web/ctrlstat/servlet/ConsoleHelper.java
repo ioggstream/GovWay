@@ -3856,44 +3856,47 @@ public class ConsoleHelper {
 				
 				if(TipoOperazione.CHANGE.equals(tipoOperazione)){
 					
-					if(urlAutorizzazioneAutenticati!=null && autorizzazione_autenticazione && (old_autorizzazione_autenticazione || CostantiControlStation.DEFAULT_VALUE_PARAMETRO_PORTE_AUTORIZZAZIONE_CUSTOM.equals(old_autorizzazione)) ){
-						de = new DataElement();
-						de.setType(DataElementType.LINK);
-						de.setUrl(urlAutorizzazioneAutenticati);
-						if(isPortaDelegata){
-							String labelApplicativi = PorteDelegateCostanti.LABEL_PARAMETRO_PORTE_DELEGATE_SERVIZI_APPLICATIVI;
-							if(!this.isModalitaCompleta()) {
-								labelApplicativi = PorteDelegateCostanti.LABEL_PARAMETRO_PORTE_DELEGATE_APPLICATIVI;
-							}
-							if (contaListe) {
-								ServletUtils.setDataElementCustomLabel(de,labelApplicativi,Long.valueOf(numAutenticati));
-							} else
-								ServletUtils.setDataElementCustomLabel(de,labelApplicativi);
-						}
-						else{
-							if (contaListe) {
-								ServletUtils.setDataElementCustomLabel(de,PorteApplicativeCostanti.LABEL_PARAMETRO_PORTE_APPLICATIVE_SOGGETTI,Long.valueOf(numAutenticati));
-							} else
-								ServletUtils.setDataElementCustomLabel(de,PorteApplicativeCostanti.LABEL_PARAMETRO_PORTE_APPLICATIVE_SOGGETTI);
-						}
-						dati.addElement(de);
-					}
+					if((autenticazione!=null && !TipoAutenticazione.DISABILITATO.equals(autenticazione))) {
 					
-					if(!isPortaDelegata && this.saCore.isSupportatoAutenticazioneApplicativiErogazione(protocollo)){
-						if(urlAutorizzazioneErogazioneApplicativiAutenticati!=null && autorizzazione_autenticazione && (old_autorizzazione_autenticazione || CostantiControlStation.DEFAULT_VALUE_PARAMETRO_PORTE_AUTORIZZAZIONE_CUSTOM.equals(old_autorizzazione)) ){
+						if(urlAutorizzazioneAutenticati!=null && autorizzazione_autenticazione && (old_autorizzazione_autenticazione || CostantiControlStation.DEFAULT_VALUE_PARAMETRO_PORTE_AUTORIZZAZIONE_CUSTOM.equals(old_autorizzazione)) ){
 							de = new DataElement();
 							de.setType(DataElementType.LINK);
-							de.setUrl(urlAutorizzazioneErogazioneApplicativiAutenticati);
-							String labelApplicativi = PorteDelegateCostanti.LABEL_PARAMETRO_PORTE_DELEGATE_SERVIZI_APPLICATIVI; // uso cmq label PD
-							if(!this.isModalitaCompleta()) {
-								labelApplicativi = PorteDelegateCostanti.LABEL_PARAMETRO_PORTE_DELEGATE_APPLICATIVI;// uso cmq label PD
+							de.setUrl(urlAutorizzazioneAutenticati);
+							if(isPortaDelegata){
+								String labelApplicativi = PorteDelegateCostanti.LABEL_PARAMETRO_PORTE_DELEGATE_SERVIZI_APPLICATIVI;
+								if(!this.isModalitaCompleta()) {
+									labelApplicativi = PorteDelegateCostanti.LABEL_PARAMETRO_PORTE_DELEGATE_APPLICATIVI;
+								}
+								if (contaListe) {
+									ServletUtils.setDataElementCustomLabel(de,labelApplicativi,Long.valueOf(numAutenticati));
+								} else
+									ServletUtils.setDataElementCustomLabel(de,labelApplicativi);
 							}
-							if (contaListe) {
-								ServletUtils.setDataElementCustomLabel(de,labelApplicativi,Long.valueOf(numErogazioneApplicativiAutenticati));
-							} else {
-								ServletUtils.setDataElementCustomLabel(de,labelApplicativi);
+							else{
+								if (contaListe) {
+									ServletUtils.setDataElementCustomLabel(de,PorteApplicativeCostanti.LABEL_PARAMETRO_PORTE_APPLICATIVE_SOGGETTI,Long.valueOf(numAutenticati));
+								} else
+									ServletUtils.setDataElementCustomLabel(de,PorteApplicativeCostanti.LABEL_PARAMETRO_PORTE_APPLICATIVE_SOGGETTI);
 							}
 							dati.addElement(de);
+						}
+						
+						if(!isPortaDelegata && this.saCore.isSupportatoAutenticazioneApplicativiErogazione(protocollo)){
+							if(urlAutorizzazioneErogazioneApplicativiAutenticati!=null && autorizzazione_autenticazione && (old_autorizzazione_autenticazione || CostantiControlStation.DEFAULT_VALUE_PARAMETRO_PORTE_AUTORIZZAZIONE_CUSTOM.equals(old_autorizzazione)) ){
+								de = new DataElement();
+								de.setType(DataElementType.LINK);
+								de.setUrl(urlAutorizzazioneErogazioneApplicativiAutenticati);
+								String labelApplicativi = PorteDelegateCostanti.LABEL_PARAMETRO_PORTE_DELEGATE_SERVIZI_APPLICATIVI; // uso cmq label PD
+								if(!this.isModalitaCompleta()) {
+									labelApplicativi = PorteDelegateCostanti.LABEL_PARAMETRO_PORTE_DELEGATE_APPLICATIVI;// uso cmq label PD
+								}
+								if (contaListe) {
+									ServletUtils.setDataElementCustomLabel(de,labelApplicativi,Long.valueOf(numErogazioneApplicativiAutenticati));
+								} else {
+									ServletUtils.setDataElementCustomLabel(de,labelApplicativi);
+								}
+								dati.addElement(de);
+							}
 						}
 					}
 				}
