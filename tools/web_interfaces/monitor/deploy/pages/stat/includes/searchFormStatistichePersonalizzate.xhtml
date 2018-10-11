@@ -92,7 +92,7 @@
 					<h:outputText id="idDatiServizio" value="#{msg['stats.search.sezioneFiltroDatiServizio.label']}" styleClass="subtitle"/>
 				</div>
 				
-				<link:prop label="Tipologia">
+				<link:prop label="Tipologia" rendered="#{sf_bean.showTipologia}">
 					<rich:comboBox id="tipologiaCombo" value="#{sf_bean.tipologiaRicerca}" defaultLabel="Seleziona Tipologia" converter="selectItemConverter"
 							width="416" rendered="#{sf_bean.tipoRicercaSPCoop != 'im'}" enableManualInput="false">
 						<f:selectItems value="#{sf_bean.tipologieRicerca}"/>
