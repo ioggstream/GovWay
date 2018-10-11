@@ -1851,12 +1851,14 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 		
 		lst.add(new SelectItem("--", "--"));  
 		
-		// TODO Poli visualizzazione dell'applicativo in funzione del protocollo
 		String protocolloSelezionato = this.getProtocollo(); 
-		boolean protocolloSupportaApplicativoinErogazione = !TipologiaRicerca.ingresso.equals(this.getTipologiaRicercaEnum()) || true; // condizione sul protocollo
+		boolean protocolloSupportaApplicativoinErogazione = false;
+		try{
+			protocolloSupportaApplicativoinErogazione = ProtocolFactoryManager.getInstance().getProtocolFactoryByName(protocolloSelezionato).createProtocolConfiguration().isSupportoAutenticazioneApplicativiErogazioni();
+		}catch(Exception e) {}
+		boolean searchModeByApplicativo = !TipologiaRicerca.ingresso.equals(this.getTipologiaRicercaEnum()) || protocolloSupportaApplicativoinErogazione; 
 		
-//		if(!TipologiaRicerca.ingresso.equals(this.getTipologiaRicercaEnum())) {
-		if(protocolloSupportaApplicativoinErogazione) {
+		if(searchModeByApplicativo) {
 			lst.add(new SelectItem(Costanti.VALUE_TIPO_RICONOSCIMENTO_APPLICATIVO, "Applicativo"));  
 		}
 		lst.add(new SelectItem(Costanti.VALUE_TIPO_RICONOSCIMENTO_IDENTIFICATIVO_AUTENTICATO, "Identificativo Autenticato"));  

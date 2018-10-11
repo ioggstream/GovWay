@@ -39,6 +39,7 @@ import org.openspcoop2.core.statistiche.constants.TipoStatistica;
 import org.openspcoop2.core.statistiche.constants.TipoVisualizzazione;
 import org.openspcoop2.generic_project.expression.SortOrder;
 import org.openspcoop2.monitor.sdk.constants.StatisticType;
+import org.openspcoop2.protocol.engine.ProtocolFactoryManager;
 import org.openspcoop2.utils.TipiDatabase;
 import org.openspcoop2.web.monitor.core.bean.AbstractDateSearchForm;
 import org.openspcoop2.web.monitor.core.bean.ApplicationBean;
@@ -182,12 +183,14 @@ public class StatsSearchForm extends BaseSearchForm{
 		
 		lst.add(new SelectItem("--", "--"));
 		
-		// TODO Poli visualizzazione dell'applicativo in funzione del protocollo
 		String protocolloSelezionato = this.getProtocollo(); 
-		boolean protocolloSupportaApplicativoinErogazione = !TipologiaRicerca.ingresso.equals(this.getTipologiaRicercaEnum()) || true; // condizione sul protocollo
+		boolean protocolloSupportaApplicativoinErogazione = false;
+		try{
+			protocolloSupportaApplicativoinErogazione = ProtocolFactoryManager.getInstance().getProtocolFactoryByName(protocolloSelezionato).createProtocolConfiguration().isSupportoAutenticazioneApplicativiErogazioni();
+		}catch(Exception e) {}
+		boolean searchModeByApplicativo = !TipologiaRicerca.ingresso.equals(this.getTipologiaRicercaEnum()) || protocolloSupportaApplicativoinErogazione; 
 
-//		if(this.tipoStatistica.equals(TipoStatistica.DISTRIBUZIONE_SERVIZIO_APPLICATIVO) || !TipologiaRicerca.ingresso.equals(this.getTipologiaRicercaEnum())) {
-		if(protocolloSupportaApplicativoinErogazione) {
+		if(searchModeByApplicativo) {
 			lst.add(new SelectItem(Costanti.VALUE_TIPO_RICONOSCIMENTO_APPLICATIVO, "Applicativo"));
 		}
 		lst.add(new SelectItem(Costanti.VALUE_TIPO_RICONOSCIMENTO_IDENTIFICATIVO_AUTENTICATO, "Identificativo Autenticato"));  
