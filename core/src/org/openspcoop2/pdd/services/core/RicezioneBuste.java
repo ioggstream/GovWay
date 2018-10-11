@@ -54,6 +54,7 @@ import org.openspcoop2.core.id.IDSoggetto;
 import org.openspcoop2.core.id.IdentificativiErogazione;
 import org.openspcoop2.core.registry.Soggetto;
 import org.openspcoop2.core.registry.constants.CostantiRegistroServizi;
+import org.openspcoop2.core.registry.driver.DriverRegistroServiziAzioneNotFound;
 import org.openspcoop2.core.registry.driver.DriverRegistroServiziException;
 import org.openspcoop2.core.registry.driver.IDServizioFactory;
 import org.openspcoop2.core.transazioni.utils.CredenzialiMittente;
@@ -1701,7 +1702,16 @@ public class RicezioneBuste {
 			// Lista trasmissioni
 			generazioneListaTrasmissioni = is.isGenerateListaTrasmissione();
 			
-		}catch(Exception e){
+		}
+		catch(DriverRegistroServiziAzioneNotFound e){
+			setSOAPFault_processamento(IntegrationError.BAD_REQUEST,logCore,msgDiag,
+					ErroriIntegrazione.ERRORE_423_SERVIZIO_CON_AZIONE_SCORRETTA.
+					getErrore423_ServizioConAzioneScorretta("(azione:"+ idServizio.getAzione()+ ") "+ e.getMessage()),e,
+					"readProtocolInfo");
+			openspcoopstate.releaseResource();
+			return;
+		}
+		catch(Exception e){
 			setSOAPFault_processamento(IntegrationError.INTERNAL_ERROR,logCore,msgDiag,
 					ErroriIntegrazione.ERRORE_5XX_GENERICO_PROCESSAMENTO_MESSAGGIO.
 					get5XX_ErroreProcessamento(CodiceErroreIntegrazione.CODICE_536_CONFIGURAZIONE_NON_DISPONIBILE),e,
@@ -2760,6 +2770,14 @@ public class RicezioneBuste {
 							if(esito.isClientIdentified()) {
 								soggettoAutenticato = true;
 								soggettoFruitore = esito.getIdSoggetto();
+								if(esito.getIdServizioApplicativo()!=null) {
+									servizioApplicativoFruitore = esito.getIdServizioApplicativo().getNome();
+									parametriGenerazioneBustaErrore.setServizioApplicativoFruitore(servizioApplicativoFruitore);
+									parametriInvioBustaErrore.setServizioApplicativoFruitore(servizioApplicativoFruitore);
+									this.generatoreErrore.updateInformazioniCooperazione(servizioApplicativoFruitore);
+									msgDiag.addKeyword(CostantiPdD.KEY_SA_FRUITORE, servizioApplicativoFruitore);
+									this.msgContext.getIntegrazione().setServizioApplicativoFruitore(servizioApplicativoFruitore);
+								}
 								msgDiag.addKeyword(CostantiPdD.KEY_CREDENZIALI_MITTENTE_MSG, ""); // per evitare di visualizzarle anche nei successivi diagnostici
 								msgDiag.addKeyword(CostantiPdD.KEY_CREDENZIALI, "");
 							}

@@ -606,6 +606,10 @@ public class ConfigurazionePdDManager {
 		return this.configurazionePdDReader.autorizzazione(pa, soggetto);
 	}
 	
+	public boolean autorizzazione(PortaApplicativa pa, IDServizioApplicativo servizioApplicativo) throws DriverConfigurazioneException,DriverConfigurazioneNotFound{ 
+		return this.configurazionePdDReader.autorizzazione(pa, servizioApplicativo);
+	}
+	
 	public boolean autorizzazioneRoles(PortaApplicativa pa, Soggetto soggetto, InfoConnettoreIngresso infoConnettoreIngresso,
 			PdDContext pddContext,
 			boolean checkRuoloRegistro, boolean checkRuoloEsterno) throws DriverConfigurazioneException,DriverConfigurazioneNotFound{ 

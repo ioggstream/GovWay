@@ -4602,8 +4602,15 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 					gByExprErogazione = createDistribuzioneServizioApplicativoExpression(dao,model,false,
 							forceErogazione,false);	
 					gByExprErogazione.sortOrder(SortOrder.ASC).addOrder(credenzialeFieldGroupBy);
-					gByExprErogazione.sortOrder(SortOrder.ASC).addOrder(model.TIPO_DESTINATARIO);
-					gByExprErogazione.sortOrder(SortOrder.ASC).addOrder(model.DESTINATARIO);
+					// Nella consultazione delle statistiche si utilizzano sempre gli applicativi fruitori come informazione fornita.
+//					gByExprErogazione.sortOrder(SortOrder.ASC).addOrder(model.TIPO_DESTINATARIO);
+//					gByExprErogazione.sortOrder(SortOrder.ASC).addOrder(model.DESTINATARIO);
+					if(StringUtils.isNotEmpty(this.distribSaSearch.getRiconoscimento())) {
+						if(this.distribSaSearch.getRiconoscimento().equals(org.openspcoop2.web.monitor.core.constants.Costanti.VALUE_TIPO_RICONOSCIMENTO_APPLICATIVO)) {
+							gByExprErogazione.sortOrder(SortOrder.ASC).addOrder(model.TIPO_MITTENTE);
+							gByExprErogazione.sortOrder(SortOrder.ASC).addOrder(model.MITTENTE);
+						}
+					}
 					
 					if(forceIndexes!=null && forceIndexes.size()>0){
 						for (Index index : forceIndexes) {
@@ -4615,8 +4622,12 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 					gByExprFruizione = createDistribuzioneServizioApplicativoExpression(dao,model,false,
 							false,forceFruizione);	
 					gByExprFruizione.sortOrder(SortOrder.ASC).addOrder(credenzialeFieldGroupBy);
-					gByExprFruizione.sortOrder(SortOrder.ASC).addOrder(model.TIPO_MITTENTE);
-					gByExprFruizione.sortOrder(SortOrder.ASC).addOrder(model.MITTENTE);
+					if(StringUtils.isNotEmpty(this.distribSaSearch.getRiconoscimento())) {
+						if(this.distribSaSearch.getRiconoscimento().equals(org.openspcoop2.web.monitor.core.constants.Costanti.VALUE_TIPO_RICONOSCIMENTO_APPLICATIVO)) {
+							gByExprFruizione.sortOrder(SortOrder.ASC).addOrder(model.TIPO_MITTENTE);
+							gByExprFruizione.sortOrder(SortOrder.ASC).addOrder(model.MITTENTE);
+						}
+					}
 					
 					if(forceIndexes!=null && forceIndexes.size()>0){
 						for (Index index : forceIndexes) {
@@ -4650,15 +4661,26 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 				if(forceErogazione){
 					unionExprErogatore = new UnionExpression(gByExprErogazione);
 					unionExprErogatore.addSelectField(credenzialeFieldGroupBy, aliasFieldCredenzialeMittente);
-					unionExprErogatore.addSelectField(model.TIPO_DESTINATARIO, aliasFieldTipoSoggetto);
-					unionExprErogatore.addSelectField(model.DESTINATARIO, aliasFieldSoggetto);
+					// Nella consultazione delle statistiche si utilizzano sempre gli applicativi fruitori come informazione fornita.
+//					unionExprErogatore.addSelectField(model.TIPO_DESTINATARIO, aliasFieldTipoSoggetto);
+//					unionExprErogatore.addSelectField(model.DESTINATARIO, aliasFieldSoggetto);
+					if(StringUtils.isNotEmpty(this.distribSaSearch.getRiconoscimento())) {
+						if(this.distribSaSearch.getRiconoscimento().equals(org.openspcoop2.web.monitor.core.constants.Costanti.VALUE_TIPO_RICONOSCIMENTO_APPLICATIVO)) {
+							unionExprErogatore.addSelectField(model.TIPO_MITTENTE, aliasFieldTipoSoggetto);
+							unionExprErogatore.addSelectField(model.MITTENTE, aliasFieldSoggetto);
+						}
+					}
 //					unionExprErogatore.addSelectField(new ConstantField(aliasFieldRuoloSoggetto, "Erogatore", String.class),aliasFieldRuoloSoggetto);
 				}
 				if(forceFruizione){
 					unionExprFruitore = new UnionExpression(gByExprFruizione);
 					unionExprFruitore.addSelectField(credenzialeFieldGroupBy, aliasFieldCredenzialeMittente);
-					unionExprFruitore.addSelectField(model.TIPO_MITTENTE, aliasFieldTipoSoggetto);
-					unionExprFruitore.addSelectField(model.MITTENTE, aliasFieldSoggetto);
+					if(StringUtils.isNotEmpty(this.distribSaSearch.getRiconoscimento())) {
+						if(this.distribSaSearch.getRiconoscimento().equals(org.openspcoop2.web.monitor.core.constants.Costanti.VALUE_TIPO_RICONOSCIMENTO_APPLICATIVO)) {
+							unionExprFruitore.addSelectField(model.TIPO_MITTENTE, aliasFieldTipoSoggetto);
+							unionExprFruitore.addSelectField(model.MITTENTE, aliasFieldSoggetto);
+						}
+					}
 //					unionExprFruitore.addSelectField(new ConstantField(aliasFieldRuoloSoggetto, "Fruitore", String.class),	aliasFieldRuoloSoggetto);
 				}
 				if(unionExprErogatore==null || unionExprFruitore==null){
@@ -4668,12 +4690,16 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 					unionExprFake.addSelectField(new ConstantField(aliasFieldCredenzialeMittente, 
 							StatisticheGiornaliereService.FALSA_UNION_DEFAULT_VALUE, credenzialeFieldGroupBy.getFieldType()), 
 							aliasFieldCredenzialeMittente);
-					unionExprFake.addSelectField(new ConstantField(aliasFieldTipoSoggetto, 
-							StatisticheGiornaliereService.FALSA_UNION_DEFAULT_VALUE, String.class), 
-							aliasFieldTipoSoggetto);
-					unionExprFake.addSelectField(new ConstantField(aliasFieldSoggetto, 
-							StatisticheGiornaliereService.FALSA_UNION_DEFAULT_VALUE, String.class), 
-							aliasFieldSoggetto);
+					if(StringUtils.isNotEmpty(this.distribSaSearch.getRiconoscimento())) {
+						if(this.distribSaSearch.getRiconoscimento().equals(org.openspcoop2.web.monitor.core.constants.Costanti.VALUE_TIPO_RICONOSCIMENTO_APPLICATIVO)) {
+							unionExprFake.addSelectField(new ConstantField(aliasFieldTipoSoggetto, 
+									StatisticheGiornaliereService.FALSA_UNION_DEFAULT_VALUE, String.class), 
+									aliasFieldTipoSoggetto);
+							unionExprFake.addSelectField(new ConstantField(aliasFieldSoggetto, 
+									StatisticheGiornaliereService.FALSA_UNION_DEFAULT_VALUE, String.class), 
+									aliasFieldSoggetto);
+						}
+					}
 //					unionExprFake.addSelectField(new ConstantField(aliasFieldRuoloSoggetto, StatisticheGiornaliereService.FALSA_UNION_DEFAULT_VALUE, String.class),	aliasFieldRuoloSoggetto);
 				}
 			}
@@ -4696,15 +4722,23 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 			union.setUnionAll(true);
 			union.addField(aliasFieldCredenzialeMittente);
 			if(forceErogazione || forceFruizione){
-				union.addField(aliasFieldTipoSoggetto);
-				union.addField(aliasFieldSoggetto);
-//				union.addField(aliasFieldRuoloSoggetto);
+				if(StringUtils.isNotEmpty(this.distribSaSearch.getRiconoscimento())) {
+					if(this.distribSaSearch.getRiconoscimento().equals(org.openspcoop2.web.monitor.core.constants.Costanti.VALUE_TIPO_RICONOSCIMENTO_APPLICATIVO)) {
+						union.addField(aliasFieldTipoSoggetto);
+						union.addField(aliasFieldSoggetto);
+		//				union.addField(aliasFieldRuoloSoggetto);
+					}
+				}
 			}
 			union.addGroupBy(aliasFieldCredenzialeMittente);
 			if(forceErogazione || forceFruizione){
-				union.addGroupBy(aliasFieldTipoSoggetto);
-				union.addGroupBy(aliasFieldSoggetto);
-//				union.addGroupBy(aliasFieldRuoloSoggetto);
+				if(StringUtils.isNotEmpty(this.distribSaSearch.getRiconoscimento())) {
+					if(this.distribSaSearch.getRiconoscimento().equals(org.openspcoop2.web.monitor.core.constants.Costanti.VALUE_TIPO_RICONOSCIMENTO_APPLICATIVO)) {
+						union.addGroupBy(aliasFieldTipoSoggetto);
+						union.addGroupBy(aliasFieldSoggetto);
+		//				union.addGroupBy(aliasFieldRuoloSoggetto);
+					}
+				}
 			}
 
 			UnionExpression [] uExpressions = new UnionExpression[2];
@@ -4938,7 +4972,11 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 					r.setRisultato(risultato);
 					
 					if(forceErogazione || forceFruizione){
-						r.getParentMap().put("0",((String) row.get(aliasFieldTipoSoggetto)) + "/" + ((String) row.get(aliasFieldSoggetto)));
+						if(StringUtils.isNotEmpty(this.distribSaSearch.getRiconoscimento())) {
+							if(this.distribSaSearch.getRiconoscimento().equals(org.openspcoop2.web.monitor.core.constants.Costanti.VALUE_TIPO_RICONOSCIMENTO_APPLICATIVO)) {
+								r.getParentMap().put("0",((String) row.get(aliasFieldTipoSoggetto)) + "/" + ((String) row.get(aliasFieldSoggetto)));
+							}
+						}
 						
 						//r.getParentMap().put("1",((String) row.get(aliasFieldRuoloSoggetto)));
 					}
@@ -5256,17 +5294,15 @@ public class StatisticheGiornaliereService implements IStatisticheGiornaliere {
 			
 			this.impostaGroupByFiltroDatiMittente(expr, this.distribSaSearch, model, isCount); 
 
-			if(forceErogazione){
-				expr.notEquals(model.TIPO_DESTINATARIO, Costanti.INFORMAZIONE_NON_DISPONIBILE);
-				expr.notEquals(model.DESTINATARIO, Costanti.INFORMAZIONE_NON_DISPONIBILE);
-				expr.addGroupBy(model.TIPO_DESTINATARIO);
-				expr.addGroupBy(model.DESTINATARIO);
-			}
-			if(forceFruizione){
-				expr.notEquals(model.TIPO_MITTENTE, Costanti.INFORMAZIONE_NON_DISPONIBILE);
-				expr.notEquals(model.MITTENTE, Costanti.INFORMAZIONE_NON_DISPONIBILE);
-				expr.addGroupBy(model.TIPO_MITTENTE);
-				expr.addGroupBy(model.MITTENTE);
+			// Nella consultazione delle statistiche si utilizzano sempre gli applicativi fruitori come informazione fornita.
+			// Poichè gli applicativi sono identificati univocamente insieme anche al soggetto proprietario, si aggiunge il soggetto nella group by
+			if(StringUtils.isNotEmpty(this.distribSaSearch.getRiconoscimento())) {
+				if(this.distribSaSearch.getRiconoscimento().equals(org.openspcoop2.web.monitor.core.constants.Costanti.VALUE_TIPO_RICONOSCIMENTO_APPLICATIVO)) {
+					expr.notEquals(model.TIPO_MITTENTE, Costanti.INFORMAZIONE_NON_DISPONIBILE);
+					expr.notEquals(model.MITTENTE, Costanti.INFORMAZIONE_NON_DISPONIBILE);
+					expr.addGroupBy(model.TIPO_MITTENTE);
+					expr.addGroupBy(model.MITTENTE);
+				}
 			}
 			
 		} catch (ServiceException e) {

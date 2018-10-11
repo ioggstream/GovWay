@@ -301,8 +301,8 @@
 					</f:facet>
 					<h:outputText id="outServizioApplicativo2" value="#{item.servizioApplicativoFruitore}" rendered="#{item.pddRuolo=='DELEGATA'}"/>
 					<rich:toolTip for="outServizioApplicativo2" value="#{item.servizioApplicativoFruitore}" rendered="#{item.pddRuolo=='DELEGATA'}"/>
-						<h:outputText id="outServizioApplicativo3" value="#{item.servizioApplicativoErogatore}" rendered="#{item.pddRuolo!='DELEGATA'}"/>
-					<rich:toolTip for="outServizioApplicativo3" value="#{item.servizioApplicativoErogatore}" rendered="#{item.pddRuolo!='DELEGATA'}"/>
+					<h:outputText id="outServizioApplicativo3" value="#{item.servizioApplicativoFruitore}" rendered="#{item.pddRuolo!='DELEGATA'}"/>
+					<rich:toolTip for="outServizioApplicativo3" value="#{item.servizioApplicativoFruitore}" rendered="#{item.pddRuolo!='DELEGATA'}"/>
 				</rich:column>
 				<rich:column id="colCodiceRispostaIngresso" sortable="false" label="Codice Risposta Ingresso" visible="false">
 					<f:facet name="header">

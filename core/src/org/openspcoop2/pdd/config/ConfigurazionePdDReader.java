@@ -2274,6 +2274,26 @@ public class ConfigurazionePdDReader {
 		return false;
 	}
 	
+	protected boolean autorizzazione(PortaApplicativa pa, IDServizioApplicativo servizioApplicativo) throws DriverConfigurazioneException,DriverConfigurazioneNotFound{ 
+		if( (pa == null) || (pa.getServiziApplicativiAutorizzati()==null) )
+			return false;
+		if( (servizioApplicativo == null) || (servizioApplicativo.getNome()==null) || 
+				(servizioApplicativo.getIdSoggettoProprietario()==null) ||
+				(servizioApplicativo.getIdSoggettoProprietario().getTipo()==null) ||
+				(servizioApplicativo.getIdSoggettoProprietario().getNome()==null) )
+			return false;
+
+		for(int j=0; j<pa.getServiziApplicativiAutorizzati().sizeServizioApplicativoList(); j++){
+			if(servizioApplicativo.getNome().equals(pa.getServiziApplicativiAutorizzati().getServizioApplicativo(j).getNome()) &&
+					servizioApplicativo.getIdSoggettoProprietario().getTipo().equals(pa.getServiziApplicativiAutorizzati().getServizioApplicativo(j).getTipoSoggettoProprietario()) &&
+					servizioApplicativo.getIdSoggettoProprietario().getNome().equals(pa.getServiziApplicativiAutorizzati().getServizioApplicativo(j).getNomeSoggettoProprietario())) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+	
 	protected boolean autorizzazioneRoles(RegistroServiziManager registroServiziManager, 
 			PortaApplicativa pa, org.openspcoop2.core.registry.Soggetto soggetto, InfoConnettoreIngresso infoConnettoreIngresso,
 			PdDContext pddContext,
