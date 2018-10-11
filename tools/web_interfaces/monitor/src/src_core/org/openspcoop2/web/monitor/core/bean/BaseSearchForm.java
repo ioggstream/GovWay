@@ -2017,4 +2017,8 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 		
 		return listaTipologie;
 	}
+	
+	public boolean isShowTipologia() {
+		return true;
+	}
 }

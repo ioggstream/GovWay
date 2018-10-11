@@ -183,12 +183,7 @@ public class StatsSearchForm extends BaseSearchForm{
 		
 		lst.add(new SelectItem("--", "--"));
 		
-		String protocolloSelezionato = this.getProtocollo(); 
-		boolean protocolloSupportaApplicativoinErogazione = false;
-		try{
-			protocolloSupportaApplicativoinErogazione = ProtocolFactoryManager.getInstance().getProtocolFactoryByName(protocolloSelezionato).createProtocolConfiguration().isSupportoAutenticazioneApplicativiErogazioni();
-		}catch(Exception e) {}
-		boolean searchModeByApplicativo = !TipologiaRicerca.ingresso.equals(this.getTipologiaRicercaEnum()) || protocolloSupportaApplicativoinErogazione; 
+		boolean searchModeByApplicativo = !TipologiaRicerca.ingresso.equals(this.getTipologiaRicercaEnum()) || isProtocolloSupportaApplicativoInErogazione(); 
 
 		if(searchModeByApplicativo) {
 			lst.add(new SelectItem(Costanti.VALUE_TIPO_RICONOSCIMENTO_APPLICATIVO, "Applicativo"));
@@ -197,6 +192,40 @@ public class StatsSearchForm extends BaseSearchForm{
 		lst.add(new SelectItem(Costanti.VALUE_TIPO_RICONOSCIMENTO_TOKEN_INFO, "Token Info"));  
 		
 		return lst;
+	}
+
+	private boolean isProtocolloSupportaApplicativoInErogazione() {
+		String protocolloSelezionato = this.getProtocollo(); 
+		boolean protocolloSupportaApplicativoinErogazione = false;
+		try{
+			protocolloSupportaApplicativoinErogazione = ProtocolFactoryManager.getInstance().getProtocolFactoryByName(protocolloSelezionato).createProtocolConfiguration().isSupportoAutenticazioneApplicativiErogazioni();
+		}catch(Exception e) {}
+		return protocolloSupportaApplicativoinErogazione;
+	}
+	
+	@Override
+	public boolean isShowTipologia() {
+		if(this.tipoStatistica.equals(TipoStatistica.DISTRIBUZIONE_SERVIZIO_APPLICATIVO)){
+			if(this.getRiconoscimento() != null && this.getRiconoscimento().equals(org.openspcoop2.web.monitor.core.constants.Costanti.VALUE_TIPO_RICONOSCIMENTO_APPLICATIVO)) {
+				return isProtocolloSupportaApplicativoInErogazione();
+			}
+		}
+		
+		return true;
+	}
+	
+	
+	@Override
+	public void setRiconoscimento(String riconoscimento) {
+		super.setRiconoscimento(riconoscimento);
+		
+		if(this.tipoStatistica.equals(TipoStatistica.DISTRIBUZIONE_SERVIZIO_APPLICATIVO)){
+			if(this.getRiconoscimento() != null && this.getRiconoscimento().equals(org.openspcoop2.web.monitor.core.constants.Costanti.VALUE_TIPO_RICONOSCIMENTO_APPLICATIVO)) {
+				if(!isProtocolloSupportaApplicativoInErogazione()) {
+					this.setTipologiaRicerca(TipologiaRicerca.uscita);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -276,7 +305,11 @@ public class StatsSearchForm extends BaseSearchForm{
 		this.periodoDellaRicerca = this.getPeriodo();
 		
 		if(this.tipoStatistica.equals(TipoStatistica.DISTRIBUZIONE_SERVIZIO_APPLICATIVO)){
-			
+			if(this.getRiconoscimento() != null && this.getRiconoscimento().equals(org.openspcoop2.web.monitor.core.constants.Costanti.VALUE_TIPO_RICONOSCIMENTO_APPLICATIVO)) {
+				if(!isProtocolloSupportaApplicativoInErogazione()) {
+					this.setTipologiaRicerca(TipologiaRicerca.uscita);
+				}
+			}
 		}
 	}
 
