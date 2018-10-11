@@ -2255,7 +2255,7 @@ public class TransazioniService implements ITransazioniService {
 		// tipoRicercaSPCoop=true
 		if (this.searchForm.getTipologiaTransazioneSPCoop() == null	|| this.searchForm.getTipologiaTransazioneSPCoop()) {
 
-			if(this.searchForm.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.searchForm.getSoggettoLocale()) && !"--".equals(this.searchForm.getSoggettoLocale())){
+			if(Utility.isFiltroDominioAbilitato() && this.searchForm.getSoggettoLocale()!=null && !StringUtils.isEmpty(this.searchForm.getSoggettoLocale()) && !"--".equals(this.searchForm.getSoggettoLocale())){
 				String tipoSoggettoLocale = this.searchForm.getTipoSoggettoLocale();
 				String nomeSoggettoLocale = this.searchForm.getSoggettoLocale();
 				String idPorta = Utility.getIdentificativoPorta(tipoSoggettoLocale, nomeSoggettoLocale);

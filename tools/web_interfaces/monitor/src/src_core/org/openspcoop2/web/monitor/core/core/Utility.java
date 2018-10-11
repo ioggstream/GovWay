@@ -357,6 +357,24 @@ public class Utility {
 		return null;
 	}
 
+	public static boolean isFiltroDominioAbilitato() {
+		if(isMultitenantAbilitato()) {
+			User utente = Utility.getLoggedUtente();
+			
+			String soggettoOperativoSelezionato = utente.getSoggettoSelezionatoPddMonitor();
+			// utente ha selezionato un soggetto
+			if(soggettoOperativoSelezionato != null) {
+				return true;
+			}
+			
+			// uso il filtro solamente se cmq ho piu' di un soggetto locale
+			return getLoginBean().isShowFiltroSoggettoLocale();
+		}
+		else {
+			return false;
+		}
+	}
+	
 	public static boolean isMultitenantAbilitato() {
 		LoginBean lb = getLoginBean();
 

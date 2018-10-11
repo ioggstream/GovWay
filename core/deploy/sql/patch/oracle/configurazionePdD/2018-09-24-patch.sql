@@ -1,5 +1,10 @@
 ALTER TABLE soggetti ADD is_default NUMBER DEFAULT 0;
 
+UPDATE soggetti SET is_default=1 WHERE id = (select min(id) from soggetti where tipo_soggetto='gw');
+UPDATE soggetti SET is_default=1 WHERE id = (select min(id) from soggetti where tipo_soggetto='spc');
+UPDATE soggetti SET is_default=1 WHERE id = (select min(id) from soggetti where tipo_soggetto='sdi');
+UPDATE soggetti SET is_default=1 WHERE id = (select min(id) from soggetti where tipo_soggetto='as4');
+
 ALTER TABLE configurazione ADD multitenant_stato VARCHAR2(255);
 ALTER TABLE configurazione ADD multitenant_fruizioni VARCHAR2(255);
 ALTER TABLE configurazione ADD multitenant_erogazioni VARCHAR2(255);

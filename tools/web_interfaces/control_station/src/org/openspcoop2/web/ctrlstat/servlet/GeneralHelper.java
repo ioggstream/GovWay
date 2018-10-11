@@ -224,7 +224,7 @@ public class GeneralHelper {
 			if(!u.hasOnlyPermessiUtenti())  
 				gd.setModalitaLinks(this.caricaMenuProtocolliUtente(u));
 			
-			if(!u.hasOnlyPermessiUtenti() && this.core.isMultitenant())  
+			if(!u.hasOnlyPermessiUtenti())  // si e' deciso di farlo vedere sempre, sarà senza tendina: && this.core.isMultitenant())  
 				gd.setSoggettiLinks(this.caricaMenuSoggetti(u));
 		}
 
