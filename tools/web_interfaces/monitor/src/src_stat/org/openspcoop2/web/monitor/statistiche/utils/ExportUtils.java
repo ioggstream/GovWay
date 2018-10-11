@@ -84,7 +84,12 @@ public class ExportUtils {
 
 	public static JasperReportBuilder creaReportDistribuzione(List<ResDistribuzione> list,String titoloReport, Logger log,TipoVisualizzazione tipoVisualizzazione, 
 			List<TipoBanda> tipiBanda,List<TipoLatenza> tipiLatenza, TipoStatistica tipoStatistica, boolean convertRawData) throws Exception{
-		JRDataSource dataSource = getDatasourceDistribuzione(list, log, tipoVisualizzazione, tipiBanda, tipiLatenza, tipoStatistica, convertRawData);
+		return creaReportDistribuzione(list, titoloReport, log, tipoVisualizzazione, tipiBanda, tipiLatenza, tipoStatistica, null, convertRawData);
+	}
+
+	public static JasperReportBuilder creaReportDistribuzione(List<ResDistribuzione> list,String titoloReport, Logger log,TipoVisualizzazione tipoVisualizzazione, 
+			List<TipoBanda> tipiBanda,List<TipoLatenza> tipiLatenza, TipoStatistica tipoStatistica, String tipoRiconoscimento, boolean convertRawData) throws Exception{
+		JRDataSource dataSource = getDatasourceDistribuzione(list, log, tipoVisualizzazione, tipiBanda, tipiLatenza, tipoStatistica, tipoRiconoscimento, convertRawData);
 
 		JasperReportBuilder builder = report();
 		builder.setDataSource(dataSource);
@@ -93,7 +98,7 @@ public class ExportUtils {
 
 	public static JasperReportBuilder creaReportAndamentoTemporalePersonalizzato(Map<String, List<Res>> results,String titoloReport,Logger log,TipoVisualizzazione tipoVisualizzazione,
 			List<TipoBanda> tipiBanda,List<TipoLatenza> tipiLatenza, StatisticType modalitaTemporale, boolean convertRawData) throws Exception{
-		JRDataSource dataSource = getDatasourceAndamentoTemporalePersonalizzato(	results, log, tipoVisualizzazione, tipiBanda, tipiLatenza, modalitaTemporale, convertRawData);
+		JRDataSource dataSource = getDatasourceAndamentoTemporalePersonalizzato(results, log, tipoVisualizzazione, tipiBanda, tipiLatenza, modalitaTemporale, convertRawData);
 
 		JasperReportBuilder builder = report();
 		builder.setDataSource(dataSource);
@@ -102,10 +107,15 @@ public class ExportUtils {
 
 	public static void esportaCsv(OutputStream outputStream, JasperReportBuilder report,String titoloReport, String headerLabel,TipoVisualizzazione tipoVisualizzazione, 
 			List<TipoBanda> tipiBanda,List<TipoLatenza> tipiLatenza,TipoStatistica tipoStatistica) throws Exception{
-		esportaCsv(outputStream, report, titoloReport, headerLabel, tipoVisualizzazione, tipiBanda,tipiLatenza, tipoStatistica, false);
+		esportaCsv(outputStream, report, titoloReport, headerLabel, tipoVisualizzazione, tipiBanda, tipiLatenza, tipoStatistica, null); 
+	}
+
+	public static void esportaCsv(OutputStream outputStream, JasperReportBuilder report,String titoloReport, String headerLabel,TipoVisualizzazione tipoVisualizzazione, 
+			List<TipoBanda> tipiBanda,List<TipoLatenza> tipiLatenza,TipoStatistica tipoStatistica,String tipoRiconoscimento) throws Exception{
+		esportaCsv(outputStream, report, titoloReport, headerLabel, tipoVisualizzazione, tipiBanda,tipiLatenza, tipoStatistica, tipoRiconoscimento, false);
 	}
 	public static void esportaCsv(OutputStream outputStream, JasperReportBuilder report,String titoloReport, String headerLabel,TipoVisualizzazione tipoVisualizzazione, 
-			List<TipoBanda> tipiBanda,List<TipoLatenza> tipiLatenza,TipoStatistica tipoStatistica, boolean distribuzionePerEsiti) throws Exception{
+			List<TipoBanda> tipiBanda,List<TipoLatenza> tipiLatenza,TipoStatistica tipoStatistica, String tipoRiconoscimento, boolean distribuzionePerEsiti) throws Exception{
 		String headerValueLabel = "";
 		String headerValueCategory = "";
 
@@ -140,19 +150,16 @@ public class ExportUtils {
 				colonne.add(col.column(headerValueLabel, headerValueCategory, type.stringType()));
 				break;
 			case DISTRIBUZIONE_SERVIZIO:
-				
 				headerValueCategory = "parent_0";
 				headerValueLabel = MessageManager.getInstance().getMessage(Costanti.EROGATORE_LABEL_KEY);
 				colonne.add(col.column(headerValueLabel, headerValueCategory, type.stringType()));
 				break;
 			case DISTRIBUZIONE_SERVIZIO_APPLICATIVO:
-				headerValueCategory = "parent_0";
-				headerValueLabel = MessageManager.getInstance().getMessage(Costanti.SOGGETTO_LABEL_KEY);
-				colonne.add(col.column(headerValueLabel, headerValueCategory, type.stringType()));
-				
-//				headerValueCategory = "parent_1";
-//				headerValueLabel = "Ruolo";
-//				colonne.add(col.column(headerValueLabel, headerValueCategory, type.stringType()));
+				if(tipoRiconoscimento != null && tipoRiconoscimento.equals(org.openspcoop2.web.monitor.core.constants.Costanti.VALUE_TIPO_RICONOSCIMENTO_APPLICATIVO)) {
+					headerValueCategory = "parent_0";
+					headerValueLabel = MessageManager.getInstance().getMessage(Costanti.SOGGETTO_LABEL_KEY);
+					colonne.add(col.column(headerValueLabel, headerValueCategory, type.stringType()));
+				}
 				break;
 			case ANDAMENTO_TEMPORALE:
 			case DISTRIBUZIONE_SOGGETTO:
@@ -232,10 +239,15 @@ public class ExportUtils {
 
 	public static void esportaPdf(OutputStream outputStream, JasperReportBuilder report,String titoloReport, String headerLabel,TipoVisualizzazione tipoVisualizzazione, 
 			List<TipoBanda> tipiBanda,List<TipoLatenza> tipiLatenza,TipoStatistica tipoStatistica) throws Exception{
-		esportaPdf(outputStream, report, titoloReport, headerLabel, tipoVisualizzazione, tipiBanda, tipiLatenza, tipoStatistica, false);
+		esportaPdf(outputStream, report, titoloReport, headerLabel, tipoVisualizzazione, tipiBanda, tipiLatenza, tipoStatistica, null);
+	}
+
+	public static void esportaPdf(OutputStream outputStream, JasperReportBuilder report,String titoloReport, String headerLabel,TipoVisualizzazione tipoVisualizzazione, 
+			List<TipoBanda> tipiBanda,List<TipoLatenza> tipiLatenza,TipoStatistica tipoStatistica,String tipoRiconoscimento) throws Exception{
+		esportaPdf(outputStream, report, titoloReport, headerLabel, tipoVisualizzazione, tipiBanda, tipiLatenza, tipoStatistica, tipoRiconoscimento, false);
 	}
 	public static void esportaPdf(OutputStream outputStream, JasperReportBuilder report,String titoloReport, String headerLabel,TipoVisualizzazione tipoVisualizzazione, 
-			List<TipoBanda> tipiBanda,List<TipoLatenza> tipiLatenza,TipoStatistica tipoStatistica, boolean distribuzionePerEsiti) throws Exception{
+			List<TipoBanda> tipiBanda,List<TipoLatenza> tipiLatenza,TipoStatistica tipoStatistica, String tipoRiconoscimento,  boolean distribuzionePerEsiti) throws Exception{
 		JasperPdfExporterBuilder builder = export.pdfExporter(outputStream);
 
 		String headerValueLabel = "";
@@ -278,13 +290,11 @@ public class ExportUtils {
 				colonne.add(col.column(headerValueLabel, headerValueCategory, type.stringType()).setHorizontalTextAlignment(HorizontalTextAlignment.CENTER));
 				break;
 			case DISTRIBUZIONE_SERVIZIO_APPLICATIVO:
-				headerValueCategory = "parent_0";
-				headerValueLabel = MessageManager.getInstance().getMessage(Costanti.SOGGETTO_LABEL_KEY);
-				colonne.add(col.column(headerValueLabel, headerValueCategory, type.stringType()).setHorizontalTextAlignment(HorizontalTextAlignment.CENTER));
-				
-//				headerValueCategory = "parent_1";
-//				headerValueLabel = "Ruolo";
-//				colonne.add(col.column(headerValueLabel, headerValueCategory, type.stringType()).setHorizontalTextAlignment(HorizontalTextAlignment.CENTER));
+				if(tipoRiconoscimento != null && tipoRiconoscimento.equals(org.openspcoop2.web.monitor.core.constants.Costanti.VALUE_TIPO_RICONOSCIMENTO_APPLICATIVO)) {
+					headerValueCategory = "parent_0";
+					headerValueLabel = MessageManager.getInstance().getMessage(Costanti.SOGGETTO_LABEL_KEY);
+					colonne.add(col.column(headerValueLabel, headerValueCategory, type.stringType()).setHorizontalTextAlignment(HorizontalTextAlignment.CENTER));
+				}
 				break;
 			case ANDAMENTO_TEMPORALE:
 			case DISTRIBUZIONE_SOGGETTO:
@@ -360,10 +370,15 @@ public class ExportUtils {
 
 	public static void esportaXls(OutputStream outputStream, JasperReportBuilder report,String titoloReport, String headerLabel,TipoVisualizzazione tipoVisualizzazione, 
 			List<TipoBanda> tipiBanda,List<TipoLatenza> tipiLatenza,TipoStatistica tipoStatistica) throws Exception{
-		esportaXls(outputStream, report, titoloReport, headerLabel, tipoVisualizzazione, tipiBanda, tipiLatenza, tipoStatistica, false);
+		esportaXls(outputStream, report, titoloReport, headerLabel, tipoVisualizzazione, tipiBanda, tipiLatenza, tipoStatistica, null);
+	}
+
+	public static void esportaXls(OutputStream outputStream, JasperReportBuilder report,String titoloReport, String headerLabel,TipoVisualizzazione tipoVisualizzazione, 
+			List<TipoBanda> tipiBanda,List<TipoLatenza> tipiLatenza,TipoStatistica tipoStatistica,String tipoRiconoscimento) throws Exception{
+		esportaXls(outputStream, report, titoloReport, headerLabel, tipoVisualizzazione, tipiBanda, tipiLatenza, tipoStatistica, tipoRiconoscimento, false);
 	}
 	public static void esportaXls(OutputStream outputStream, JasperReportBuilder report,String titoloReport, String headerLabel,TipoVisualizzazione tipoVisualizzazione, 
-			List<TipoBanda> tipiBanda,List<TipoLatenza> tipiLatenza,TipoStatistica tipoStatistica,boolean distribuzionePerEsiti) throws Exception{
+			List<TipoBanda> tipiBanda,List<TipoLatenza> tipiLatenza,TipoStatistica tipoStatistica,String tipoRiconoscimento, boolean distribuzionePerEsiti) throws Exception{
 		JasperXlsExporterBuilder builder = export.xlsExporter(outputStream).setDetectCellType(true).setIgnorePageMargins(true)
 				.setWhitePageBackground(false)
 				.setRemoveEmptySpaceBetweenColumns(true);
@@ -415,15 +430,12 @@ public class ExportUtils {
 						.addProperty(JasperProperty.PRINT_KEEP_FULL_TEXT, "true"));
 				break;
 			case DISTRIBUZIONE_SERVIZIO_APPLICATIVO:
-				headerValueCategory = "parent_0";
-				headerValueLabel = MessageManager.getInstance().getMessage(Costanti.SOGGETTO_LABEL_KEY);
-				colonne.add(col.column(headerValueLabel, headerValueCategory, type.stringType()).setStretchWithOverflow(false)
-						.addProperty(JasperProperty.PRINT_KEEP_FULL_TEXT, "true"));
-				
-//				headerValueCategory = "parent_1";
-//				headerValueLabel = "Ruolo";
-//				colonne.add(col.column(headerValueLabel, headerValueCategory, type.stringType()).setStretchWithOverflow(false)
-//						.addProperty(JasperProperty.PRINT_KEEP_FULL_TEXT, "true"));
+				if(tipoRiconoscimento != null && tipoRiconoscimento.equals(org.openspcoop2.web.monitor.core.constants.Costanti.VALUE_TIPO_RICONOSCIMENTO_APPLICATIVO)) {
+					headerValueCategory = "parent_0";
+					headerValueLabel = MessageManager.getInstance().getMessage(Costanti.SOGGETTO_LABEL_KEY);
+					colonne.add(col.column(headerValueLabel, headerValueCategory, type.stringType()).setStretchWithOverflow(false)
+							.addProperty(JasperProperty.PRINT_KEEP_FULL_TEXT, "true"));
+				}
 				break;
 			case ANDAMENTO_TEMPORALE:
 			case DISTRIBUZIONE_SOGGETTO:
@@ -1172,7 +1184,7 @@ public class ExportUtils {
 	}
 
 	private static JRDataSource getDatasourceDistribuzione (List<ResDistribuzione> list,Logger log,TipoVisualizzazione tipoVisualizzazione, 
-			List<TipoBanda> tipiBanda,List<TipoLatenza> tipiLatenza, TipoStatistica tipoStatistica, boolean convertRawData) throws Exception {
+			List<TipoBanda> tipiBanda,List<TipoLatenza> tipiLatenza, TipoStatistica tipoStatistica, String tipoRiconoscimento, boolean convertRawData) throws Exception {
 		// Scittura Intestazione
 		List<String> header = new ArrayList<String>();
 
@@ -1187,8 +1199,8 @@ public class ExportUtils {
 			header.add("parent_0");
 			break;
 		case DISTRIBUZIONE_SERVIZIO_APPLICATIVO:
-			header.add("parent_0");
-			//header.add("parent_1");
+			if(tipoRiconoscimento != null && tipoRiconoscimento.equals(org.openspcoop2.web.monitor.core.constants.Costanti.VALUE_TIPO_RICONOSCIMENTO_APPLICATIVO))
+				header.add("parent_0");
 			break;
 		case ANDAMENTO_TEMPORALE:
 		case DISTRIBUZIONE_SOGGETTO:

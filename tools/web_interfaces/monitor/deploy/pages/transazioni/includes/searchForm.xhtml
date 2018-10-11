@@ -182,7 +182,7 @@
 					<a4j:outputPanel layout="block" id="saComboCtr" rendered="#{sf_bean.riconoscimento == 'applicativo'}">
 						<link:prop label="Applicativo" required="true">
 							<rich:comboBox id="saCombo" value="#{sf_servizioApplicativo}"
-										defaultLabel="#{not empty sf_soggettoLocale ? msg['transazioni.search.applicativo.defaultLabel'] : msg['transazioni.search.applicativo.defaultLabelNoSoggettoLocal']}" 
+										defaultLabel="#{sf_bean.defaultLabelServizioApplicativo}" 
 										directInputSuggestions="true" listWidth="#{sf_mbean.serviziApplicativiSelectItemsWidth}"
 										width="416" enableManualInput="false">
 								<f:selectItem itemValue="--"/>

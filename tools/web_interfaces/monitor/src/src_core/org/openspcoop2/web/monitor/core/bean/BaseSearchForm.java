@@ -69,6 +69,7 @@ import org.openspcoop2.web.monitor.core.dynamic.Statistiche;
 import org.openspcoop2.web.monitor.core.exception.UserInvalidException;
 import org.openspcoop2.web.monitor.core.logger.LoggerManager;
 import org.openspcoop2.web.monitor.core.utils.DynamicPdDBeanUtils;
+import org.openspcoop2.web.monitor.core.utils.MessageManager;
 import org.openspcoop2.web.monitor.core.utils.MessageUtils;
 import org.richfaces.model.Ordering;
 import org.slf4j.Logger;
@@ -2020,5 +2021,22 @@ public abstract class BaseSearchForm extends AbstractDateSearchForm {
 	
 	public boolean isShowTipologia() {
 		return true;
+	}
+	
+	
+	public String getDefaultLabelServizioApplicativo() {
+		if(this.getTipologiaRicercaEnum().equals(TipologiaRicerca.ingresso)) {
+			if(StringUtils.isNotEmpty(this.getTipoNomeMittente())) {
+				return MessageManager.getInstance().getMessage(Costanti.SEARCH_APPLICATIVO_DEFAULT_LABEL_KEY);
+			} else {
+				return MessageManager.getInstance().getMessage(Costanti.SEARCH_APPLICATIVO_DEFAULT_LABEL_NO_SOGGETTO_FRUITORE_KEY);
+			}
+		} else {
+			if(StringUtils.isNotEmpty(this.getSoggettoLocale())) {
+				return MessageManager.getInstance().getMessage(Costanti.SEARCH_APPLICATIVO_DEFAULT_LABEL_KEY);
+			} else {
+				return MessageManager.getInstance().getMessage(Costanti.SEARCH_APPLICATIVO_DEFAULT_LABEL_NO_SOGGETTO_LOCALE_KEY);
+			}
+		}
 	}
 }

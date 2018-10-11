@@ -73,14 +73,27 @@ public class StatisticheCostanti {
 	public static final String STATS_ANALISI_STATISTICA_TIPO_DISTRIBUZIONE_SOGGETTO_LOCALE_LABEL_SUFFIX_KEY = STATS_ANALISI_STATISTICA_TIPO_DISTRIBUZIONE_SOGGETTO_LOCALE_LABEL_KEY + ".suffix";
 	public static final String STATS_ANALISI_STATISTICA_TIPO_DISTRIBUZIONE_PERSONALIZZATA_LABEL_SUFFIX_KEY = STATS_ANALISI_STATISTICA_TIPO_DISTRIBUZIONE_PERSONALIZZATA_LABEL_KEY + ".suffix";
 	
-	
 	public static final String  STATS_ANALISI_STATISTICA_TIPO_DISTRIBUZIONE_TOOLTIP_NOSVG_EROGATORE_PATTERN_KEY = "stats.analisiStatistica.tipoDistribuzione.tooltip.nosvg.erogatore.pattern";
 	public static final String  STATS_ANALISI_STATISTICA_TIPO_DISTRIBUZIONE_TOOLTIP_NOSVG_SERVIZIO_PATTERN_KEY = "stats.analisiStatistica.tipoDistribuzione.tooltip.nosvg.servizio.pattern";
 	public static final String  STATS_ANALISI_STATISTICA_TIPO_DISTRIBUZIONE_TOOLTIP_NOSVG_AZIONE_PATTERN_KEY = "stats.analisiStatistica.tipoDistribuzione.tooltip.nosvg.azione.pattern";
-	public static final String  STATS_ANALISI_STATISTICA_TIPO_DISTRIBUZIONE_TOOLTIP_NOSVG_APPLICATIVO_PATTERN_KEY = "stats.analisiStatistica.tipoDistribuzione.tooltip.nosvg.sa.pattern";
 	public static final String  STATS_ANALISI_STATISTICA_TIPO_DISTRIBUZIONE_TOOLTIP_NOSVG_SOGGETTO_PATTERN_KEY = "stats.analisiStatistica.tipoDistribuzione.tooltip.nosvg.soggetto.pattern";
+	public static final String  STATS_ANALISI_STATISTICA_TIPO_DISTRIBUZIONE_TOOLTIP_NOSVG_APPLICATIVO_PATTERN_KEY = "stats.analisiStatistica.tipoDistribuzione.tooltip.nosvg.sa.applicativo.pattern";
+	public static final String  STATS_ANALISI_STATISTICA_TIPO_DISTRIBUZIONE_TOOLTIP_NOSVG_IDENTIFICATIVO_AUTENTICATO_PATTERN_KEY = "stats.analisiStatistica.tipoDistribuzione.tooltip.nosvg.sa.identificativoAutenticato.pattern";
+	public static final String  STATS_ANALISI_STATISTICA_TIPO_DISTRIBUZIONE_TOOLTIP_NOSVG_TOKENINFO_PATTERN_KEY = "stats.analisiStatistica.tipoDistribuzione.tooltip.nosvg.sa.tokenInfo.pattern";
+	public static final String  STATS_ANALISI_STATISTICA_TIPO_DISTRIBUZIONE_TOOLTIP_NOSVG_TOKENINFO_ISSUER_PATTERN_KEY = "stats.analisiStatistica.tipoDistribuzione.tooltip.nosvg.sa.tokenInfo.issuer.pattern";
+	public static final String  STATS_ANALISI_STATISTICA_TIPO_DISTRIBUZIONE_TOOLTIP_NOSVG_TOKENINFO_CLIENTID_PATTERN_KEY = "stats.analisiStatistica.tipoDistribuzione.tooltip.nosvg.sa.tokenInfo.clientID.pattern";
+	public static final String  STATS_ANALISI_STATISTICA_TIPO_DISTRIBUZIONE_TOOLTIP_NOSVG_TOKENINFO_SUBJECT_PATTERN_KEY = "stats.analisiStatistica.tipoDistribuzione.tooltip.nosvg.sa.tokenInfo.subject.pattern";
+	public static final String  STATS_ANALISI_STATISTICA_TIPO_DISTRIBUZIONE_TOOLTIP_NOSVG_TOKENINFO_USERNAME_PATTERN_KEY = "stats.analisiStatistica.tipoDistribuzione.tooltip.nosvg.sa.tokenInfo.username.pattern";
+	public static final String  STATS_ANALISI_STATISTICA_TIPO_DISTRIBUZIONE_TOOLTIP_NOSVG_TOKENINFO_EMAIL_PATTERN_KEY = "stats.analisiStatistica.tipoDistribuzione.tooltip.nosvg.sa.tokenInfo.email.pattern";
 	
 	public static final String  STATS_ANALISI_STATISTICA_TIPO_DISTRIBUZIONE_SERVIZIO_TOOLTIP_SVG_PATTERN_KEY = "stats.analisiStatistica.tipoDistribuzione.servizio.tooltip.svg.pattern";
 	public static final String  STATS_ANALISI_STATISTICA_TIPO_DISTRIBUZIONE_AZIONE_TOOLTIP_SVG_PATTERN_KEY = "stats.analisiStatistica.tipoDistribuzione.azione.tooltip.svg.pattern";
 	public static final String  STATS_ANALISI_STATISTICA_TIPO_DISTRIBUZIONE_SERVIZIO_APPLICATIVO_TOOLTIP_SVG_PATTERN_KEY = "stats.analisiStatistica.tipoDistribuzione.applicativo.tooltip.svg.pattern";
+	public static final String  STATS_ANALISI_STATISTICA_TIPO_DISTRIBUZIONE_IDENTIFICATIVO_AUTENTICATO_TOOLTIP_SVG_PATTERN_KEY = "stats.analisiStatistica.tipoDistribuzione.identificativoAutenticato.tooltip.svg.pattern";
+	public static final String  STATS_ANALISI_STATISTICA_TIPO_DISTRIBUZIONE_TOKENINFO_ISSUER_TOOLTIP_SVG_PATTERN_KEY = "stats.analisiStatistica.tipoDistribuzione.tokenInfo.issuer.tooltip.svg.pattern";
+	public static final String  STATS_ANALISI_STATISTICA_TIPO_DISTRIBUZIONE_TOKENINFO_CLIENTID_TOOLTIP_SVG_PATTERN_KEY = "stats.analisiStatistica.tipoDistribuzione.tokenInfo.clientID.tooltip.svg.pattern";
+	public static final String  STATS_ANALISI_STATISTICA_TIPO_DISTRIBUZIONE_TOKENINFO_SUBJECT_TOOLTIP_SVG_PATTERN_KEY = "stats.analisiStatistica.tipoDistribuzione.tokenInfo.subject.tooltip.svg.pattern";
+	public static final String  STATS_ANALISI_STATISTICA_TIPO_DISTRIBUZIONE_TOKENINFO_USERNAME_TOOLTIP_SVG_PATTERN_KEY = "stats.analisiStatistica.tipoDistribuzione.tokenInfo.username.tooltip.svg.pattern";
+	public static final String  STATS_ANALISI_STATISTICA_TIPO_DISTRIBUZIONE_TOKENINFO_EMAIL_TOOLTIP_SVG_PATTERN_KEY = "stats.analisiStatistica.tipoDistribuzione.tokenInfo.email.tooltip.svg.pattern";
+	
 }
