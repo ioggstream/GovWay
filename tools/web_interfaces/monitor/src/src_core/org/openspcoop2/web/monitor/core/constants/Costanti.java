@@ -96,4 +96,9 @@ public class Costanti {
 	public static final String RICHIESTA_LABEL_KEY = "commons.richiesta.label";
 	public static final String EROGATORE_LABEL_KEY = "commons.erogatore.label";
 	public static final String FRUITORE_LABEL_KEY = "commons.fruitore.label";
+	
+	public static final String SEARCH_APPLICATIVO_DEFAULT_LABEL_KEY = "commons.search.applicativo.defaultLabel";
+	public static final String SEARCH_APPLICATIVO_DEFAULT_LABEL_NO_SOGGETTO_LOCALE_KEY = "commons.search.applicativo.defaultLabelNoSoggettoLocal";
+	public static final String SEARCH_APPLICATIVO_DEFAULT_LABEL_NO_SOGGETTO_FRUITORE_KEY = "commons.search.applicativo.defaultLabelNoSoggettoFruitore";
+	
 }
