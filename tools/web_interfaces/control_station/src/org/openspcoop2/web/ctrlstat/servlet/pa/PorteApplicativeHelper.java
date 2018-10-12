@@ -1568,22 +1568,24 @@ public class PorteApplicativeHelper extends ConnettoriHelper {
 		// *************** ServizioApplicativo Erogatore *********************
 		
 		if(!isConfigurazione && TipoOperazione.CHANGE.equals(tipoOp)){
-					
-			de = new DataElement();
-			de.setType(DataElementType.TITLE);
-			de.setLabel(PorteApplicativeCostanti.LABEL_PARAMETRO_PORTE_APPLICATIVE_SERVIZI_APPLICATIVI_EROGATORI);
-			dati.addElement(de);
+				
+			// Il link richiede ulteriori parametri.
 			
-			de = new DataElement();
-			de.setType(DataElementType.LINK);
-			
-			de.setUrl(ServiziApplicativiCostanti.SERVLET_NAME_SERVIZI_APPLICATIVI_ENDPOINT, pIdSogg, pIdPorta, pIdAsps,
-					new Parameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_NOME_SERVIZIO_APPLICATIVO, servizioApplicativo),
-					new Parameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_ID_SERVIZIO_APPLICATIVO, idSa+""));
-			ServletUtils.setDataElementVisualizzaLabel(de);
-
-
-			dati.addElement(de);
+//			de = new DataElement();
+//			de.setType(DataElementType.TITLE);
+//			de.setLabel(PorteApplicativeCostanti.LABEL_PARAMETRO_PORTE_APPLICATIVE_SERVIZI_APPLICATIVI_EROGATORI);
+//			dati.addElement(de);
+//			
+//			de = new DataElement();
+//			de.setType(DataElementType.LINK);
+//			
+//			de.setUrl(ServiziApplicativiCostanti.SERVLET_NAME_SERVIZI_APPLICATIVI_ENDPOINT, pIdSogg, pIdPorta, pIdAsps,
+//					new Parameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_NOME_SERVIZIO_APPLICATIVO, servizioApplicativo),
+//					new Parameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_ID_SERVIZIO_APPLICATIVO, idSa+""));
+//			ServletUtils.setDataElementVisualizzaLabel(de);
+//
+//
+//			dati.addElement(de);
 		
 			
 		}
@@ -1592,14 +1594,17 @@ public class PorteApplicativeHelper extends ConnettoriHelper {
 	
 		if(!tipoOp.equals(TipoOperazione.ADD)) {
 			if(!isConfigurazione) {
-				this.controlloAccessi(dati);
-				// 	controllo accessi
-				de = new DataElement();
-				de.setType(DataElementType.LINK);
-				de.setUrl(PorteApplicativeCostanti.SERVLET_NAME_PORTE_APPLICATIVE_CONTROLLO_ACCESSI, pIdSogg, pIdPorta, pIdAsps);
-				String statoControlloAccessi = this.getLabelStatoControlloAccessi(gestioneToken,autenticazione, autenticazioneOpzionale, autenticazioneCustom, autorizzazione, autorizzazioneContenuti,autorizzazioneCustom);
-				ServletUtils.setDataElementCustomLabel(de, PorteApplicativeCostanti.LABEL_PARAMETRO_PORTE_APPLICATIVE_CONTROLLO_ACCESSI, statoControlloAccessi);
-				dati.addElement(de);
+				
+				// Il link richiede ulteriori parametri.
+				
+//				this.controlloAccessi(dati);
+//				// 	controllo accessi
+//				de = new DataElement();
+//				de.setType(DataElementType.LINK);
+//				de.setUrl(PorteApplicativeCostanti.SERVLET_NAME_PORTE_APPLICATIVE_CONTROLLO_ACCESSI, pIdSogg, pIdPorta, pIdAsps);
+//				String statoControlloAccessi = this.getLabelStatoControlloAccessi(gestioneToken,autenticazione, autenticazioneOpzionale, autenticazioneCustom, autorizzazione, autorizzazioneContenuti,autorizzazioneCustom);
+//				ServletUtils.setDataElementCustomLabel(de, PorteApplicativeCostanti.LABEL_PARAMETRO_PORTE_APPLICATIVE_CONTROLLO_ACCESSI, statoControlloAccessi);
+//				dati.addElement(de);
 			}
 		}else {
 			// Pintori 29/11/2017 Gestione Accessi spostata nella servlet PorteApplicativeControlloAccessi,  in ADD devo mostrare comunque la form.
@@ -1633,18 +1638,21 @@ public class PorteApplicativeHelper extends ConnettoriHelper {
 		// *************** Validazione Contenuti *********************
 		if(!tipoOp.equals(TipoOperazione.ADD)) {
 			if(!isConfigurazione) {
-				de = new DataElement();
-				de.setType(DataElementType.TITLE);
-				de.setLabel(PorteApplicativeCostanti.LABEL_PARAMETRO_PORTE_APPLICATIVE_VALIDAZIONE_CONTENUTI);
-				dati.addElement(de);
 				
+				// Il link richiede ulteriori parametri.
 				
-				// Validazione Contenuti
-				de = new DataElement();
-				de.setType(DataElementType.LINK);
-				de.setUrl(PorteApplicativeCostanti.SERVLET_NAME_PORTE_APPLICATIVE_VALIDAZIONE_CONTENUTI, pIdSogg, pIdPorta, pIdAsps);
-				ServletUtils.setDataElementCustomLabel(de, PorteApplicativeCostanti.LABEL_PARAMETRO_PORTE_APPLICATIVE_VALIDAZIONE_CONTENUTI, statoValidazione);
-				dati.addElement(de);
+//				de = new DataElement();
+//				de.setType(DataElementType.TITLE);
+//				de.setLabel(PorteApplicativeCostanti.LABEL_PARAMETRO_PORTE_APPLICATIVE_VALIDAZIONE_CONTENUTI);
+//				dati.addElement(de);
+//				
+//				
+//				// Validazione Contenuti
+//				de = new DataElement();
+//				de.setType(DataElementType.LINK);
+//				de.setUrl(PorteApplicativeCostanti.SERVLET_NAME_PORTE_APPLICATIVE_VALIDAZIONE_CONTENUTI, pIdSogg, pIdPorta, pIdAsps);
+//				ServletUtils.setDataElementCustomLabel(de, PorteApplicativeCostanti.LABEL_PARAMETRO_PORTE_APPLICATIVE_VALIDAZIONE_CONTENUTI, statoValidazione);
+//				dati.addElement(de);
 			}
 		}else {
 			// 	Pintori 08/02/2018 Validazione Contenuti spostata nella servlet PorteApplicativeValidazione, in ADD devo mostrare comunque la form.
@@ -1790,33 +1798,36 @@ public class PorteApplicativeHelper extends ConnettoriHelper {
 		
 		if (tipoOp.equals(TipoOperazione.CHANGE)) {
 			if(!isConfigurazione) {
-				de = new DataElement();
-				de.setType(DataElementType.TITLE);
-				de.setLabel(PorteApplicativeCostanti.LABEL_PARAMETRO_PORTE_APPLICATIVE_GESTIONE_MESSAGGIO);
-				dati.addElement(de);
-	
-				de = new DataElement();
-				de.setType(DataElementType.LINK);
-				de.setUrl(PorteApplicativeCostanti.SERVLET_NAME_PORTE_APPLICATIVE_CORRELAZIONE_APPLICATIVA,pIdSogg,pIdPorta,pNomePorta, pIdAsps);
-				String statoCorrelazioneApplicativa = PorteApplicativeCostanti.LABEL_PARAMETRO_PORTE_APPLICATIVE_CORRELAZIONE_APPLICATIVA_DISABILITATA;
-				if(numCorrelazioneReq>0 || numCorrelazioneRes>0){
-					statoCorrelazioneApplicativa = PorteApplicativeCostanti.LABEL_PARAMETRO_PORTE_APPLICATIVE_CORRELAZIONE_APPLICATIVA_ABILITATA;
-				}
-				ServletUtils.setDataElementCustomLabel(de, PorteApplicativeCostanti.LABEL_PARAMETRO_PORTE_APPLICATIVE_CORRELAZIONE_APPLICATIVA, statoCorrelazioneApplicativa);
-				dati.addElement(de);
 				
-				de = new DataElement();
-				de.setType(DataElementType.LINK);
-				de.setUrl(PorteApplicativeCostanti.SERVLET_NAME_PORTE_APPLICATIVE_MESSAGE_SECURITY,pIdSogg,pIdPorta, pIdAsps);
-				ServletUtils.setDataElementCustomLabel(de, PorteApplicativeCostanti.LABEL_PARAMETRO_PORTE_APPLICATIVE_MESSAGE_SECURITY, statoMessageSecurity);
-				dati.addElement(de);
+				// Il link richiede ulteriori parametri.
 				
-				//if (InterfaceType.AVANZATA.equals(ServletUtils.getUserFromSession(this.session).getInterfaceType())) {
-				de = new DataElement();
-				de.setType(DataElementType.LINK);
-				de.setUrl(PorteApplicativeCostanti.SERVLET_NAME_PORTE_APPLICATIVE_MTOM, pIdSogg,pIdPorta, pIdAsps);
-				ServletUtils.setDataElementCustomLabel(de, PorteApplicativeCostanti.LABEL_PARAMETRO_PORTE_APPLICATIVE_MTOM, statoMTOM);
-				dati.addElement(de);
+//				de = new DataElement();
+//				de.setType(DataElementType.TITLE);
+//				de.setLabel(PorteApplicativeCostanti.LABEL_PARAMETRO_PORTE_APPLICATIVE_GESTIONE_MESSAGGIO);
+//				dati.addElement(de);
+//	
+//				de = new DataElement();
+//				de.setType(DataElementType.LINK);
+//				de.setUrl(PorteApplicativeCostanti.SERVLET_NAME_PORTE_APPLICATIVE_CORRELAZIONE_APPLICATIVA,pIdSogg,pIdPorta,pNomePorta, pIdAsps);
+//				String statoCorrelazioneApplicativa = PorteApplicativeCostanti.LABEL_PARAMETRO_PORTE_APPLICATIVE_CORRELAZIONE_APPLICATIVA_DISABILITATA;
+//				if(numCorrelazioneReq>0 || numCorrelazioneRes>0){
+//					statoCorrelazioneApplicativa = PorteApplicativeCostanti.LABEL_PARAMETRO_PORTE_APPLICATIVE_CORRELAZIONE_APPLICATIVA_ABILITATA;
+//				}
+//				ServletUtils.setDataElementCustomLabel(de, PorteApplicativeCostanti.LABEL_PARAMETRO_PORTE_APPLICATIVE_CORRELAZIONE_APPLICATIVA, statoCorrelazioneApplicativa);
+//				dati.addElement(de);
+//				
+//				de = new DataElement();
+//				de.setType(DataElementType.LINK);
+//				de.setUrl(PorteApplicativeCostanti.SERVLET_NAME_PORTE_APPLICATIVE_MESSAGE_SECURITY,pIdSogg,pIdPorta, pIdAsps);
+//				ServletUtils.setDataElementCustomLabel(de, PorteApplicativeCostanti.LABEL_PARAMETRO_PORTE_APPLICATIVE_MESSAGE_SECURITY, statoMessageSecurity);
+//				dati.addElement(de);
+//				
+//				//if (InterfaceType.AVANZATA.equals(ServletUtils.getUserFromSession(this.session).getInterfaceType())) {
+//				de = new DataElement();
+//				de.setType(DataElementType.LINK);
+//				de.setUrl(PorteApplicativeCostanti.SERVLET_NAME_PORTE_APPLICATIVE_MTOM, pIdSogg,pIdPorta, pIdAsps);
+//				ServletUtils.setDataElementCustomLabel(de, PorteApplicativeCostanti.LABEL_PARAMETRO_PORTE_APPLICATIVE_MTOM, statoMTOM);
+//				dati.addElement(de);
 				//}
 			}
 		}
@@ -2135,7 +2146,17 @@ public class PorteApplicativeHelper extends ConnettoriHelper {
 					Parameter pIdNome = new Parameter(PorteApplicativeCostanti.PARAMETRO_PORTE_APPLICATIVE_NOME, ""+pa.getNome());
 					Parameter pIdSogg = new Parameter(PorteApplicativeCostanti.PARAMETRO_PORTE_APPLICATIVE_ID_SOGGETTO, pa.getIdSoggetto() + "");
 					Parameter pIdPorta = new Parameter(PorteApplicativeCostanti.PARAMETRO_PORTE_APPLICATIVE_ID, ""+pa.getId());
-					Parameter pIdAsps = new Parameter(PorteApplicativeCostanti.PARAMETRO_PORTE_APPLICATIVE_ID_ASPS, idAsps);
+					Parameter pIdAsps = null;
+					if(idAsps==null || "".equals(idAsps)) {
+						IDServizio idServizioObject = IDServizioFactory.getInstance().getIDServizioFromValues(pa.getServizio().getTipo(), pa.getServizio().getNome(), 
+								pa.getTipoSoggettoProprietario(), pa.getNomeSoggettoProprietario(), 
+								pa.getServizio().getVersione());
+						AccordoServizioParteSpecifica asps = this.apsCore.getServizio(idServizioObject);
+						pIdAsps = new Parameter(PorteApplicativeCostanti.PARAMETRO_PORTE_APPLICATIVE_ID_ASPS, asps.getId()+"");
+					}
+					else {
+						pIdAsps = new Parameter(PorteApplicativeCostanti.PARAMETRO_PORTE_APPLICATIVE_ID_ASPS, idAsps);
+					}
 
 					String protocollo = this.soggettiCore.getProtocolloAssociatoTipoSoggetto(pa.getTipoSoggettoProprietario());
 					
