@@ -392,6 +392,9 @@ public final class AccordiServizioParteComuneChange extends Action {
 			else if(ApiCostanti.VALORE_PARAMETRO_APC_API_SOGGETTO_REFERENTE.equals(apiGestioneParziale)) {
 				listaParams.add(new Parameter(AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_REFERENTE, null));
 			}
+			else if(ApiCostanti.VALORE_PARAMETRO_APC_API_DESCRIZIONE.equals(apiGestioneParziale)) {
+				listaParams.add(new Parameter(AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_DESCRIZIONE, null));
+			}
 			else if(ApiCostanti.VALORE_PARAMETRO_APC_API_GESTIONE_ALLEGATI.equals(apiGestioneParziale)) {
 				listaParams.add(new Parameter(ApiCostanti.APC_API_LABEL_GESTIONE_ALLEGATI, null));
 			}

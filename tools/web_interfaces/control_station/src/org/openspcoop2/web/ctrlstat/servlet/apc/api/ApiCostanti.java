@@ -99,6 +99,7 @@ public class ApiCostanti extends AccordiServizioParteComuneCostanti {
 	public final static String PARAMETRO_APC_API_GESTIONE_PARZIALE = "apiGestioneParziale";
 	public final static String VALORE_PARAMETRO_APC_API_INFORMAZIONI_GENERALI = "apiInfoGenerali";
 	public final static String VALORE_PARAMETRO_APC_API_SOGGETTO_REFERENTE = "apiSoggettoReferente";
+	public final static String VALORE_PARAMETRO_APC_API_DESCRIZIONE = "apiDescrizione";
 	public final static String VALORE_PARAMETRO_APC_API_GESTIONE_ALLEGATI = "apiGestioneAllegati";
 	public final static String VALORE_PARAMETRO_APC_API_OPZIONI_AVANZATE = "apiOpzioniAvanzate";
 	public final static String VALORE_PARAMETRO_APC_API_GESTIONE_PARZIALE_WSDL_CHANGE = "apiWsdlChange";

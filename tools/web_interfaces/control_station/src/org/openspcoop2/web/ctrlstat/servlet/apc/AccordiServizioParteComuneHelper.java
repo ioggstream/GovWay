@@ -2970,6 +2970,13 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 		Boolean isModalitaVistaApiCustom = ServletUtils.getBooleanAttributeFromSession(ApiCostanti.SESSION_ATTRIBUTE_VISTA_APC_API, this.session, false);
 		String apiGestioneParziale = this.getParameter(ApiCostanti.PARAMETRO_APC_API_GESTIONE_PARZIALE);
 		
+		boolean gestioneAPI = true;
+		boolean gestioneSoggettoReferente = true;
+		boolean gestioneDescrizione = true;
+		boolean gestioneAllegati = true;
+		boolean gestioneInformazioniProtocollo = true;
+		
+		
 		DataElement de = new DataElement();
 		de.setValue(tipoAccordo);
 		de.setType(DataElementType.HIDDEN);

@@ -375,7 +375,7 @@ public class ApiHelper extends AccordiServizioParteComuneHelper {
 		de.setToolTip(MessageFormat.format(ApiCostanti.APC_API_ICONA_MODIFICA_API_TOOLTIP_CON_PARAMETRO, ApiCostanti.APC_API_LABEL_APS_INFO_GENERALI));
 		de.setIcon(ApiCostanti.APC_API_ICONA_MODIFICA_API);
 		dati.addElement(de);
-
+		
 		// soggetto referente
 		ProtocolFactoryManager protocolFactoryManager = ProtocolFactoryManager.getInstance();
 		boolean supportatoSoggettoReferente = protocolFactoryManager.getProtocolFactoryByName(tipoProtocollo).createProtocolConfiguration().isSupportoSoggettoReferenteAccordiParteComune();
@@ -430,7 +430,7 @@ public class ApiHelper extends AccordiServizioParteComuneHelper {
 		StringBuilder sb = new StringBuilder();
 		sb.append(labelServiceBinding).append(" ").append(labelWsdlCon);
 		de.setValue(sb.toString());
-		
+				
 		// lista icone a dx 
 		// wsdl change
 		Parameter pNascondiSezioneDownload = new Parameter(ApiCostanti.PARAMETRO_APC_API_GESTIONE_PARZIALE, ApiCostanti.VALORE_PARAMETRO_APC_API_GESTIONE_PARZIALE_WSDL_CHANGE); 
@@ -457,9 +457,21 @@ public class ApiHelper extends AccordiServizioParteComuneHelper {
 			de.addToolTip(MessageFormat.format(ApiCostanti.APC_API_ICONA_DOWNLOAD_DOCUMENTO_INTERFACCIA_TOOLTIP_CON_PARAMETRO, ApiCostanti.APC_API_LABEL_PARAMETRO_INTERFACCIA));
 			de.addIcon(ApiCostanti.APC_API_ICONA_DOWNLOAD_DOCUMENTO_INTERFACCIA);
 			de.addTarget(TargetType.SELF);
-			dati.addElement(de);
 		}
 		
+		dati.addElement(de);
+		
+		
+		// Descrizione
+		de = new DataElement();
+		de.setType(DataElementType.TEXT);
+		de.setLabel(AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_DESCRIZIONE);
+		de.setValue(as.getDescrizione());
+		listParametersApi.get(0).setValue(ApiCostanti.VALORE_PARAMETRO_APC_API_DESCRIZIONE);
+		de.setUrl(AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_CHANGE, listParametersApi.toArray(new Parameter[1]));
+		de.setToolTip(MessageFormat.format(ApiCostanti.APC_API_ICONA_MODIFICA_API_TOOLTIP_CON_PARAMETRO, AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_DESCRIZIONE));
+		de.setIcon(ApiCostanti.APC_API_ICONA_MODIFICA_API);
+		dati.addElement(de);
 		
 		
 		// link
