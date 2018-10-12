@@ -69,6 +69,7 @@ import org.openspcoop2.web.ctrlstat.core.ControlStationCore;
 import org.openspcoop2.web.ctrlstat.core.Search;
 import org.openspcoop2.web.ctrlstat.servlet.GeneralHelper;
 import org.openspcoop2.web.ctrlstat.servlet.ac.AccordiCooperazioneCore;
+import org.openspcoop2.web.ctrlstat.servlet.apc.api.ApiCostanti;
 import org.openspcoop2.web.ctrlstat.servlet.aps.AccordiServizioParteSpecificaCore;
 import org.openspcoop2.web.ctrlstat.servlet.archivi.ArchiviCostanti;
 import org.openspcoop2.web.ctrlstat.servlet.protocol_properties.ProtocolPropertiesCostanti;
@@ -134,6 +135,8 @@ public final class AccordiServizioParteComuneWSDLChange extends Action {
 		this.consoleOperationType = ConsoleOperationType.CHANGE;
 		
 		try {
+			Boolean isModalitaVistaApiCustom = ServletUtils.getBooleanAttributeFromSession(ApiCostanti.SESSION_ATTRIBUTE_VISTA_APC_API, session, false);
+			
 			AccordiServizioParteComuneHelper apcHelper = new AccordiServizioParteComuneHelper(request, pd, session);
 			this.consoleInterfaceType = ProtocolPropertiesUtilities.getTipoInterfaccia(apcHelper); 
 
@@ -292,6 +295,9 @@ public final class AccordiServizioParteComuneWSDLChange extends Action {
 
 
 			IDAccordo idAccordoOLD = idAccordoFactory.getIDAccordoFromValues(as.getNome(),BeanUtilities.getSoggettoReferenteID(as.getSoggettoReferente()),as.getVersione());
+			Parameter pIdAccordo = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_ID, this.id+"");
+			Parameter pNomeAccordo = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_NOME, as.getNome());
+			Parameter pTipoAccordo = AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo);
 
 			String tipoProtocollo = null;
 			// controllo se l'accordo e' utilizzato da qualche asps
@@ -307,22 +313,16 @@ public final class AccordiServizioParteComuneWSDLChange extends Action {
 			}
 
 			List<String> tipiSoggettiGestitiProtocollo = soggettiCore.getTipiSoggettiGestitiProtocollo(tipoProtocollo);
-
-			Parameter parameterApcChange = new Parameter(labelASTitle,
-					AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_CHANGE+"?"+
-							AccordiServizioParteComuneCostanti.PARAMETRO_APC_ID+"="+this.id+"&"+
-							AccordiServizioParteComuneCostanti.PARAMETRO_APC_NOME+"="+as.getNome()+"&"+
-							AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo).getName()+"="+
-							AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo).getValue()
-					);
+			String servletNameApcList = isModalitaVistaApiCustom ? ApiCostanti.SERVLET_NAME_APC_API_LIST : AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_LIST;
+			String servletNameApcChange = isModalitaVistaApiCustom ? ApiCostanti.SERVLET_NAME_APC_API_CHANGE : AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_CHANGE;
+			Parameter parameterApcChange = new Parameter(labelASTitle,	servletNameApcChange, pIdAccordo,pNomeAccordo,pTipoAccordo);
+			
 			if(apcHelper.isEditModeInProgress() && ServletUtils.isEditModeInProgress(this.editMode)){
 
 				// setto la barra del titolo				
 				ServletUtils.setPageDataTitle(pd, 
 						new Parameter(AccordiServizioParteComuneUtilities.getTerminologiaAccordoServizio(this.tipoAccordo),
-								AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_LIST+"?"+
-										AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo).getName()+"="+
-										AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo).getValue()),
+								servletNameApcList,pTipoAccordo),
 										parameterApcChange,
 												new Parameter(label,null)
 						);
@@ -349,10 +349,7 @@ public final class AccordiServizioParteComuneWSDLChange extends Action {
 
 				// setto la barra del titolo
 				ServletUtils.setPageDataTitle(pd, 
-						new Parameter(AccordiServizioParteComuneUtilities.getTerminologiaAccordoServizio(this.tipoAccordo),
-								AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_LIST+"?"+
-										AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo).getName()+"="+
-										AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo).getValue()),
+						new Parameter(AccordiServizioParteComuneUtilities.getTerminologiaAccordoServizio(this.tipoAccordo),	servletNameApcList, pTipoAccordo),
 										parameterApcChange,
 												new Parameter(label,null)
 						);
@@ -401,9 +398,7 @@ public final class AccordiServizioParteComuneWSDLChange extends Action {
 							// setto la barra del titolo
 							ServletUtils.setPageDataTitle(pd, 
 									new Parameter(AccordiServizioParteComuneUtilities.getTerminologiaAccordoServizio(this.tipoAccordo),
-											AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_LIST+"?"+
-													AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo).getName()+"="+
-													AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo).getValue()),
+											servletNameApcList,pTipoAccordo),
 													parameterApcChange,
 															new Parameter(label,null)
 									);
@@ -605,9 +600,7 @@ public final class AccordiServizioParteComuneWSDLChange extends Action {
 			// setto la barra del titolo
 			ServletUtils.setPageDataTitle(pd, 
 					new Parameter(AccordiServizioParteComuneUtilities.getTerminologiaAccordoServizio(this.tipoAccordo),
-							AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_LIST+"?"+
-									AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo).getName()+"="+
-									AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo).getValue()),
+							servletNameApcList,pTipoAccordo),
 									new Parameter(uriAS,null)
 					);
 

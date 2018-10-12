@@ -80,6 +80,7 @@ import org.openspcoop2.utils.rest.api.ApiResponse;
 import org.openspcoop2.web.ctrlstat.core.Search;
 import org.openspcoop2.web.ctrlstat.costanti.CostantiControlStation;
 import org.openspcoop2.web.ctrlstat.plugins.ExtendedConnettore;
+import org.openspcoop2.web.ctrlstat.servlet.apc.api.ApiCostanti;
 import org.openspcoop2.web.ctrlstat.servlet.aps.AccordiServizioParteSpecificaCostanti;
 import org.openspcoop2.web.ctrlstat.servlet.archivi.ArchiviCostanti;
 import org.openspcoop2.web.ctrlstat.servlet.archivi.ExporterUtils;
@@ -2671,8 +2672,11 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 
 
 	public void addAccordiWSDLChangeToDati(Vector<DataElement> dati,String id,String tipoAccordo,String tipo,String label,
-			String oldwsdl,String statoPackage,boolean validazioneDocumenti, String tipologiaDocumentoScaricare){
+			String oldwsdl,String statoPackage,boolean validazioneDocumenti, String tipologiaDocumentoScaricare) throws Exception{
 
+		boolean nascondiSezioneDownload =
+				ServletUtils.isCheckBoxEnabled(this.getParameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_NASCONDI_SEZIONE_DOWNLOAD_WSDL_CHANGE, String.class, ""));
+		
 		DataElement de = new DataElement();
 		String labelWSDL = label;
 		if(label.contains(" di ")){
@@ -2681,9 +2685,11 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 			labelWSDL = tipologiaDocumentoScaricare.toUpperCase().charAt(0)+tipologiaDocumentoScaricare.substring(1);
 		}
 		
-		de.setLabel(labelWSDL);
-		de.setType(DataElementType.TITLE);
-		dati.addElement(de);
+		if(!nascondiSezioneDownload) {
+			de.setLabel(labelWSDL);
+			de.setType(DataElementType.TITLE);
+			dati.addElement(de);
+		}
 		
 		de = new DataElement();
 		de.setLabel(AccordiServizioParteComuneCostanti.PARAMETRO_APC_ID);
@@ -2704,6 +2710,13 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 		de.setValue(tipo);
 		de.setType(DataElementType.HIDDEN);
 		de.setName(AccordiServizioParteComuneCostanti.PARAMETRO_APC_TIPO_WSDL);
+		dati.addElement(de);
+		
+		de = new DataElement();
+		de.setLabel(AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_NASCONDI_SEZIONE_DOWNLOAD_WSDL_CHANGE);
+		de.setType(DataElementType.HIDDEN);
+		ServletUtils.setCheckBox(de, nascondiSezioneDownload); 
+		de.setName(AccordiServizioParteComuneCostanti.PARAMETRO_APC_NASCONDI_SEZIONE_DOWNLOAD_WSDL_CHANGE);
 		dati.addElement(de);
 
 		if(this.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(statoPackage)){
@@ -2741,25 +2754,27 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 		else{
 			//			de.setLabel(label.replace(" di ", " di <BR/>")+"<BR/>Attuale:");
 			if(oldwsdl != null && !oldwsdl.isEmpty()){
-				if(this.core.isShowInterfacceAPI()) {
-					de = new DataElement();
-					de.setType(DataElementType.TEXT_AREA_NO_EDIT);
-//					de.setType(DataElementType.HIDDEN);
-					de.setValue(oldwsdl);
-					de.setRows(30);
-					de.setCols(110);
-					//de.setLabel(AccordiServizioParteComuneCostanti.LABEL_WSDL_ATTUALE );
-					dati.addElement(de);
+				if(!nascondiSezioneDownload) {
+					if(this.core.isShowInterfacceAPI()) {
+						de = new DataElement();
+						de.setType(DataElementType.TEXT_AREA_NO_EDIT);
+	//					de.setType(DataElementType.HIDDEN);
+						de.setValue(oldwsdl);
+						de.setRows(30);
+						de.setCols(110);
+						//de.setLabel(AccordiServizioParteComuneCostanti.LABEL_WSDL_ATTUALE );
+						dati.addElement(de);
+					}
+					
+					DataElement saveAs = new DataElement();
+					saveAs.setValue(AccordiServizioParteComuneCostanti.LABEL_DOWNLOAD);
+					saveAs.setType(DataElementType.LINK);
+					saveAs.setUrl(ArchiviCostanti.SERVLET_NAME_DOCUMENTI_EXPORT, 
+							new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_ALLEGATI_ID_ACCORDO, id),
+							new Parameter(ArchiviCostanti.PARAMETRO_ARCHIVI_ALLEGATO_TIPO_ACCORDO_TIPO_DOCUMENTO, tipologiaDocumentoScaricare),
+							new Parameter(ArchiviCostanti.PARAMETRO_ARCHIVI_ALLEGATO_TIPO_ACCORDO, ArchiviCostanti.PARAMETRO_VALORE_ARCHIVI_ALLEGATO_TIPO_ACCORDO_PARTE_COMUNE));
+					dati.add(saveAs);
 				}
-				
-				DataElement saveAs = new DataElement();
-				saveAs.setValue(AccordiServizioParteComuneCostanti.LABEL_DOWNLOAD);
-				saveAs.setType(DataElementType.LINK);
-				saveAs.setUrl(ArchiviCostanti.SERVLET_NAME_DOCUMENTI_EXPORT, 
-						new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_ALLEGATI_ID_ACCORDO, id),
-						new Parameter(ArchiviCostanti.PARAMETRO_ARCHIVI_ALLEGATO_TIPO_ACCORDO_TIPO_DOCUMENTO, tipologiaDocumentoScaricare),
-						new Parameter(ArchiviCostanti.PARAMETRO_ARCHIVI_ALLEGATO_TIPO_ACCORDO, ArchiviCostanti.PARAMETRO_VALORE_ARCHIVI_ALLEGATO_TIPO_ACCORDO_PARTE_COMUNE));
-				dati.add(saveAs);
 
 				de = new DataElement();
 				de.setType(DataElementType.TITLE);

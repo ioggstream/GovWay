@@ -142,22 +142,26 @@ public class NamingUtils {
 		return getLabelAccordoServizioParteComune(protocollo, idAccordo);
 	}
 	public static String getLabelAccordoServizioParteComune(String protocollo, IDAccordo idAccordo) throws Exception{
+		return getLabelAccordoServizioParteComune(protocollo, idAccordo, true);
+	}
+	public static String getLabelAccordoServizioParteComune(String protocollo, IDAccordo idAccordo, boolean addSoggettoReferente) throws Exception{
 		StringBuffer bf = new StringBuffer();
 		bf.append(idAccordo.getNome());
 		bf.append(":");
 		bf.append(idAccordo.getVersione());
-		ProtocolFactoryManager protocolFactoryManager = ProtocolFactoryManager.getInstance();
-		boolean supportatoSoggettoReferente = protocolFactoryManager.getProtocolFactoryByName(protocollo).createProtocolConfiguration().isSupportoSoggettoReferenteAccordiParteComune();
-		if(supportatoSoggettoReferente) {
-			if(idAccordo.getSoggettoReferente()!=null){
-				bf.append(" (");
-				bf.append(getLabelSoggetto(protocollo, idAccordo.getSoggettoReferente().getTipo(), idAccordo.getSoggettoReferente().getNome()));
-				bf.append(")");
+		if(addSoggettoReferente) {
+			ProtocolFactoryManager protocolFactoryManager = ProtocolFactoryManager.getInstance();
+			boolean supportatoSoggettoReferente = protocolFactoryManager.getProtocolFactoryByName(protocollo).createProtocolConfiguration().isSupportoSoggettoReferenteAccordiParteComune();
+			if(supportatoSoggettoReferente) {
+				if(idAccordo.getSoggettoReferente()!=null){
+					bf.append(" (");
+					bf.append(getLabelSoggetto(protocollo, idAccordo.getSoggettoReferente().getTipo(), idAccordo.getSoggettoReferente().getNome()));
+					bf.append(")");
+				}
 			}
 		}
 		return bf.toString();
 	}
-	
 	
 	// SERVIZI
 	

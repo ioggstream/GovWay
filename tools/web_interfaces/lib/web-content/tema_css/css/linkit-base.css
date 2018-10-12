@@ -1266,23 +1266,26 @@ div.prop-slider{
 }
 
 
-/* CLASSI VISTA CUSTOM EROGAZIONI */
+/* CLASSI VISTA CUSTOM EROGAZIONI, FRUIZIONI, API */
 
 .entryErogazione,
-.entryFruizione {
+.entryFruizione,
+.entryApi {
 	cursor: pointer;
 	padding: 16px;
 }
 
 .entryErogazione .titoloEntry,
-.entryFruizione .titoloEntry {
+.entryFruizione .titoloEntry,
+.entryApi .titoloEntry {
 	padding: 4px 4px 4px 0px;
     font-weight: bold;
     font-size: 16px;
 }
 
 .entryErogazione .metadatiEntry,
-.entryFruizione .metadatiEntry {
+.entryFruizione .metadatiEntry,
+.entryApi .metadatiEntry {
 	padding: 4px 4px 4px 0px;
 	color: ${body.secondary.color};
 }

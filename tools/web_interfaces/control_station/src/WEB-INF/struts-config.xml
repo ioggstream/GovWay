@@ -379,6 +379,33 @@
             <forward name="accordiServizioParteComuneWSDLChangeCheckError" path="/jsplib/addElement.jsp"/>
             <forward name="accordiServizioParteComuneError" path="/jsplib/info.jsp"/>
         </action>
+        
+        <!-- Accordi di Servizio Parte Comune (Vista API) -->
+  		<action path="/accordiServizioParteComuneApiAdd" type="org.openspcoop2.web.ctrlstat.servlet.apc.AccordiServizioParteComuneAdd"
+            scope="request" validate="true">
+            <forward name="accordiServizioParteComuneAddForm" path="/jsplib/addElement.jsp"/>
+            <forward name="accordiServizioParteComuneAddOk" path="/jsplib/listElement.jsp"/>
+            <forward name="accordiServizioParteComuneAddCheckError" path="/jsplib/addElement.jsp"/>
+            <forward name="accordiServizioParteComuneError" path="/jsplib/info.jsp"/>
+            <forward name="accordiServizioParteComuneApiAddOk" path="/jsplib/listElement.jsp"/>
+        </action>
+		<action path="/accordiServizioParteComuneApiChange" type="org.openspcoop2.web.ctrlstat.servlet.apc.api.ApiChange"
+            scope="request" validate="true">
+            <forward name="accordiServizioParteComuneApiChangeForm" path="/jsplib/addElement.jsp"/>
+            <forward name="accordiServizioParteComuneApiChangeOk" path="/jsplib/addElement.jsp"/>
+            <forward name="accordiServizioParteComuneApiError" path="/jsplib/info.jsp"/>
+        </action>
+		<action path="/accordiServizioParteComuneApiList" type="org.openspcoop2.web.ctrlstat.servlet.apc.api.ApiList"
+            scope="request" validate="true">
+            <forward name="accordiServizioParteComuneApiList" path="/jsplib/listElement.jsp"/>
+            <forward name="accordiServizioParteComuneApiError" path="/jsplib/info.jsp"/>
+        </action>
+        <action path="/accordiServizioParteComuneApiDel" type="org.openspcoop2.web.ctrlstat.servlet.apc.AccordiServizioParteComuneDel"
+            scope="request" validate="true">
+            <forward name="accordiServizioParteComuneDel" path="/jsplib/listElement.jsp"/>
+            <forward name="accordiServizioParteComuneError" path="/jsplib/info.jsp"/>
+            <forward name="accordiServizioParteComuneApiDel" path="/jsplib/listElement.jsp"/>
+        </action>
 
 		<!--  Accordi di Servizio Parte Comune Azioni -->
 

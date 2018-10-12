@@ -154,6 +154,7 @@ import org.openspcoop2.web.ctrlstat.servlet.ac.AccordiCooperazioneCore;
 import org.openspcoop2.web.ctrlstat.servlet.ac.AccordiCooperazioneCostanti;
 import org.openspcoop2.web.ctrlstat.servlet.apc.AccordiServizioParteComuneCore;
 import org.openspcoop2.web.ctrlstat.servlet.apc.AccordiServizioParteComuneCostanti;
+import org.openspcoop2.web.ctrlstat.servlet.apc.api.ApiCostanti;
 import org.openspcoop2.web.ctrlstat.servlet.aps.AccordiServizioParteSpecificaCore;
 import org.openspcoop2.web.ctrlstat.servlet.aps.AccordiServizioParteSpecificaCostanti;
 import org.openspcoop2.web.ctrlstat.servlet.aps.erogazioni.ErogazioniCostanti;
@@ -1103,13 +1104,19 @@ public class ConsoleHelper {
 					// ASPC e ASPS
 					if(this.core.isRegistroServiziLocale()){
 						//ASPC
-						entries[index][0] = AccordiServizioParteComuneCostanti.LABEL_APC_MENU_VISUALE_AGGREGATA;
-						entries[index][1] = AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_LIST+"?"+
-								AccordiServizioParteComuneCostanti.PARAMETRO_APC_TIPO_ACCORDO+"="+
-								AccordiServizioParteComuneCostanti.PARAMETRO_VALORE_APC_TIPO_ACCORDO_PARTE_COMUNE;
-						index++;
-
-						
+						if(isModalitaCompleta) {
+							entries[index][0] = AccordiServizioParteComuneCostanti.LABEL_APC_MENU_VISUALE_AGGREGATA;
+							entries[index][1] = AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_LIST+"?"+
+									AccordiServizioParteComuneCostanti.PARAMETRO_APC_TIPO_ACCORDO+"="+
+									AccordiServizioParteComuneCostanti.PARAMETRO_VALORE_APC_TIPO_ACCORDO_PARTE_COMUNE;
+							index++; 
+						} else {
+							entries[index][0] = AccordiServizioParteComuneCostanti.LABEL_APC_MENU_VISUALE_AGGREGATA;
+							entries[index][1] = ApiCostanti.SERVLET_NAME_APC_API_LIST +"?"+
+									AccordiServizioParteComuneCostanti.PARAMETRO_APC_TIPO_ACCORDO+"="+
+									AccordiServizioParteComuneCostanti.PARAMETRO_VALORE_APC_TIPO_ACCORDO_PARTE_COMUNE;
+							index++; 
+						}
 
 						//ASPS
 						if(isModalitaCompleta) {
@@ -5339,6 +5346,9 @@ public class ConsoleHelper {
 	}
 	public String getLabelIdAccordo(String protocollo, IDAccordo idAccordo) throws Exception{
 		return NamingUtils.getLabelAccordoServizioParteComune(protocollo, idAccordo);
+	}
+	public String getLabelIdAccordoSenzaReferente(String protocollo, IDAccordo idAccordo) throws Exception{
+		return NamingUtils.getLabelAccordoServizioParteComune(protocollo, idAccordo,false);
 	}
 	
 	

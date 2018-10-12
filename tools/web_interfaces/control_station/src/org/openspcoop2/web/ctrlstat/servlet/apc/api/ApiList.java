@@ -19,9 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-
-package org.openspcoop2.web.ctrlstat.servlet.apc;
+package org.openspcoop2.web.ctrlstat.servlet.apc.api;
 
 import java.util.List;
 
@@ -38,7 +36,9 @@ import org.openspcoop2.core.registry.AccordoServizioParteComune;
 import org.openspcoop2.web.ctrlstat.core.ControlStationCore;
 import org.openspcoop2.web.ctrlstat.core.Search;
 import org.openspcoop2.web.ctrlstat.servlet.GeneralHelper;
-import org.openspcoop2.web.ctrlstat.servlet.apc.api.ApiCostanti;
+import org.openspcoop2.web.ctrlstat.servlet.apc.AccordiServizioParteComuneCore;
+import org.openspcoop2.web.ctrlstat.servlet.apc.AccordiServizioParteComuneCostanti;
+import org.openspcoop2.web.ctrlstat.servlet.apc.AccordiServizioParteComuneUtilities;
 import org.openspcoop2.web.lib.mvc.Costanti;
 import org.openspcoop2.web.lib.mvc.ForwardParams;
 import org.openspcoop2.web.lib.mvc.GeneralData;
@@ -46,16 +46,13 @@ import org.openspcoop2.web.lib.mvc.PageData;
 import org.openspcoop2.web.lib.mvc.ServletUtils;
 
 /**
- * accordiList
- * 
- * @author Andrea Poli (apoli@link.it)
- * @author Stefano Corallo (corallo@link.it)
- * @author Sandra Giangrandi (sandra@link.it)
+ * ApiList
+ *
+ * @author Giuliano Pintori (pintori@link.it)
  * @author $Author$
  * @version $Rev$, $Date$
- * 
  */
-public final class AccordiServizioParteComuneList extends Action {
+public class ApiList  extends Action {
 
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -72,15 +69,13 @@ public final class AccordiServizioParteComuneList extends Action {
 
 	
 		try {
-			ServletUtils.removeObjectFromSession(session, ApiCostanti.SESSION_ATTRIBUTE_VISTA_APC_API);
-			
-			AccordiServizioParteComuneHelper apcHelper = new AccordiServizioParteComuneHelper(request, pd, session);
+			ApiHelper apiHelper = new ApiHelper(request, pd, session);
 
-			String tipoAccordo = apcHelper.getParameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_TIPO_ACCORDO);
+			String tipoAccordo = apiHelper.getParameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_TIPO_ACCORDO);
 			if("".equals(tipoAccordo))
 				tipoAccordo = null;
 			
-			apcHelper.makeMenu();
+			apiHelper.makeMenu();
 
 			AccordiServizioParteComuneCore apcCore = new AccordiServizioParteComuneCore();
 			
@@ -89,13 +84,13 @@ public final class AccordiServizioParteComuneList extends Action {
 
 			int idLista = Liste.ACCORDI;
 
-			ricerca = apcHelper.checkSearchParameters(idLista, ricerca);
+			ricerca = apiHelper.checkSearchParameters(idLista, ricerca);
 			String userLogin = ServletUtils.getUserLoginFromSession(session);
 			
 			List<AccordoServizioParteComune> lista = AccordiServizioParteComuneUtilities.accordiList(apcCore, userLogin, ricerca, tipoAccordo);
-			apcHelper.prepareAccordiList(lista, ricerca, tipoAccordo);
+			apiHelper.prepareApiList(lista, ricerca, tipoAccordo);
 
-			String msg = apcHelper.getParameter(Costanti.PARAMETER_NAME_MSG_ERROR_EXPORT);
+			String msg = apiHelper.getParameter(Costanti.PARAMETER_NAME_MSG_ERROR_EXPORT);
 			if(msg!=null && !"".equals(msg)){
 				pd.setMessage("Errore durante esportazione: "+msg);
 			}
@@ -105,11 +100,12 @@ public final class AccordiServizioParteComuneList extends Action {
 			
 			ServletUtils.setGeneralAndPageDataIntoSession(session, gd, pd);
 			
-			return ServletUtils.getStrutsForward(mapping, AccordiServizioParteComuneCostanti.OBJECT_NAME_APC, ForwardParams.LIST());
+			return ServletUtils.getStrutsForward(mapping, ApiCostanti.OBJECT_NAME_APC_API, ForwardParams.LIST());
 
 		} catch (Exception e) {
 			return ServletUtils.getStrutsForwardError(ControlStationCore.getLog(), e, pd, session, gd, mapping, 
-					AccordiServizioParteComuneCostanti.OBJECT_NAME_APC, ForwardParams.LIST());
+					ApiCostanti.OBJECT_NAME_APC_API, ForwardParams.LIST());
 		}
 	}
+
 }
