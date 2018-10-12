@@ -135,8 +135,6 @@ public final class AccordiServizioParteComuneWSDLChange extends Action {
 		this.consoleOperationType = ConsoleOperationType.CHANGE;
 		
 		try {
-			Boolean isModalitaVistaApiCustom = ServletUtils.getBooleanAttributeFromSession(ApiCostanti.SESSION_ATTRIBUTE_VISTA_APC_API, session, false);
-			
 			AccordiServizioParteComuneHelper apcHelper = new AccordiServizioParteComuneHelper(request, pd, session);
 			this.consoleInterfaceType = ProtocolPropertiesUtilities.getTipoInterfaccia(apcHelper); 
 
@@ -184,6 +182,12 @@ public final class AccordiServizioParteComuneWSDLChange extends Action {
 				idAcc = Integer.parseInt(this.id);
 			} catch (Exception e) {
 			}
+			
+			String apiGestioneParziale = apcHelper.getParameter(ApiCostanti.PARAMETRO_APC_API_GESTIONE_PARZIALE);
+			if(apiGestioneParziale == null) {
+				apiGestioneParziale = "";
+			}
+			boolean isGestioneAllegati = apiGestioneParziale.equals(ApiCostanti.VALORE_PARAMETRO_APC_API_GESTIONE_ALLEGATI);
 
 			// Preparo il menu
 			apcHelper.makeMenu();
@@ -313,19 +317,16 @@ public final class AccordiServizioParteComuneWSDLChange extends Action {
 			}
 
 			List<String> tipiSoggettiGestitiProtocollo = soggettiCore.getTipiSoggettiGestitiProtocollo(tipoProtocollo);
-			String servletNameApcList = isModalitaVistaApiCustom ? ApiCostanti.SERVLET_NAME_APC_API_LIST : AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_LIST;
-			String servletNameApcChange = isModalitaVistaApiCustom ? ApiCostanti.SERVLET_NAME_APC_API_CHANGE : AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_CHANGE;
-			Parameter parameterApcChange = new Parameter(labelASTitle,	servletNameApcChange, pIdAccordo,pNomeAccordo,pTipoAccordo);
+			String servletNameApcChange = AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_CHANGE;
+			Parameter parameterApcChange = new Parameter(labelASTitle, servletNameApcChange, pIdAccordo, pNomeAccordo, pTipoAccordo);
+
+			List<Parameter> listaParams = apcHelper.getTitoloApc(TipoOperazione.OTHER, as, this.tipoAccordo, labelASTitle, AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_CHANGE, isGestioneAllegati); 
+			listaParams.add(new Parameter(label,null));
 			
 			if(apcHelper.isEditModeInProgress() && ServletUtils.isEditModeInProgress(this.editMode)){
 
 				// setto la barra del titolo				
-				ServletUtils.setPageDataTitle(pd, 
-						new Parameter(AccordiServizioParteComuneUtilities.getTerminologiaAccordoServizio(this.tipoAccordo),
-								servletNameApcList,pTipoAccordo),
-										parameterApcChange,
-												new Parameter(label,null)
-						);
+				ServletUtils.setPageDataTitle(pd, listaParams);
 
 				// preparo i campi
 				Vector<DataElement> dati = new Vector<DataElement>();
@@ -348,11 +349,7 @@ public final class AccordiServizioParteComuneWSDLChange extends Action {
 			if (!isOk) {
 
 				// setto la barra del titolo
-				ServletUtils.setPageDataTitle(pd, 
-						new Parameter(AccordiServizioParteComuneUtilities.getTerminologiaAccordoServizio(this.tipoAccordo),	servletNameApcList, pTipoAccordo),
-										parameterApcChange,
-												new Parameter(label,null)
-						);
+				ServletUtils.setPageDataTitle(pd, listaParams);
 
 				// preparo i campi
 				Vector<DataElement> dati = new Vector<DataElement>();
@@ -396,12 +393,7 @@ public final class AccordiServizioParteComuneWSDLChange extends Action {
 							ServletUtils.setObjectIntoSession(session, this.wsdl, AccordiServizioParteComuneCostanti.PARAMETRO_APC_WSDL_CHANGE_TMP);
 
 							// setto la barra del titolo
-							ServletUtils.setPageDataTitle(pd, 
-									new Parameter(AccordiServizioParteComuneUtilities.getTerminologiaAccordoServizio(this.tipoAccordo),
-											servletNameApcList,pTipoAccordo),
-													parameterApcChange,
-															new Parameter(label,null)
-									);
+							ServletUtils.setPageDataTitle(pd, listaParams);
 
 							// preparo i campi
 							Vector<DataElement> dati = new Vector<DataElement>();
@@ -598,12 +590,7 @@ public final class AccordiServizioParteComuneWSDLChange extends Action {
 
 			// visualizzo il form di modifica accordo come in accordiChange
 			// setto la barra del titolo
-			ServletUtils.setPageDataTitle(pd, 
-					new Parameter(AccordiServizioParteComuneUtilities.getTerminologiaAccordoServizio(this.tipoAccordo),
-							servletNameApcList,pTipoAccordo),
-									new Parameter(uriAS,null)
-					);
-
+			ServletUtils.setPageDataTitle(pd, listaParams);
 
 			String descr = as.getDescrizione();
 			// controllo profilo collaborazione

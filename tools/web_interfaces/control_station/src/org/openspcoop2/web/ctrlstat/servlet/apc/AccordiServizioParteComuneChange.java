@@ -376,7 +376,7 @@ public final class AccordiServizioParteComuneChange extends Action {
 		propertiesProprietario.setProperty(ProtocolPropertiesCostanti.PARAMETRO_PP_PROTOCOLLO, this.tipoProtocollo);
 		propertiesProprietario.setProperty(ProtocolPropertiesCostanti.PARAMETRO_PP_TIPO_ACCORDO, this.tipoAccordo);
 		
-		List<Parameter> listaParams = apcHelper.getTitoloApc(tipoOp, as, this.tipoAccordo, labelASTitle, null); 
+		List<Parameter> listaParams = apcHelper.getTitoloApc(tipoOp, as, this.tipoAccordo, labelASTitle, null, true); 
 
 		// Se idhid = null, devo visualizzare la pagina per la modifica dati
 		if(ServletUtils.isEditModeInProgress(this.editMode)){

@@ -5859,11 +5859,13 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 			String uri = null;
 			uri = this.idAccordoFactory.getUriFromAccordo(as);
 			String labelASTitle = this.getLabelIdAccordo(as); 
+			
+			Parameter pTipoAccordo = AccordiServizioParteComuneUtilities.getParametroAccordoServizio(tipoAccordo);
+			Parameter pIdAccordo = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_ID, idApc);
+			Parameter pNomeAccordo = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_NOME, uri);
 
 			ServletUtils.addListElementIntoSession(this.session, AccordiServizioParteComuneCostanti.OBJECT_NAME_APC_RESOURCES,
-					new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_ID, idApc),
-					new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_TIPO_ACCORDO, tipoAccordo),
-					new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_NOME, uri));
+					pIdAccordo,	pTipoAccordo, pNomeAccordo);
 
 //			Boolean contaListe = ServletUtils.getContaListeFromSession(this.session);
 //			User user = ServletUtils.getUserFromSession(this.session);
@@ -5881,31 +5883,20 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 			this.pd.setPageSize(limit);
 			this.pd.setNumEntries(ricerca.getNumEntries(idLista));
 
+			
+			Boolean isModalitaVistaApiCustom = ServletUtils.getBooleanAttributeFromSession(ApiCostanti.SESSION_ATTRIBUTE_VISTA_APC_API, this.session, false);
+			List<Parameter> listaParams = this.getTitoloApc(TipoOperazione.LIST, as, tipoAccordo, labelASTitle, null, false);
+			
+			String labelRisorse = isModalitaVistaApiCustom ? AccordiServizioParteComuneCostanti.LABEL_RISORSE : AccordiServizioParteComuneCostanti.LABEL_RISORSE + " di " + labelASTitle;
 			// setto la barra del titolo
 			if (search.equals("")) {
 				this.pd.setSearchDescription("");
-				ServletUtils.setPageDataTitle(this.pd, 
-						new Parameter(AccordiServizioParteComuneUtilities.getTerminologiaAccordoServizio(tipoAccordo),
-								AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_LIST+"?"+
-										AccordiServizioParteComuneUtilities.getParametroAccordoServizio(tipoAccordo).getName()+"="+
-										AccordiServizioParteComuneUtilities.getParametroAccordoServizio(tipoAccordo).getValue()),
-										new Parameter(AccordiServizioParteComuneCostanti.LABEL_RISORSE + " di " + labelASTitle, null)
-						);
+				listaParams.add(new Parameter(labelRisorse, null));
 			}else{
-				ServletUtils.setPageDataTitle(this.pd, 
-						new Parameter(AccordiServizioParteComuneUtilities.getTerminologiaAccordoServizio(tipoAccordo),
-								AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_LIST+"?"+
-										AccordiServizioParteComuneUtilities.getParametroAccordoServizio(tipoAccordo).getName()+"="+
-										AccordiServizioParteComuneUtilities.getParametroAccordoServizio(tipoAccordo).getValue()),
-										new Parameter(AccordiServizioParteComuneCostanti.LABEL_RISORSE + " di " + labelASTitle, 
-												AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_RESOURCES_LIST+"?"+
-														AccordiServizioParteComuneCostanti.PARAMETRO_APC_ID+"="+idApc+"&"+
-														AccordiServizioParteComuneCostanti.PARAMETRO_APC_NOME+"="+uri+"&"+
-														AccordiServizioParteComuneUtilities.getParametroAccordoServizio(tipoAccordo).getName()+"="+
-														AccordiServizioParteComuneUtilities.getParametroAccordoServizio(tipoAccordo).getValue()),
-														new Parameter(Costanti.PAGE_DATA_TITLE_LABEL_RISULTATI_RICERCA, null)
-						);
+				listaParams.add(new Parameter(labelRisorse, AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_RESOURCES_LIST, pIdAccordo, pNomeAccordo, pTipoAccordo));
+				listaParams.add(new Parameter(Costanti.PAGE_DATA_TITLE_LABEL_RISULTATI_RICERCA, null));
 			}
+			ServletUtils.setPageDataTitle(this.pd, listaParams);
 
 			// controllo eventuali risultati ricerca
 			this.pd.setSearchLabel(AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_RESOURCES_PATH);
@@ -8003,7 +7994,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 	}
 
 
-	public List<Parameter> getTitoloApc(TipoOperazione tipoOperazione, AccordoServizioParteComune as, String tipoAccordo, String labelASTitle, String servletNameApcChange) throws Exception { 
+	public List<Parameter> getTitoloApc(TipoOperazione tipoOperazione, AccordoServizioParteComune as, String tipoAccordo, String labelASTitle, String servletNameApcChange, boolean addApcChange) throws Exception { 
 		
 		String labelAccordoServizio = AccordiServizioParteComuneUtilities.getTerminologiaAccordoServizio(tipoAccordo);
 		Boolean isModalitaVistaApiCustom = ServletUtils.getBooleanAttributeFromSession(ApiCostanti.SESSION_ATTRIBUTE_VISTA_APC_API, this.session, false);
@@ -8016,32 +8007,32 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 		List<Parameter> listaParams = new ArrayList<>();
 		listaParams.add(new Parameter(labelAccordoServizio, servletNameApcList, pTipoAccordo));
 
+		String labelApcChange = labelASTitle;
 		if(isModalitaVistaApiCustom) {
 			Parameter parameterApcApiChange = new Parameter(labelASTitle, ApiCostanti.SERVLET_NAME_APC_API_CHANGE, pIdAccordo,pNomeAccordo,pTipoAccordo);
 			listaParams.add(parameterApcApiChange);
-			String labelVistaParziale = "";
 			if(ApiCostanti.VALORE_PARAMETRO_APC_API_INFORMAZIONI_GENERALI.equals(apiGestioneParziale)) {
-				labelVistaParziale = ApiCostanti.APC_API_LABEL_APS_INFO_GENERALI;
+				labelApcChange = ApiCostanti.APC_API_LABEL_APS_INFO_GENERALI;
 			}
 			else if(ApiCostanti.VALORE_PARAMETRO_APC_API_SOGGETTO_REFERENTE.equals(apiGestioneParziale)) {
-				labelVistaParziale = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_REFERENTE;
+				labelApcChange = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_REFERENTE;
 			}
 			else if(ApiCostanti.VALORE_PARAMETRO_APC_API_DESCRIZIONE.equals(apiGestioneParziale)) {
-				labelVistaParziale = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_DESCRIZIONE;
+				labelApcChange = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_DESCRIZIONE;
 			}
 			else if(ApiCostanti.VALORE_PARAMETRO_APC_API_GESTIONE_SPECIFICA_INTERFACCE.equals(apiGestioneParziale)) {
-				labelVistaParziale = ApiCostanti.APC_API_LABEL_PARAMETRO_INTERFACCIA;
+				labelApcChange = ApiCostanti.APC_API_LABEL_PARAMETRO_INTERFACCIA;
 			}
 			else if(ApiCostanti.VALORE_PARAMETRO_APC_API_OPZIONI_AVANZATE.equals(apiGestioneParziale)) {
-				labelVistaParziale = ApiCostanti.APC_API_LABEL_GESTIONE_OPZIONI_AVANZATE;
+				labelApcChange = ApiCostanti.APC_API_LABEL_GESTIONE_OPZIONI_AVANZATE;
 			}
-			
-			Parameter parameterApcChange = servletNameApcChange != null ? new Parameter(labelVistaParziale, servletNameApcChange, pIdAccordo,pNomeAccordo,pTipoAccordo) : new Parameter(labelVistaParziale, servletNameApcChange);
-			listaParams.add(parameterApcChange);
-		} else {
-			Parameter parameterApcChange = servletNameApcChange != null ? new Parameter(labelASTitle, servletNameApcChange, pIdAccordo,pNomeAccordo,pTipoAccordo) : new Parameter(labelASTitle, servletNameApcChange);
+		}
+		
+		if(addApcChange) {
+			Parameter parameterApcChange = servletNameApcChange != null ? new Parameter(labelApcChange, servletNameApcChange, pIdAccordo,pNomeAccordo,pTipoAccordo) : new Parameter(labelApcChange, servletNameApcChange);
 			listaParams.add(parameterApcChange);
 		}
+		
 		return listaParams;
 	}
  
