@@ -43,7 +43,6 @@ import org.openspcoop2.core.commons.ErrorsHandlerCostant;
 import org.openspcoop2.core.commons.Liste;
 import org.openspcoop2.core.id.IDSoggetto;
 import org.openspcoop2.core.registry.CredenzialiSoggetto;
-import org.openspcoop2.core.registry.PortaDominio;
 import org.openspcoop2.core.registry.ProtocolProperty;
 import org.openspcoop2.core.registry.Soggetto;
 import org.openspcoop2.core.registry.constants.CredenzialeTipo;
@@ -183,6 +182,7 @@ public final class SoggettiChange extends Action {
 			List<String> tipiSoggetti = null;
 			int numPA = 0, numPD = 0,numSA = 0;
 			String[] pddList = null;
+			String[] pddEsterneList = null;
 			List<String> versioniProtocollo = null;
 
 			SoggettiCore soggettiCore = new SoggettiCore();
@@ -276,24 +276,34 @@ public final class SoggettiChange extends Action {
 						pddOperativa = PddTipologia.OPERATIVO.toString().equals(pddCtrlstat.getTipo());
 					}
 
-					List<PortaDominio> lista = new ArrayList<PortaDominio>();
+					List<PdDControlStation> lista = new ArrayList<PdDControlStation>();
 					if( (numPA<=0 && numPD<=0 && numSA<=0) || !pddOperativa ){
+						
+						List<String> pddEsterne = new ArrayList<>();
+						pddEsterne.add("-");
+						
 						// aggiungo un elemento di comodo
-						PortaDominio tmp = new PortaDominio();
+						PdDControlStation tmp = new PdDControlStation();
 						tmp.setNome("-");
 						lista.add(tmp);
 						// aggiungo gli altri elementi
 						if(soggettiCore.isVisioneOggettiGlobale(userLogin)){
-							lista.addAll(pddCore.porteDominioList(null, new Search(true)));
+							lista.addAll(pddCore.pddList(null, new Search(true)));
 						}else{
-							lista.addAll(pddCore.porteDominioList(userLogin, new Search(true)));
+							lista.addAll(pddCore.pddList(userLogin, new Search(true)));
 						}
 						pddList = new String[lista.size()];
 						int i = 0;
-						for (PortaDominio pddTmp : lista) {
+						for (PdDControlStation pddTmp : lista) {
 							pddList[i] = pddTmp.getNome();
 							i++;
+							
+							if(PddTipologia.ESTERNO.toString().equals(pddTmp.getTipo())){
+								pddEsterne.add(pddTmp.getNome());
+							}
 						}
+						
+						pddEsterneList = pddEsterne.toArray(new String[1]);
 					}
 					else{
 						// non posso modificare la pdd. Lascio solo quella operativa
@@ -452,7 +462,7 @@ public final class SoggettiChange extends Action {
 				dati = soggettiHelper.addSoggettiToDati(tipoOp,dati, this.nomeprov, this.tipoprov, this.portadom, this.descr, 
 						this.isRouter, tipiSoggetti, this.versioneProtocollo, this.privato, this.codiceIpa, versioniProtocollo,
 						isSupportatoCodiceIPA, isSupportatoIdentificativoPorta,
-						pddList,nomePddGestioneLocale,this.pdd,this.id,oldnomeprov,oldtipoprov,connettore,
+						pddList,pddEsterneList,nomePddGestioneLocale,this.pdd,this.id,oldnomeprov,oldtipoprov,connettore,
 						numPD,this.pd_url_prefix_rewriter,numPA,this.pa_url_prefix_rewriter,listaTipiProtocollo,this.protocollo,
 						isSupportatoAutenticazioneSoggetti,this.utenteSoggetto,this.passwordSoggetto,this.subjectSoggetto,this.principalSoggetto,this.tipoauthSoggetto,
 						isPddEsterna,null,this.dominio);
@@ -603,7 +613,7 @@ public final class SoggettiChange extends Action {
 				dati = soggettiHelper.addSoggettiToDati(tipoOp,dati, this.nomeprov, this.tipoprov, this.portadom, this.descr, 
 						this.isRouter, tipiSoggetti, this.versioneProtocollo, this.privato, this.codiceIpa, versioniProtocollo,
 						isSupportatoCodiceIPA, isSupportatoIdentificativoPorta,
-						pddList,nomePddGestioneLocale,this.pdd,this.id,oldnomeprov,oldtipoprov,connettore,
+						pddList,pddEsterneList,nomePddGestioneLocale,this.pdd,this.id,oldnomeprov,oldtipoprov,connettore,
 						numPD,this.pd_url_prefix_rewriter,numPA,this.pa_url_prefix_rewriter,listaTipiProtocollo,this.protocollo,
 						isSupportatoAutenticazioneSoggetti,this.utenteSoggetto,this.passwordSoggetto,this.subjectSoggetto,this.principalSoggetto,this.tipoauthSoggetto,
 						isPddEsterna,null,this.dominio);

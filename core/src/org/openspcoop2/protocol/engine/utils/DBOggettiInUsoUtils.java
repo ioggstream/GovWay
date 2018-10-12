@@ -2762,7 +2762,7 @@ public class DBOggettiInUsoUtils  {
 			sqlQueryObject.addFromTable(CostantiDB.PORTE_APPLICATIVE);
 			sqlQueryObject.addSelectField("nome_porta");
 			sqlQueryObject.setANDLogicOperator(true);
-			sqlQueryObject.addWhereCondition(CostantiDB.PORTE_APPLICATIVE_SA_AUTORIZZATI+".id_porta="+CostantiDB.PORTE_DELEGATE+".id");
+			sqlQueryObject.addWhereCondition(CostantiDB.PORTE_APPLICATIVE_SA_AUTORIZZATI+".id_porta="+CostantiDB.PORTE_APPLICATIVE+".id");
 			sqlQueryObject.addWhereCondition("id_servizio_applicativo=?");
 			queryString = sqlQueryObject.createSQLQuery();
 			stmt = con.prepareStatement(queryString);

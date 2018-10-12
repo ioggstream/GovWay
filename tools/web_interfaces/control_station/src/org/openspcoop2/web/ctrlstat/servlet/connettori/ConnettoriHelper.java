@@ -1054,7 +1054,7 @@ public class ConnettoriHelper extends ConsoleHelper {
 						SoggettiCostanti.SERVLET_NAME_SOGGETTI_CHANGE.equals(toCall)) ) {
 					boolean creazione_modifica_SA = ServiziApplicativiCostanti.SERVLET_NAME_SERVIZI_APPLICATIVI_ADD.equals(toCall) || 
 							ServiziApplicativiCostanti.SERVLET_NAME_SERVIZI_APPLICATIVI_CHANGE.equals(toCall);
-					if (this.isModalitaStandard() || creazione_modifica_SA){
+					if (this.isModalitaStandard() || (!this.isModalitaCompleta() && creazione_modifica_SA)){
 						autenticazioneNessuna = false;
 					}
 				}

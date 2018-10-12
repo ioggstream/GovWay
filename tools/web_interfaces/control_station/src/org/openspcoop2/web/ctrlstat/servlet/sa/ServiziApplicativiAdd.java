@@ -334,6 +334,11 @@ public final class ServiziApplicativiAdd extends Action {
 					tipoProtocollo = soggettiCore.getProtocolloAssociatoTipoSoggetto(soggetto.getTipo());
 				}
 				tipoENomeSoggetto = saHelper.getLabelNomeSoggetto(tipoProtocollo, soggetto.getTipo() , soggetto.getNome());
+				
+				soggettiList = new String[1];
+				soggettiList[0] = soggetto.getId().toString();
+				soggettiListLabel = new String[1];
+				soggettiListLabel[0] =saHelper.getLabelNomeSoggetto(tipoProtocollo, soggetto.getTipo() , soggetto.getNome());
 			}
 			else {
 				tipoProtocollo = saHelper.getParameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_PROTOCOLLO);

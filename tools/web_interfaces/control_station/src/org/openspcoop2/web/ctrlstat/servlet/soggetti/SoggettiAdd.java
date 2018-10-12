@@ -163,6 +163,7 @@ public final class SoggettiAdd extends Action {
 
 			// Prendo la lista di pdd e la metto in un array
 			String[] pddList = null;
+			String[] pddEsterneList = null;
 			List<String> tipiSoggetti = null;
 			int totPdd = 1;
 			String nomePddGestioneLocale = null;
@@ -198,13 +199,19 @@ public final class SoggettiAdd extends Action {
 				pddList = new String[lista.size()];
 
 				int i = 0;
+				List<String> pddEsterne = new ArrayList<>();
+				pddEsterne.add("-");
 				for (PdDControlStation pddTmp : lista) {
 					pddList[i] = pddTmp.getNome();
 					i++;
 					if(this.singlePdD && (nomePddGestioneLocale==null) && (PddTipologia.OPERATIVO.toString().equals(pddTmp.getTipo())) ){
 						nomePddGestioneLocale = pddTmp.getNome();
 					}
+					if(this.singlePdD && PddTipologia.ESTERNO.toString().equals(pddTmp.getTipo())){
+						pddEsterne.add(pddTmp.getNome());
+					}
 				}
+				pddEsterneList = pddEsterne.toArray(new String[1]);
 				
 				// Gestione pdd
 				if(soggettiCore.isGestionePddAbilitata(soggettiHelper)==false) {
@@ -324,7 +331,7 @@ public final class SoggettiAdd extends Action {
 				dati = soggettiHelper.addSoggettiToDati(TipoOperazione.ADD,dati, this.nomeprov, this.tipoprov, this.portadom, this.descr, 
 						isRouter, tipiSoggetti, this.versioneProtocollo, this.privato,this.codiceIpa,versioniProtocollo,
 						isSupportatoCodiceIPA, isSupportatoIdentificativoPorta,
-						pddList,nomePddGestioneLocale, this.pdd, 
+						pddList,pddEsterneList,nomePddGestioneLocale, this.pdd, 
 						listaTipiProtocollo, this.protocollo ,
 						isSupportatoAutenticazioneSoggetti,this.utenteSoggetto,this.passwordSoggetto,this.subjectSoggetto,this.principalSoggetto,this.tipoauthSoggetto,
 						isPddEsterna,this.tipologia,this.dominio);
@@ -403,7 +410,7 @@ public final class SoggettiAdd extends Action {
 				dati = soggettiHelper.addSoggettiToDati(TipoOperazione.ADD,dati, this.nomeprov, this.tipoprov, this.portadom, this.descr, 
 						isRouter, tipiSoggetti, this.versioneProtocollo, this.privato,this.codiceIpa,versioniProtocollo,
 						isSupportatoCodiceIPA, isSupportatoIdentificativoPorta,
-						pddList,nomePddGestioneLocale, this.pdd,  
+						pddList,pddEsterneList,nomePddGestioneLocale, this.pdd,  
 						listaTipiProtocollo, this.protocollo,
 						isSupportatoAutenticazioneSoggetti,this.utenteSoggetto,this.passwordSoggetto,this.subjectSoggetto,this.principalSoggetto,this.tipoauthSoggetto,
 						isPddEsterna,this.tipologia,this.dominio);

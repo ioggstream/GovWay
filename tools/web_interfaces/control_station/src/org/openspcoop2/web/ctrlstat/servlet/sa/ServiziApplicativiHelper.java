@@ -1021,10 +1021,12 @@ public class ServiziApplicativiHelper extends ConnettoriHelper {
 			// providers disponibili
 			if (tipoOperazione.equals(TipoOperazione.ADD)) {
 				boolean trovatoProv = false;
-				for (int i = 0; i < soggettiList.length; i++) {
-					String tmpSogg = soggettiList[i];
-					if (tmpSogg.equals(provider)) {
-						trovatoProv = true;
+				if(soggettiList!=null) {
+					for (int i = 0; i < soggettiList.length; i++) {
+						String tmpSogg = soggettiList[i];
+						if (tmpSogg.equals(provider)) {
+							trovatoProv = true;
+						}
 					}
 				}
 				if (!trovatoProv) {

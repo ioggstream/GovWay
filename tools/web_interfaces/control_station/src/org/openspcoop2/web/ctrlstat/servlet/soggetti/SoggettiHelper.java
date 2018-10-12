@@ -80,14 +80,14 @@ public class SoggettiHelper extends ConnettoriHelper {
 	public Vector<DataElement> addSoggettiToDati(TipoOperazione tipoOp,Vector<DataElement> dati, String nomeprov, String tipoprov, String portadom, String descr, 
 			boolean isRouter, List<String> tipiSoggetti, String profilo, boolean privato, String codiceIpa, List<String> versioni, 
 			boolean isSupportatoCodiceIPA, boolean isSupportatoIdentificativoPorta,
-			String [] pddList,String nomePddGestioneLocale, String pdd, 
+			String [] pddList,String[] pddEsterneList,String nomePddGestioneLocale, String pdd, 
 			List<String> listaTipiProtocollo, String protocollo,
 			boolean isSupportatoAutenticazioneSoggetti, String utente,String password, String subject, String principal, String tipoauth,
 			boolean isPddEsterna,String tipologia, String dominio) throws Exception  {
 		return addSoggettiToDati(tipoOp, dati, nomeprov, tipoprov, portadom, descr, 
 				isRouter, tipiSoggetti, profilo, privato, codiceIpa, versioni, 
 				isSupportatoCodiceIPA, isSupportatoIdentificativoPorta,
-				pddList, nomePddGestioneLocale, pdd,
+				pddList, pddEsterneList, nomePddGestioneLocale, pdd,
 				null,null,null,null,
 				-1,null,-1,null,listaTipiProtocollo,protocollo,
 				isSupportatoAutenticazioneSoggetti, utente, password, subject, principal, tipoauth,
@@ -96,14 +96,14 @@ public class SoggettiHelper extends ConnettoriHelper {
 	public Vector<DataElement> addSoggettiToDati(TipoOperazione tipoOp,Vector<DataElement> dati, String nomeprov, String tipoprov, String portadom, String descr, 
 			boolean isRouter, List<String> tipiSoggetti, String profilo, boolean privato, String codiceIpa, List<String> versioni, 
 			boolean isSupportatoCodiceIPA, boolean isSupportatoIdentificativoPorta,
-			String [] pddList,String nomePddGestioneLocale,String pdd, 
+			String [] pddList,String[] pddEsterneList,String nomePddGestioneLocale,String pdd, 
 			String id, String oldnomeprov, String oldtipoprov, org.openspcoop2.core.registry.Connettore connettore,
 			long numPD,String pd_url_prefix_rewriter,long numPA, String pa_url_prefix_rewriter, List<String> listaTipiProtocollo, String protocollo,
 			boolean isSupportatoAutenticazioneSoggetti, String utente,String password, String subject, String principal, String tipoauth,
 			boolean isPddEsterna,String tipologia, String dominio) throws Exception {
 
 		Boolean contaListe = ServletUtils.getContaListeFromSession(this.session);
-
+		
 		if(TipoOperazione.CHANGE.equals(tipoOp)){
 			DataElement de = new DataElement();
 			de.setLabel(SoggettiCostanti.PARAMETRO_SOGGETTO_ID);
@@ -135,6 +135,7 @@ public class SoggettiHelper extends ConnettoriHelper {
 		}
 		
 		if(gestionePdd) {
+			
 			if(TipoOperazione.ADD.equals(tipoOp)){
 				
 				if(this.core.isRegistroServiziLocale()){
@@ -142,7 +143,12 @@ public class SoggettiHelper extends ConnettoriHelper {
 					de.setLabel(PddCostanti.LABEL_PORTA_DI_DOMINIO);
 					de.setType(DataElementType.SELECT);
 					de.setName(SoggettiCostanti.PARAMETRO_SOGGETTO_PDD);
-					de.setValues(pddList);
+					if(this.soggettiCore.isMultitenant()) {
+						de.setValues(pddList);
+					}
+					else {
+						de.setValues(pddEsterneList);
+					}
 					de.setSelected(pdd);
 					de.setPostBack(isSupportatoAutenticazioneSoggetti);
 					if (this.core.isSinglePdD()) {
@@ -164,7 +170,12 @@ public class SoggettiHelper extends ConnettoriHelper {
 						de.setLabel(PddCostanti.LABEL_PORTA_DI_DOMINIO);
 						de.setType(DataElementType.SELECT);
 						de.setName(SoggettiCostanti.PARAMETRO_SOGGETTO_PDD);
-						de.setValues(pddList);
+						if(this.soggettiCore.isMultitenant()) {
+							de.setValues(pddList);
+						}
+						else {
+							de.setValues(pddEsterneList);
+						}
 						de.setSelected(pdd);
 						de.setPostBack(isSupportatoAutenticazioneSoggetti);
 						dati.addElement(de);
