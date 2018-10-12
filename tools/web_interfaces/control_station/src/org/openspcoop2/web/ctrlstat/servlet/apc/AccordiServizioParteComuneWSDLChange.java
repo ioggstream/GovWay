@@ -24,6 +24,7 @@
 package org.openspcoop2.web.ctrlstat.servlet.apc;
 
 import java.net.URLEncoder;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -187,7 +188,7 @@ public final class AccordiServizioParteComuneWSDLChange extends Action {
 			if(apiGestioneParziale == null) {
 				apiGestioneParziale = "";
 			}
-			boolean isGestioneAllegati = apiGestioneParziale.equals(ApiCostanti.VALORE_PARAMETRO_APC_API_GESTIONE_ALLEGATI);
+			boolean isGestioneAllegati = apiGestioneParziale.equals(ApiCostanti.VALORE_PARAMETRO_APC_API_GESTIONE_SPECIFICA_INTERFACCE);
 
 			// Preparo il menu
 			apcHelper.makeMenu();
@@ -239,17 +240,17 @@ public final class AccordiServizioParteComuneWSDLChange extends Action {
 			boolean facilityUnicoWSDL_interfacciaStandard = false;
 			if (this.tipo.equals(AccordiServizioParteComuneCostanti.PARAMETRO_APC_WSDL_DEFINITORIO)) {
 				wsdlbyte = as.getByteWsdlDefinitorio();
-				label = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_WSDL_DEFINITORIO+" di " + labelASTitle;
+				label = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_WSDL_DEFINITORIO;
 				tipologiaDocumentoScaricare = ArchiviCostanti.PARAMETRO_VALORE_ARCHIVI_ALLEGATO_TIPO_ACCORDO_TIPO_DOCUMENTO_WSDL_DEFINITORIO;
 			}
 			if (this.tipo.equals(AccordiServizioParteComuneCostanti.PARAMETRO_APC_WSDL_CONCETTUALE)) {
 				wsdlbyte = as.getByteWsdlConcettuale();
-				label = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_WSDL_CONCETTUALE+" di " + labelASTitle;
+				label = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_WSDL_CONCETTUALE;
 				tipologiaDocumentoScaricare = ArchiviCostanti.PARAMETRO_VALORE_ARCHIVI_ALLEGATO_TIPO_ACCORDO_TIPO_DOCUMENTO_WSDL_CONCETTUALE;
 				
 				switch (serviceBinding) {
 				case REST:
-					label = apcHelper.getLabelWSDLFromFormatoSpecifica(formatoSpecifica) +" di " + labelASTitle;
+					label = apcHelper.getLabelWSDLFromFormatoSpecifica(formatoSpecifica);
 					break;
 				case SOAP:
 				default:
@@ -262,33 +263,33 @@ public final class AccordiServizioParteComuneWSDLChange extends Action {
 				wsdlbyte = as.getByteWsdlLogicoErogatore();
 				if(isModalitaAvanzata){
 					if(isSupportoProfiloAsincrono)
-						label = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_WSDL_EROGATORE+" di " + labelASTitle;
+						label = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_WSDL_EROGATORE;
 					else 
-						label = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_WSDL_LOGICO+" di " + labelASTitle;
+						label = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_WSDL_LOGICO;
 				} else {
-					label = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_WSDL+" di " + labelASTitle;
+					label = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_WSDL;
 					facilityUnicoWSDL_interfacciaStandard = true;
 				}
 				tipologiaDocumentoScaricare = ArchiviCostanti.PARAMETRO_VALORE_ARCHIVI_ALLEGATO_TIPO_ACCORDO_TIPO_DOCUMENTO_WSDL_LOGICO_EROGATORE;
 			}
 			if (this.tipo.equals(AccordiServizioParteComuneCostanti.PARAMETRO_APC_WSDL_FRUITORE)) {
 				wsdlbyte = as.getByteWsdlLogicoFruitore();
-				label = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_WSDL_FRUITORE+" di " + labelASTitle;
+				label = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_WSDL_FRUITORE;
 				tipologiaDocumentoScaricare = ArchiviCostanti.PARAMETRO_VALORE_ARCHIVI_ALLEGATO_TIPO_ACCORDO_TIPO_DOCUMENTO_WSDL_LOGICO_FRUITORE;
 			}
 			if (this.tipo.equals(AccordiServizioParteComuneCostanti.PARAMETRO_APC_SPECIFICA_CONVERSAZIONE_CONCETTUALE)) {
 				wsdlbyte = as.getByteSpecificaConversazioneConcettuale();
-				label = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_SPECIFICA_CONVERSAZIONE_CONCETTUALE+" di " + labelASTitle;
+				label = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_SPECIFICA_CONVERSAZIONE_CONCETTUALE;
 				tipologiaDocumentoScaricare = ArchiviCostanti.PARAMETRO_VALORE_ARCHIVI_ALLEGATO_TIPO_ACCORDO_TIPO_DOCUMENTO_SPECIFICA_CONVERSAZIONE_CONCETTUALE;
 			}
 			if (this.tipo.equals(AccordiServizioParteComuneCostanti.PARAMETRO_APC_SPECIFICA_CONVERSAZIONE_EROGATORE)) {
 				wsdlbyte = as.getByteSpecificaConversazioneErogatore();
-				label = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_SPECIFICA_CONVERSAZIONE_EROGATORE+" di " + labelASTitle;
+				label = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_SPECIFICA_CONVERSAZIONE_EROGATORE;
 				tipologiaDocumentoScaricare = ArchiviCostanti.PARAMETRO_VALORE_ARCHIVI_ALLEGATO_TIPO_ACCORDO_TIPO_DOCUMENTO_SPECIFICA_CONVERSAZIONE_LOGICO_EROGATORE;
 			}
 			if (this.tipo.equals(AccordiServizioParteComuneCostanti.PARAMETRO_APC_SPECIFICA_CONVERSAZIONE_FRUITORE)) {
 				wsdlbyte = as.getByteSpecificaConversazioneFruitore();
-				label = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_SPECIFICA_CONVERSAZIONE_FRUITORE+" di " + labelASTitle;
+				label = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_SPECIFICA_CONVERSAZIONE_FRUITORE;
 				tipologiaDocumentoScaricare = ArchiviCostanti.PARAMETRO_VALORE_ARCHIVI_ALLEGATO_TIPO_ACCORDO_TIPO_DOCUMENTO_SPECIFICA_CONVERSAZIONE_LOGICO_FRUITORE;
 			}
 			if (wsdlbyte != null) {
@@ -296,7 +297,11 @@ public final class AccordiServizioParteComuneWSDLChange extends Action {
 			}
 
 			boolean used = true;
-
+			
+			Boolean isModalitaVistaApiCustom = ServletUtils.getBooleanAttributeFromSession(ApiCostanti.SESSION_ATTRIBUTE_VISTA_APC_API, session, false);
+			if(!isModalitaVistaApiCustom) {
+				label = MessageFormat.format("{0} di {1}", label, labelASTitle);
+			}
 
 			IDAccordo idAccordoOLD = idAccordoFactory.getIDAccordoFromValues(as.getNome(),BeanUtilities.getSoggettoReferenteID(as.getSoggettoReferente()),as.getVersione());
 			Parameter pIdAccordo = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_ID, this.id+"");

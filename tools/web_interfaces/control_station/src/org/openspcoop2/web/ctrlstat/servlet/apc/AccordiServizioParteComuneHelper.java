@@ -8006,7 +8006,12 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 		
 		List<Parameter> listaParams = new ArrayList<>();
 		listaParams.add(new Parameter(labelAccordoServizio, servletNameApcList, pTipoAccordo));
-
+		
+		List<Parameter> listaParamsApcChange  = new ArrayList<>();
+		listaParamsApcChange.add(pIdAccordo);
+		listaParamsApcChange.add(pNomeAccordo);
+		listaParamsApcChange.add(pTipoAccordo);
+		
 		String labelApcChange = labelASTitle;
 		if(isModalitaVistaApiCustom) {
 			Parameter parameterApcApiChange = new Parameter(labelASTitle, ApiCostanti.SERVLET_NAME_APC_API_CHANGE, pIdAccordo,pNomeAccordo,pTipoAccordo);
@@ -8026,10 +8031,15 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 			else if(ApiCostanti.VALORE_PARAMETRO_APC_API_OPZIONI_AVANZATE.equals(apiGestioneParziale)) {
 				labelApcChange = ApiCostanti.APC_API_LABEL_GESTIONE_OPZIONI_AVANZATE;
 			}
+			
+			if(apiGestioneParziale == null)
+				apiGestioneParziale = "";
+			
+			listaParamsApcChange.add(new Parameter(ApiCostanti.PARAMETRO_APC_API_GESTIONE_PARZIALE, apiGestioneParziale));
 		}
 		
 		if(addApcChange) {
-			Parameter parameterApcChange = servletNameApcChange != null ? new Parameter(labelApcChange, servletNameApcChange, pIdAccordo,pNomeAccordo,pTipoAccordo) : new Parameter(labelApcChange, servletNameApcChange);
+			Parameter parameterApcChange = servletNameApcChange != null ? new Parameter(labelApcChange, servletNameApcChange, listaParamsApcChange) : new Parameter(labelApcChange, servletNameApcChange);
 			listaParams.add(parameterApcChange);
 		}
 		
