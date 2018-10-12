@@ -366,6 +366,7 @@
             <forward name="accordiServizioParteComuneChangeOk" path="/jsplib/listElement.jsp"/>
             <forward name="accordiServizioParteComuneChangeCheckError" path="/jsplib/addElement.jsp"/>
             <forward name="accordiServizioParteComuneError" path="/jsplib/info.jsp"/>
+            <forward name="accordiServizioParteComuneApiChangeOk" path="/jsplib/addElement.jsp"/>
         </action>
         <action path="/accordiServizioParteComuneDel" type="org.openspcoop2.web.ctrlstat.servlet.apc.AccordiServizioParteComuneDel"
             scope="request" validate="true">

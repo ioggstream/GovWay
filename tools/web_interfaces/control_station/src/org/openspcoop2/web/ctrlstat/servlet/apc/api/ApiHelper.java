@@ -440,7 +440,13 @@ public class ApiHelper extends AccordiServizioParteComuneHelper {
 		listParametersApiWsdlChange.add(pTipoAccordo);
 		listParametersApiWsdlChange.add(pTipoWsdl);
 		listParametersApiWsdlChange.add(pNascondiSezioneDownload);
-		de.addUrl(AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_WSDL_CHANGE, listParametersApiWsdlChange.toArray(new Parameter[1]));
+		if(this.isModalitaStandard()) {
+			de.addUrl(AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_WSDL_CHANGE, listParametersApiWsdlChange.toArray(new Parameter[1]));
+		}
+		else {
+			listParametersApi.get(0).setValue(ApiCostanti.VALORE_PARAMETRO_APC_API_GESTIONE_SPECIFICA_INTERFACCE);
+			de.addUrl(AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_CHANGE, listParametersApi.toArray(new Parameter[1]));
+		}
 		de.addToolTip(MessageFormat.format(ApiCostanti.APC_API_ICONA_MODIFICA_API_TOOLTIP_CON_PARAMETRO, ApiCostanti.APC_API_LABEL_PARAMETRO_INTERFACCIA));
 		de.addIcon(ApiCostanti.APC_API_ICONA_MODIFICA_API);
 		de.addTarget(TargetType.SELF);
@@ -480,6 +486,7 @@ public class ApiHelper extends AccordiServizioParteComuneHelper {
 		case REST:
 				de = new DataElement();
 				de.setType(DataElementType.LINK);
+				listParametersApi.get(0).setValue("");
 				de.setUrl(AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_RESOURCES_LIST, listParametersApi.toArray(new Parameter[1]));
 				de.setValue(ApiCostanti.APC_API_LABEL_GESTIONE_RISORSE);
 				dati.addElement(de);
@@ -489,6 +496,7 @@ public class ApiHelper extends AccordiServizioParteComuneHelper {
 			// PortType
 			de = new DataElement();
 			de.setType(DataElementType.LINK);
+			listParametersApi.get(0).setValue("");
 			de.setUrl(AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_PORT_TYPES_LIST, listParametersApi.toArray(new Parameter[1]));
 			de.setValue(ApiCostanti.APC_API_LABEL_GESTIONE_SERVIZI);
 			dati.addElement(de);
@@ -499,8 +507,8 @@ public class ApiHelper extends AccordiServizioParteComuneHelper {
 		// 2. allegati
 		de = new DataElement();
 		de.setType(DataElementType.LINK);
-		listParametersApi.get(0).setValue(ApiCostanti.VALORE_PARAMETRO_APC_API_GESTIONE_ALLEGATI);
-		de.addUrl(AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_CHANGE, listParametersApi.toArray(new Parameter[1]));
+		listParametersApi.get(0).setValue("");
+		de.addUrl(AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_ALLEGATI_LIST, listParametersApi.toArray(new Parameter[1]));
 		de.setValue(ApiCostanti.APC_API_LABEL_GESTIONE_ALLEGATI);
 		dati.addElement(de);
 		

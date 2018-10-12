@@ -442,7 +442,7 @@ public class AccordiServizioParteComuneCostanti {
 
 	public final static String LABEL_PARAMETRO_APC_NOME = "Nome";
 	public final static String LABEL_PARAMETRO_APC_DESCRIZIONE = "Descrizione";
-	public final static String LABEL_PARAMETRO_APC_REFERENTE = "Soggetto referente";
+	public final static String LABEL_PARAMETRO_APC_REFERENTE = "Soggetto Referente";
 	public final static String LABEL_PARAMETRO_APC_VERSIONE = "Versione";
 	public final static String LABEL_PARAMETRO_APC_PRIVATO = "Privato";
 	public final static String LABEL_PARAMETRO_APC_PRIVATO_INFORMATIVA_VISIBILITA = "Visibilità accordo";
