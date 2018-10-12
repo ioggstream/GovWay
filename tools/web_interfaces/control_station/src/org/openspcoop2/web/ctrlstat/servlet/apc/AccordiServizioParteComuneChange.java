@@ -216,6 +216,7 @@ public final class AccordiServizioParteComuneChange extends Action {
 		String tmpValidazioneDocumenti = apcHelper.getParameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_VALIDAZIONE_DOCUMENTI);
 
 		String apiGestioneParziale = apcHelper.getParameter(ApiCostanti.PARAMETRO_APC_API_GESTIONE_PARZIALE);
+		Boolean isModalitaVistaApiCustom = ServletUtils.getBooleanAttributeFromSession(ApiCostanti.SESSION_ATTRIBUTE_VISTA_APC_API, session, false);
 		
 		if(ServletUtils.isEditModeInProgress(this.editMode) ){
 
@@ -241,8 +242,6 @@ public final class AccordiServizioParteComuneChange extends Action {
 		SoggettiCore soggettiCore = new SoggettiCore(apcCore);
 		PorteApplicativeCore porteApplicativeCore = new PorteApplicativeCore(apcCore);
 		AccordiCooperazioneCore acCore = new AccordiCooperazioneCore(apcCore);
-		String labelAccordoServizio = AccordiServizioParteComuneUtilities.getTerminologiaAccordoServizio(this.tipoAccordo);
-
 		Search ricerca = (Search) ServletUtils.getSearchObjectFromSession(session, Search.class);
 
 		AccordoServizioParteComune as = apcCore.getAccordoServizio(idAcc);
@@ -255,11 +254,7 @@ public final class AccordiServizioParteComuneChange extends Action {
 		List<String> listaTipiProtocollo = null;
 
 		boolean used = false;
-
-		Boolean isModalitaVistaApiCustom = ServletUtils.getBooleanAttributeFromSession(ApiCostanti.SESSION_ATTRIBUTE_VISTA_APC_API, session, false);
-		Parameter pIdAccordo = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_ID, this.id+"");
-		Parameter pNomeAccordo = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_NOME, as.getNome());
-		Parameter pTipoAccordo = AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo);
+		
 		IDAccordo idAccordoOLD = idAccordoFactory.getIDAccordoFromValues(as.getNome(),BeanUtilities.getSoggettoReferenteID(as.getSoggettoReferente()),as.getVersione());
 
 		try {
@@ -379,31 +374,7 @@ public final class AccordiServizioParteComuneChange extends Action {
 		propertiesProprietario.setProperty(ProtocolPropertiesCostanti.PARAMETRO_PP_PROTOCOLLO, this.tipoProtocollo);
 		propertiesProprietario.setProperty(ProtocolPropertiesCostanti.PARAMETRO_PP_TIPO_ACCORDO, this.tipoAccordo);
 		
-		String servletNameApcList = isModalitaVistaApiCustom ? ApiCostanti.SERVLET_NAME_APC_API_LIST : AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_LIST;
-		
-		List<Parameter> listaParams = new ArrayList<>();
-		listaParams.add(new Parameter(labelAccordoServizio, servletNameApcList, pTipoAccordo));
-		if(isModalitaVistaApiCustom) {
-			Parameter parameterApcChange = new Parameter(labelASTitle,	ApiCostanti.SERVLET_NAME_APC_API_CHANGE, pIdAccordo,pNomeAccordo,pTipoAccordo);
-			listaParams.add(parameterApcChange);
-			if(ApiCostanti.VALORE_PARAMETRO_APC_API_INFORMAZIONI_GENERALI.equals(apiGestioneParziale)) {
-				listaParams.add(new Parameter(ApiCostanti.APC_API_LABEL_APS_INFO_GENERALI, null));
-			}
-			else if(ApiCostanti.VALORE_PARAMETRO_APC_API_SOGGETTO_REFERENTE.equals(apiGestioneParziale)) {
-				listaParams.add(new Parameter(AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_REFERENTE, null));
-			}
-			else if(ApiCostanti.VALORE_PARAMETRO_APC_API_DESCRIZIONE.equals(apiGestioneParziale)) {
-				listaParams.add(new Parameter(AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_DESCRIZIONE, null));
-			}
-			else if(ApiCostanti.VALORE_PARAMETRO_APC_API_GESTIONE_ALLEGATI.equals(apiGestioneParziale)) {
-				listaParams.add(new Parameter(ApiCostanti.APC_API_LABEL_GESTIONE_ALLEGATI, null));
-			}
-			else if(ApiCostanti.VALORE_PARAMETRO_APC_API_OPZIONI_AVANZATE.equals(apiGestioneParziale)) {
-				listaParams.add(new Parameter(ApiCostanti.APC_API_LABEL_GESTIONE_OPZIONI_AVANZATE, null));
-			}
-		} else {
-			listaParams.add(new Parameter(labelASTitle,null));
-		}
+		List<Parameter> listaParams = apcHelper.getTitoloApc(tipoOp, as, this.tipoAccordo, labelASTitle, null); 
 
 		// Se idhid = null, devo visualizzare la pagina per la modifica dati
 		if(ServletUtils.isEditModeInProgress(this.editMode)){

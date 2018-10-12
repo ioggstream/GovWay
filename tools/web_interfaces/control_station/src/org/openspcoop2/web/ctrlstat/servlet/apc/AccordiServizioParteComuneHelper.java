@@ -7882,6 +7882,46 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 	}
 
 
+	public List<Parameter> getTitoloApc(TipoOperazione tipoOperazione, AccordoServizioParteComune as, String tipoAccordo, String labelASTitle, String servletNameApcChange) throws Exception { 
+		
+		String labelAccordoServizio = AccordiServizioParteComuneUtilities.getTerminologiaAccordoServizio(tipoAccordo);
+		Boolean isModalitaVistaApiCustom = ServletUtils.getBooleanAttributeFromSession(ApiCostanti.SESSION_ATTRIBUTE_VISTA_APC_API, this.session, false);
+		String servletNameApcList = isModalitaVistaApiCustom ? ApiCostanti.SERVLET_NAME_APC_API_LIST : AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_LIST;
+		Parameter pIdAccordo = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_ID, as.getId()+"");
+		Parameter pNomeAccordo = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_NOME, as.getNome());
+		Parameter pTipoAccordo = AccordiServizioParteComuneUtilities.getParametroAccordoServizio(tipoAccordo);
+		String apiGestioneParziale = this.getParameter(ApiCostanti.PARAMETRO_APC_API_GESTIONE_PARZIALE);
+		
+		List<Parameter> listaParams = new ArrayList<>();
+		listaParams.add(new Parameter(labelAccordoServizio, servletNameApcList, pTipoAccordo));
 
-
+		if(isModalitaVistaApiCustom) {
+			Parameter parameterApcApiChange = new Parameter(labelASTitle, ApiCostanti.SERVLET_NAME_APC_API_CHANGE, pIdAccordo,pNomeAccordo,pTipoAccordo);
+			listaParams.add(parameterApcApiChange);
+			String labelVistaParziale = "";
+			if(ApiCostanti.VALORE_PARAMETRO_APC_API_INFORMAZIONI_GENERALI.equals(apiGestioneParziale)) {
+				labelVistaParziale = ApiCostanti.APC_API_LABEL_APS_INFO_GENERALI;
+			}
+			else if(ApiCostanti.VALORE_PARAMETRO_APC_API_SOGGETTO_REFERENTE.equals(apiGestioneParziale)) {
+				labelVistaParziale = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_REFERENTE;
+			}
+			else if(ApiCostanti.VALORE_PARAMETRO_APC_API_DESCRIZIONE.equals(apiGestioneParziale)) {
+				labelVistaParziale = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_DESCRIZIONE;
+			}
+			else if(ApiCostanti.VALORE_PARAMETRO_APC_API_GESTIONE_ALLEGATI.equals(apiGestioneParziale)) {
+				labelVistaParziale = ApiCostanti.APC_API_LABEL_GESTIONE_ALLEGATI;
+			}
+			else if(ApiCostanti.VALORE_PARAMETRO_APC_API_OPZIONI_AVANZATE.equals(apiGestioneParziale)) {
+				labelVistaParziale = ApiCostanti.APC_API_LABEL_GESTIONE_OPZIONI_AVANZATE;
+			}
+			
+			Parameter parameterApcChange = servletNameApcChange != null ? new Parameter(labelVistaParziale, servletNameApcChange, pIdAccordo,pNomeAccordo,pTipoAccordo) : new Parameter(labelVistaParziale, servletNameApcChange);
+			listaParams.add(parameterApcChange);
+		} else {
+			Parameter parameterApcChange = servletNameApcChange != null ? new Parameter(labelASTitle, servletNameApcChange, pIdAccordo,pNomeAccordo,pTipoAccordo) : new Parameter(labelASTitle, servletNameApcChange);
+			listaParams.add(parameterApcChange);
+		}
+		return listaParams;
+	}
+ 
 }
