@@ -190,7 +190,9 @@ public class ApiHelper extends AccordiServizioParteComuneHelper {
 					labelServiceBinding= CostantiControlStation.LABEL_PARAMETRO_SERVICE_BINDING_SOAP;
 					break;
 				}
-
+				InterfaceType interfaceType = this.apcCore.formatoSpecifica2InterfaceType(accordoServizio.getFormatoSpecifica());
+				labelServiceBinding = labelServiceBinding + " " + this.getLabelWSDLFromFormatoSpecifica(interfaceType);
+				
 				if(showProtocolli) {
 					String labelProtocollo =this.getLabelProtocollo(protocollo); 
 					de.setValue(MessageFormat.format(ApiCostanti.MESSAGE_METADATI_APC_API_CON_PROFILO, labelServiceBinding, labelProtocollo));
@@ -205,7 +207,7 @@ public class ApiHelper extends AccordiServizioParteComuneHelper {
 				de.setType(DataElementType.CHECKBOX);
 				
 				// controllo stato dell'API
-				Search searchForCount = new Search(true,1);
+				Search searchForCount = new Search(true);
 				switch (serviceBinding) {
 				case REST:
 					// caso REST: l'API e' abilitata se ha almeno una risorsa
@@ -234,9 +236,13 @@ public class ApiHelper extends AccordiServizioParteComuneHelper {
 							numeroServiziAbilitati ++;
 					}
 					
-					if(numeroServiziAbilitati == 0) {
+					if(numeroTotaleServizi == 0) {
 						de.setValue(ApiCostanti.APC_API_ICONA_STATO_SERVIZI_TUTTI_DISABILITATI);
 						de.setToolTip(ApiCostanti.APC_API_ICONA_STATO_SERVIZI_TUTTI_DISABILITATI_TOOLTIP);
+					}
+					else if(numeroTotaleServizi==1 && numeroServiziAbilitati==0) {
+						de.setValue(ApiCostanti.APC_API_ICONA_STATO_SERVIZI_TUTTI_DISABILITATI);
+						de.setToolTip(ApiCostanti.APC_API_ICONA_STATO_SERVIZIO_PARZIALMENTE_CONFIGURATO_DISABILITATI_TOOLTIP);
 					} else if(numeroServiziAbilitati == numeroTotaleServizi) {
 						de.setValue(ApiCostanti.APC_API_ICONA_STATO_SERVIZI_TUTTI_ABILITATI);
 					} else {
@@ -353,15 +359,18 @@ public class ApiHelper extends AccordiServizioParteComuneHelper {
 		// tipo interfaccia + link wsdl change + link download
 		Vector<DataElement> dati = datiPagina.elementAt(0);
 		
+		List<Parameter> listParametersApi = new ArrayList<>();
+		listParametersApi.add(new Parameter(ApiCostanti.PARAMETRO_APC_API_GESTIONE_PARZIALE, "")); // lasciare per primo
+		listParametersApi.add(pIdAccordo);
+		listParametersApi.add(pNomeAccordo);
+		listParametersApi.add(pTipoAccordo);
+		
 		// Titolo API
 		DataElement de = new DataElement();
 		de.setType(DataElementType.TEXT);
 		de.setLabel(AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_NOME);
 		de.setValue(getLabelIdAccordoSenzaReferente(tipoProtocollo, idAccordo));
-		List<Parameter> listParametersApi = new ArrayList<>();
-		listParametersApi.add(pIdAccordo);
-		listParametersApi.add(pNomeAccordo);
-		listParametersApi.add(pTipoAccordo);
+		listParametersApi.get(0).setValue(ApiCostanti.VALORE_PARAMETRO_APC_API_INFORMAZIONI_GENERALI);
 		de.setUrl(AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_CHANGE, listParametersApi.toArray(new Parameter[1]));
 		de.setToolTip(MessageFormat.format(ApiCostanti.APC_API_ICONA_MODIFICA_API_TOOLTIP_CON_PARAMETRO, ApiCostanti.APC_API_LABEL_APS_INFO_GENERALI));
 		de.setIcon(ApiCostanti.APC_API_ICONA_MODIFICA_API);
@@ -375,6 +384,7 @@ public class ApiHelper extends AccordiServizioParteComuneHelper {
 			de.setLabel(AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_REFERENTE);
 			de.setValue(this.getLabelNomeSoggetto(tipoProtocollo,as.getSoggettoReferente().getTipo(),as.getSoggettoReferente().getNome())); 
 			de.setType(DataElementType.TEXT);
+			listParametersApi.get(0).setValue(ApiCostanti.VALORE_PARAMETRO_APC_API_SOGGETTO_REFERENTE);
 			de.setUrl(AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_CHANGE, listParametersApi.toArray(new Parameter[1]));
 			de.setToolTip(MessageFormat.format(ApiCostanti.APC_API_ICONA_MODIFICA_API_TOOLTIP_CON_PARAMETRO, AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_REFERENTE));
 			de.setIcon(ApiCostanti.APC_API_ICONA_MODIFICA_API);
@@ -398,17 +408,20 @@ public class ApiHelper extends AccordiServizioParteComuneHelper {
 		String labelServiceBinding = null;
 		String tipoWsdl = null;
 		String tipologiaDocumentoScaricare = null;
+		boolean download = false;
 		switch (serviceBinding) {
 		case REST:
 			labelServiceBinding= CostantiControlStation.LABEL_PARAMETRO_SERVICE_BINDING_REST;
 			tipoWsdl = AccordiServizioParteComuneCostanti.PARAMETRO_APC_WSDL_CONCETTUALE;
 			tipologiaDocumentoScaricare = ArchiviCostanti.PARAMETRO_VALORE_ARCHIVI_ALLEGATO_TIPO_ACCORDO_TIPO_DOCUMENTO_WSDL_CONCETTUALE;
+			download = as.getByteWsdlConcettuale()!=null;
 			break;
 		case SOAP:
 		default:
 			labelServiceBinding= CostantiControlStation.LABEL_PARAMETRO_SERVICE_BINDING_SOAP;
 			tipoWsdl = AccordiServizioParteComuneCostanti.PARAMETRO_APC_WSDL_EROGATORE;
 			tipologiaDocumentoScaricare = ArchiviCostanti.PARAMETRO_VALORE_ARCHIVI_ALLEGATO_TIPO_ACCORDO_TIPO_DOCUMENTO_WSDL_LOGICO_EROGATORE;
+			download = as.getByteWsdlLogicoErogatore()!=null;
 			break;
 		}
 		
@@ -432,18 +445,20 @@ public class ApiHelper extends AccordiServizioParteComuneHelper {
 		de.addIcon(ApiCostanti.APC_API_ICONA_MODIFICA_API);
 		de.addTarget(TargetType.SELF);
 		// download
-		List<Parameter> listParametersApiWsdlDownload = new ArrayList<>();
-		Parameter pIdAccordoDownload = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_ALLEGATI_ID_ACCORDO, as.getId()+"");
-		Parameter pTipoDocumentoDownload = new Parameter(ArchiviCostanti.PARAMETRO_ARCHIVI_ALLEGATO_TIPO_ACCORDO_TIPO_DOCUMENTO, tipologiaDocumentoScaricare);
-		Parameter pTipoAccordoDownload = new Parameter(ArchiviCostanti.PARAMETRO_ARCHIVI_ALLEGATO_TIPO_ACCORDO, ArchiviCostanti.PARAMETRO_VALORE_ARCHIVI_ALLEGATO_TIPO_ACCORDO_PARTE_COMUNE);
-		listParametersApiWsdlDownload.add(pIdAccordoDownload);
-		listParametersApiWsdlDownload.add(pTipoDocumentoDownload);
-		listParametersApiWsdlDownload.add(pTipoAccordoDownload);
-		de.addUrl(ArchiviCostanti.SERVLET_NAME_DOCUMENTI_EXPORT, listParametersApiWsdlDownload.toArray(new Parameter[1]));
-		de.addToolTip(MessageFormat.format(ApiCostanti.APC_API_ICONA_DOWNLOAD_DOCUMENTO_INTERFACCIA_TOOLTIP_CON_PARAMETRO, ApiCostanti.APC_API_LABEL_PARAMETRO_INTERFACCIA));
-		de.addIcon(ApiCostanti.APC_API_ICONA_DOWNLOAD_DOCUMENTO_INTERFACCIA);
-		de.addTarget(TargetType.SELF);
-		dati.addElement(de);
+		if(download) {
+			List<Parameter> listParametersApiWsdlDownload = new ArrayList<>();
+			Parameter pIdAccordoDownload = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_ALLEGATI_ID_ACCORDO, as.getId()+"");
+			Parameter pTipoDocumentoDownload = new Parameter(ArchiviCostanti.PARAMETRO_ARCHIVI_ALLEGATO_TIPO_ACCORDO_TIPO_DOCUMENTO, tipologiaDocumentoScaricare);
+			Parameter pTipoAccordoDownload = new Parameter(ArchiviCostanti.PARAMETRO_ARCHIVI_ALLEGATO_TIPO_ACCORDO, ArchiviCostanti.PARAMETRO_VALORE_ARCHIVI_ALLEGATO_TIPO_ACCORDO_PARTE_COMUNE);
+			listParametersApiWsdlDownload.add(pIdAccordoDownload);
+			listParametersApiWsdlDownload.add(pTipoDocumentoDownload);
+			listParametersApiWsdlDownload.add(pTipoAccordoDownload);
+			de.addUrl(ArchiviCostanti.SERVLET_NAME_DOCUMENTI_EXPORT, listParametersApiWsdlDownload.toArray(new Parameter[1]));
+			de.addToolTip(MessageFormat.format(ApiCostanti.APC_API_ICONA_DOWNLOAD_DOCUMENTO_INTERFACCIA_TOOLTIP_CON_PARAMETRO, ApiCostanti.APC_API_LABEL_PARAMETRO_INTERFACCIA));
+			de.addIcon(ApiCostanti.APC_API_ICONA_DOWNLOAD_DOCUMENTO_INTERFACCIA);
+			de.addTarget(TargetType.SELF);
+			dati.addElement(de);
+		}
 		
 		
 		
@@ -472,6 +487,7 @@ public class ApiHelper extends AccordiServizioParteComuneHelper {
 		// 2. allegati
 		de = new DataElement();
 		de.setType(DataElementType.LINK);
+		listParametersApi.get(0).setValue(ApiCostanti.VALORE_PARAMETRO_APC_API_GESTIONE_ALLEGATI);
 		de.addUrl(AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_CHANGE, listParametersApi.toArray(new Parameter[1]));
 		de.setValue(ApiCostanti.APC_API_LABEL_GESTIONE_ALLEGATI);
 		dati.addElement(de);
@@ -480,6 +496,7 @@ public class ApiHelper extends AccordiServizioParteComuneHelper {
 		if(this.isModalitaAvanzata()) {
 			de = new DataElement();
 			de.setType(DataElementType.LINK);
+			listParametersApi.get(0).setValue(ApiCostanti.VALORE_PARAMETRO_APC_API_OPZIONI_AVANZATE);
 			de.addUrl(AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_CHANGE, listParametersApi.toArray(new Parameter[1]));
 			de.setValue(ApiCostanti.APC_API_LABEL_GESTIONE_OPZIONI_AVANZATE);
 			dati.addElement(de);

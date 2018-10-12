@@ -2964,6 +2964,9 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 
 		boolean showServizioCompostoCheck = AccordiServizioParteComuneUtilities.showFlagServizioComposto();
 
+		Boolean isModalitaVistaApiCustom = ServletUtils.getBooleanAttributeFromSession(ApiCostanti.SESSION_ATTRIBUTE_VISTA_APC_API, this.session, false);
+		String apiGestioneParziale = this.getParameter(ApiCostanti.PARAMETRO_APC_API_GESTIONE_PARZIALE);
+		
 		DataElement de = new DataElement();
 		de.setValue(tipoAccordo);
 		de.setType(DataElementType.HIDDEN);
@@ -5665,6 +5668,57 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 		} catch (Exception e) {
 			this.log.error("Exception: " + e.getMessage(), e);
 			throw new Exception(e);
+		}
+	}
+	
+	public void setMessageWarningStatoConsistenzaAccordo(boolean create, AccordoServizioParteComune as) {
+		if(create) {
+			if(org.openspcoop2.core.registry.constants.ServiceBinding.REST.equals(as.getServiceBinding())) {
+				if(as.sizeResourceList()<=0) {
+					this.pd.setMessage(AccordiServizioParteComuneCostanti.LABEL_CONFIGURAZIONE_INCOMPLETA_REST_CREATE, org.openspcoop2.web.lib.mvc.MessageType.INFO);
+				}
+			}
+			else {
+				if(as.sizePortTypeList()<=0) {
+					this.pd.setMessage(AccordiServizioParteComuneCostanti.LABEL_CONFIGURAZIONE_INCOMPLETA_SOAP_CREATE, org.openspcoop2.web.lib.mvc.MessageType.INFO);
+				}
+				else if(as.sizePortTypeList()==1) {
+					if(as.getPortType(0).sizeAzioneList()<=0) {
+						this.pd.setMessage(AccordiServizioParteComuneCostanti.LABEL_CONFIGURAZIONE_INCOMPLETA_SOAP_AZIONE_SERVIZIO_CREATE, org.openspcoop2.web.lib.mvc.MessageType.INFO);
+					}
+				}
+				else {
+					for (PortType portType : as.getPortTypeList()) {
+						if(portType.sizeAzioneList()<=0) {
+							this.pd.setMessage(AccordiServizioParteComuneCostanti.LABEL_CONFIGURAZIONE_INCOMPLETA_SOAP_AZIONE_SERVIZI_CREATE, org.openspcoop2.web.lib.mvc.MessageType.INFO);
+						}
+					}
+				}
+			}
+		}
+		else {
+			if(org.openspcoop2.core.registry.constants.ServiceBinding.REST.equals(as.getServiceBinding())) {
+				if(as.sizeResourceList()<=0) {
+					this.pd.setMessage(AccordiServizioParteComuneCostanti.LABEL_CONFIGURAZIONE_INCOMPLETA_REST_UPDATE, org.openspcoop2.web.lib.mvc.MessageType.INFO);
+				}
+			}
+			else {
+				if(as.sizePortTypeList()<=0) {
+					this.pd.setMessage(AccordiServizioParteComuneCostanti.LABEL_CONFIGURAZIONE_INCOMPLETA_SOAP_UPDATE, org.openspcoop2.web.lib.mvc.MessageType.INFO);
+				}
+				else if(as.sizePortTypeList()==1) {
+					if(as.getPortType(0).sizeAzioneList()<=0) {
+						this.pd.setMessage(AccordiServizioParteComuneCostanti.LABEL_CONFIGURAZIONE_INCOMPLETA_SOAP_AZIONE_SERVIZIO_UPDATE, org.openspcoop2.web.lib.mvc.MessageType.INFO);
+					}
+				}
+				else {
+					for (PortType portType : as.getPortTypeList()) {
+						if(portType.sizeAzioneList()<=0) {
+							this.pd.setMessage(AccordiServizioParteComuneCostanti.LABEL_CONFIGURAZIONE_INCOMPLETA_SOAP_AZIONE_SERVIZI_UPDATE, org.openspcoop2.web.lib.mvc.MessageType.INFO);
+						}
+					}
+				}
+			}
 		}
 	}
 	

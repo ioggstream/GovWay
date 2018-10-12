@@ -81,11 +81,12 @@ public class ApiCostanti extends AccordiServizioParteComuneCostanti {
 	public final static String APC_API_ICONA_STATO_SERVIZI_TUTTI_DISABILITATI = "disabled_red.png";
 	
 	public final static String APC_API_ICONA_STATO_RISORSE_TUTTE_ABILITATE_TOOLTIP = "Abilitato";
-	public final static String APC_API_ICONA_STATO_RISORSE_TUTTE_DISABILITATE_TOOLTIP = "Nessuna Risorsa configurata";
+	public final static String APC_API_ICONA_STATO_RISORSE_TUTTE_DISABILITATE_TOOLTIP = "Nessuna risorsa configurata";
 	
 	public final static String APC_API_ICONA_STATO_SERVIZI_TUTTI_ABILITATI_TOOLTIP = "Abilitato";
-	public final static String APC_API_ICONA_STATO_SERVIZI_PARZIALMENTE_ABILITATI_TOOLTIP = "Alcuni Servizi non posseggono Azioni";
-	public final static String APC_API_ICONA_STATO_SERVIZI_TUTTI_DISABILITATI_TOOLTIP = "Nessun Servizio configurata";
+	public final static String APC_API_ICONA_STATO_SERVIZI_PARZIALMENTE_ABILITATI_TOOLTIP = "Alcuni servizi configurati senza azioni";
+	public final static String APC_API_ICONA_STATO_SERVIZI_TUTTI_DISABILITATI_TOOLTIP = "Nessun servizio configurato";
+	public final static String APC_API_ICONA_STATO_SERVIZIO_PARZIALMENTE_CONFIGURATO_DISABILITATI_TOOLTIP = "Nessun'azione configurata per il servizio";
 	
 	public final static String APC_API_LABEL_APS_INFO_GENERALI = "Informazioni Generali";
 	public final static String APC_API_LABEL_PARAMETRO_INTERFACCIA = "Interfaccia";
@@ -93,4 +94,11 @@ public class ApiCostanti extends AccordiServizioParteComuneCostanti {
 	public final static String APC_API_LABEL_GESTIONE_SERVIZI = "Gestione Servizi";
 	public final static String APC_API_LABEL_GESTIONE_ALLEGATI = "Gestione Allegati";
 	public final static String APC_API_LABEL_GESTIONE_OPZIONI_AVANZATE = "Opzioni Avanzate";
+	
+	
+	public final static String PARAMETRO_APC_API_GESTIONE_PARZIALE = "apiGestioneParziale";
+	public final static String VALORE_PARAMETRO_APC_API_INFORMAZIONI_GENERALI = "apiInfoGenerali";
+	public final static String VALORE_PARAMETRO_APC_API_SOGGETTO_REFERENTE = "apiSoggettoReferente";
+	public final static String VALORE_PARAMETRO_APC_API_GESTIONE_ALLEGATI = "apiGestioneAllegati";
+	public final static String VALORE_PARAMETRO_APC_API_OPZIONI_AVANZATE = "apiOpzioniAvanzate";
 }

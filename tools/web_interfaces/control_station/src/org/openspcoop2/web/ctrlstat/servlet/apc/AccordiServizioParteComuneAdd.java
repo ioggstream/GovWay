@@ -810,6 +810,9 @@ public final class AccordiServizioParteComuneAdd extends Action {
 			apcHelper.deleteBinaryParameters(this.wsdlconc,this.wsdldef,this.wsdlserv,this.wsdlservcorr,this.wsblconc,this.wsblserv,this.wsblservcorr);
 			apcHelper.deleteBinaryProtocolPropertiesTmpFiles(this.protocolProperties);
 
+			// Verifico stato
+			apcHelper.setMessageWarningStatoConsistenzaAccordo(true, as);
+			
 			// Preparo la lista
 			Search ricerca = (Search) ServletUtils.getSearchObjectFromSession(session, Search.class);
 

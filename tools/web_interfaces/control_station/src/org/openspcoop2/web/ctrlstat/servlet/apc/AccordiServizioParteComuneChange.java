@@ -215,6 +215,8 @@ public final class AccordiServizioParteComuneChange extends Action {
 
 		String tmpValidazioneDocumenti = apcHelper.getParameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_VALIDAZIONE_DOCUMENTI);
 
+		String apiGestioneParziale = apcHelper.getParameter(ApiCostanti.PARAMETRO_APC_API_GESTIONE_PARZIALE);
+		
 		if(ServletUtils.isEditModeInProgress(this.editMode) ){
 
 			// primo accesso alla servlet
@@ -384,7 +386,18 @@ public final class AccordiServizioParteComuneChange extends Action {
 		if(isModalitaVistaApiCustom) {
 			Parameter parameterApcChange = new Parameter(labelASTitle,	ApiCostanti.SERVLET_NAME_APC_API_CHANGE, pIdAccordo,pNomeAccordo,pTipoAccordo);
 			listaParams.add(parameterApcChange);
-			listaParams.add(new Parameter(ApiCostanti.APC_API_LABEL_APS_INFO_GENERALI, null));
+			if(ApiCostanti.VALORE_PARAMETRO_APC_API_INFORMAZIONI_GENERALI.equals(apiGestioneParziale)) {
+				listaParams.add(new Parameter(ApiCostanti.APC_API_LABEL_APS_INFO_GENERALI, null));
+			}
+			else if(ApiCostanti.VALORE_PARAMETRO_APC_API_SOGGETTO_REFERENTE.equals(apiGestioneParziale)) {
+				listaParams.add(new Parameter(AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_REFERENTE, null));
+			}
+			else if(ApiCostanti.VALORE_PARAMETRO_APC_API_GESTIONE_ALLEGATI.equals(apiGestioneParziale)) {
+				listaParams.add(new Parameter(ApiCostanti.APC_API_LABEL_GESTIONE_ALLEGATI, null));
+			}
+			else if(ApiCostanti.VALORE_PARAMETRO_APC_API_OPZIONI_AVANZATE.equals(apiGestioneParziale)) {
+				listaParams.add(new Parameter(ApiCostanti.APC_API_LABEL_GESTIONE_OPZIONI_AVANZATE, null));
+			}
 		} else {
 			listaParams.add(new Parameter(labelASTitle,null));
 		}

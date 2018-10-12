@@ -406,6 +406,9 @@ public final class AccordiServizioParteComunePortTypesAdd extends Action {
 			// cancello i file temporanei
 			apcHelper.deleteBinaryProtocolPropertiesTmpFiles(this.protocolProperties);
 
+			// Verifico stato
+			apcHelper.setMessageWarningStatoConsistenzaAccordo(false, as);
+			
 			// Preparo la lista
 			Search ricerca = (Search) ServletUtils.getSearchObjectFromSession(session, Search.class);
 
