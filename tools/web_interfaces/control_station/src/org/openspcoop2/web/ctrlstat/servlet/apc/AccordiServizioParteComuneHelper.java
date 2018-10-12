@@ -4368,7 +4368,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 
 
 	// Controlla i dati degli Accordi
-	boolean accordiCheckData(TipoOperazione tipoOperazione, String nome, String descr, String profcoll, 
+	public boolean accordiCheckData(TipoOperazione tipoOperazione, String nome, String descr, String profcoll, 
 			BinaryParameter wsdldef, BinaryParameter wsdlconc, BinaryParameter wsdlserv, BinaryParameter wsdlservcorr, 
 			String filtrodup, String confric, String idcoll, String idRifRichiesta, String consord, String scadenza, String id,
 			String referente,String versione,String accordoCooperazione, 

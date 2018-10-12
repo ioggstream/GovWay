@@ -69,6 +69,8 @@ import org.openspcoop2.web.ctrlstat.core.ControlStationCore;
 import org.openspcoop2.web.ctrlstat.core.Search;
 import org.openspcoop2.web.ctrlstat.servlet.GeneralHelper;
 import org.openspcoop2.web.ctrlstat.servlet.ac.AccordiCooperazioneCore;
+import org.openspcoop2.web.ctrlstat.servlet.apc.api.ApiCostanti;
+import org.openspcoop2.web.ctrlstat.servlet.apc.api.ApiHelper;
 import org.openspcoop2.web.ctrlstat.servlet.protocol_properties.ProtocolPropertiesCostanti;
 import org.openspcoop2.web.ctrlstat.servlet.protocol_properties.ProtocolPropertiesUtilities;
 import org.openspcoop2.web.ctrlstat.servlet.soggetti.SoggettiCore;
@@ -78,6 +80,7 @@ import org.openspcoop2.web.lib.mvc.DataElement;
 import org.openspcoop2.web.lib.mvc.ForwardParams;
 import org.openspcoop2.web.lib.mvc.GeneralData;
 import org.openspcoop2.web.lib.mvc.PageData;
+import org.openspcoop2.web.lib.mvc.Parameter;
 import org.openspcoop2.web.lib.mvc.ServletUtils;
 import org.openspcoop2.web.lib.mvc.TipoOperazione;
 
@@ -146,8 +149,8 @@ public final class AccordiServizioParteComuneAdd extends Action {
 		TipoOperazione tipoOp = TipoOperazione.ADD; 
 
 		try {
-
-			AccordiServizioParteComuneHelper apcHelper = new AccordiServizioParteComuneHelper(request, pd, session);
+			Boolean isModalitaVistaApiCustom = ServletUtils.getBooleanAttributeFromSession(ApiCostanti.SESSION_ATTRIBUTE_VISTA_APC_API, session, false);
+			ApiHelper apcHelper = new ApiHelper(request, pd, session);
 			this.consoleInterfaceType = ProtocolPropertiesUtilities.getTipoInterfaccia(apcHelper); 
 
 			this.editMode = apcHelper.getParameter(Costanti.DATA_ELEMENT_EDIT_MODE_NAME);
@@ -431,13 +434,17 @@ public final class AccordiServizioParteComuneAdd extends Action {
 			}
 
 			// Se nome = null, devo visualizzare la pagina per l'inserimento dati
+			String servletNameApcList = isModalitaVistaApiCustom ? ApiCostanti.SERVLET_NAME_APC_API_LIST : AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_LIST; 
+			Parameter pTipoAccordo = AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo);
+			List<Parameter> listaParams = new ArrayList<>();
+			listaParams.add(new Parameter(labelAccordoServizio, servletNameApcList, pTipoAccordo));
+			listaParams.add(new Parameter(Costanti.PAGE_DATA_TITLE_LABEL_AGGIUNGI,null));
+			
+			
 			if(ServletUtils.isEditModeInProgress(this.editMode)){ // && apcHelper.isEditModeInProgress()){
 
 				// setto la barra del titolo
-				ServletUtils.setPageDataTitle_ServletAdd(pd, labelAccordoServizio,
-						AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_LIST+"?"+
-								AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo).getName()+"="+
-								AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo).getValue());
+				ServletUtils.setPageDataTitle(pd, listaParams);
 
 				if(this.nome==null){
 					this.nome = "";
@@ -578,10 +585,7 @@ public final class AccordiServizioParteComuneAdd extends Action {
 			if (!isOk) {
 
 				// setto la barra del titolo
-				ServletUtils.setPageDataTitle_ServletAdd(pd, labelAccordoServizio,
-						AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_LIST+"?"+
-								AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo).getName()+"="+
-								AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo).getValue());
+				ServletUtils.setPageDataTitle(pd, listaParams);
 
 				// preparo i campi
 				Vector<DataElement> dati = new Vector<DataElement>();
@@ -723,10 +727,7 @@ public final class AccordiServizioParteComuneAdd extends Action {
 					pd.setMessage(validazioneException.toString());
 
 					// setto la barra del titolo
-					ServletUtils.setPageDataTitle_ServletAdd(pd, labelAccordoServizio,
-							AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_LIST+"?"+
-									AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo).getName()+"="+
-									AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo).getValue());
+					ServletUtils.setPageDataTitle(pd, listaParams);
 
 					// preparo i campi
 					Vector<DataElement> dati = new Vector<DataElement>();
@@ -814,6 +815,12 @@ public final class AccordiServizioParteComuneAdd extends Action {
 
 			List<AccordoServizioParteComune> lista = AccordiServizioParteComuneUtilities.accordiList(apcCore, userLogin, ricerca, this.tipoAccordo);
 
+			if(isModalitaVistaApiCustom) {
+				apcHelper.prepareApiList(lista, ricerca, this.tipoAccordo); 
+				ServletUtils.setGeneralAndPageDataIntoSession(session, gd, pd);
+				return ServletUtils.getStrutsForwardEditModeFinished(mapping, ApiCostanti.OBJECT_NAME_APC_API, ForwardParams.ADD());
+			}
+			
 			apcHelper.prepareAccordiList(lista, ricerca, this.tipoAccordo);
 
 			ServletUtils.setGeneralAndPageDataIntoSession(session, gd, pd);
