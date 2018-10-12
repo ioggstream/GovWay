@@ -79,6 +79,7 @@ import org.openspcoop2.web.ctrlstat.core.Search;
 import org.openspcoop2.web.ctrlstat.costanti.CostantiControlStation;
 import org.openspcoop2.web.ctrlstat.servlet.GeneralHelper;
 import org.openspcoop2.web.ctrlstat.servlet.ac.AccordiCooperazioneCore;
+import org.openspcoop2.web.ctrlstat.servlet.apc.api.ApiCostanti;
 import org.openspcoop2.web.ctrlstat.servlet.aps.AccordiServizioParteSpecificaCore;
 import org.openspcoop2.web.ctrlstat.servlet.aps.AccordiServizioParteSpecificaCostanti;
 import org.openspcoop2.web.ctrlstat.servlet.pa.PorteApplicativeCore;
@@ -92,6 +93,7 @@ import org.openspcoop2.web.lib.mvc.DataElementType;
 import org.openspcoop2.web.lib.mvc.ForwardParams;
 import org.openspcoop2.web.lib.mvc.GeneralData;
 import org.openspcoop2.web.lib.mvc.PageData;
+import org.openspcoop2.web.lib.mvc.Parameter;
 import org.openspcoop2.web.lib.mvc.ServletUtils;
 import org.openspcoop2.web.lib.mvc.TipoOperazione;
 
@@ -252,7 +254,10 @@ public final class AccordiServizioParteComuneChange extends Action {
 
 		boolean used = false;
 
-
+		Boolean isModalitaVistaApiCustom = ServletUtils.getBooleanAttributeFromSession(ApiCostanti.SESSION_ATTRIBUTE_VISTA_APC_API, session, false);
+		Parameter pIdAccordo = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_ID, this.id+"");
+		Parameter pNomeAccordo = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_NOME, as.getNome());
+		Parameter pTipoAccordo = AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo);
 		IDAccordo idAccordoOLD = idAccordoFactory.getIDAccordoFromValues(as.getNome(),BeanUtilities.getSoggettoReferenteID(as.getSoggettoReferente()),as.getVersione());
 
 		try {
@@ -371,6 +376,18 @@ public final class AccordiServizioParteComuneChange extends Action {
 		propertiesProprietario.setProperty(ProtocolPropertiesCostanti.PARAMETRO_PP_URL_ORIGINALE_CHANGE, URLEncoder.encode( AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_CHANGE + "?" + request.getQueryString(), "UTF-8"));
 		propertiesProprietario.setProperty(ProtocolPropertiesCostanti.PARAMETRO_PP_PROTOCOLLO, this.tipoProtocollo);
 		propertiesProprietario.setProperty(ProtocolPropertiesCostanti.PARAMETRO_PP_TIPO_ACCORDO, this.tipoAccordo);
+		
+		String servletNameApcList = isModalitaVistaApiCustom ? ApiCostanti.SERVLET_NAME_APC_API_LIST : AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_LIST;
+		
+		List<Parameter> listaParams = new ArrayList<>();
+		listaParams.add(new Parameter(labelAccordoServizio, servletNameApcList, pTipoAccordo));
+		if(isModalitaVistaApiCustom) {
+			Parameter parameterApcChange = new Parameter(labelASTitle,	ApiCostanti.SERVLET_NAME_APC_API_CHANGE, pIdAccordo,pNomeAccordo,pTipoAccordo);
+			listaParams.add(parameterApcChange);
+			listaParams.add(new Parameter(ApiCostanti.APC_API_LABEL_APS_INFO_GENERALI, null));
+		} else {
+			listaParams.add(new Parameter(labelASTitle,null));
+		}
 
 		// Se idhid = null, devo visualizzare la pagina per la modifica dati
 		if(ServletUtils.isEditModeInProgress(this.editMode)){
@@ -378,11 +395,7 @@ public final class AccordiServizioParteComuneChange extends Action {
 			try {
 
 				// setto la barra del titolo
-				ServletUtils.setPageDataTitle_ServletChange(pd, labelAccordoServizio,
-						AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_LIST+"?"+
-								AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo).getName()+"="+
-								AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo).getValue(),
-								labelASTitle);
+				ServletUtils.setPageDataTitle(pd, listaParams);
 
 				if(this.descr==null){
 					//inizializzazione default
@@ -618,11 +631,7 @@ public final class AccordiServizioParteComuneChange extends Action {
 		if (!isOk) {
 
 			// setto la barra del titolo
-			ServletUtils.setPageDataTitle_ServletChange(pd, labelAccordoServizio,
-					AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_LIST+"?"+
-							AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo).getName()+"="+
-							AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo).getValue(),
-							labelASTitle);
+			ServletUtils.setPageDataTitle(pd, listaParams);
 
 			// preparo i campi
 			Vector<DataElement> dati = new Vector<DataElement>();
@@ -661,11 +670,7 @@ public final class AccordiServizioParteComuneChange extends Action {
 		if( this.actionConfirm == null){
 			if(used || this.backToStato != null){
 				// setto la barra del titolo
-				ServletUtils.setPageDataTitle_ServletChange(pd, labelAccordoServizio,
-						AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_LIST+"?"+
-								AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo).getName()+"="+
-								AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo).getValue(),
-								labelASTitle);
+				ServletUtils.setPageDataTitle(pd, listaParams);
 
 				// preparo i campi
 				Vector<DataElement> dati = new Vector<DataElement>();
@@ -813,11 +818,7 @@ public final class AccordiServizioParteComuneChange extends Action {
 				pd.setMessage(validazioneException.toString());
 
 				// setto la barra del titolo
-				ServletUtils.setPageDataTitle_ServletChange(pd, labelAccordoServizio,
-						AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_LIST+"?"+
-								AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo).getName()+"="+
-								AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo).getValue(),
-								labelASTitle);
+				ServletUtils.setPageDataTitle(pd, listaParams);
 
 				// preparo i campi
 				Vector<DataElement> dati = new Vector<DataElement>();
@@ -920,12 +921,8 @@ public final class AccordiServizioParteComuneChange extends Action {
 							pd.setMessage(MessageFormat.format(msg, oldProfiloCollaborazione, newProfiloCollaborazione));
 
 							// setto la barra del titolo
-							ServletUtils.setPageDataTitle_ServletChange(pd, labelAccordoServizio,
-									AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_LIST+"?"+
-											AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo).getName()+"="+
-											AccordiServizioParteComuneUtilities.getParametroAccordoServizio(this.tipoAccordo).getValue(),
-											labelASTitle);
-
+							ServletUtils.setPageDataTitle(pd, listaParams);
+							
 							// preparo i campi
 							Vector<DataElement> dati = new Vector<DataElement>();
 
