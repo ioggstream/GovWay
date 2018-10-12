@@ -438,9 +438,6 @@ public class AccordiServizioParteComuneCostanti {
 	public final static String PARAMETRO_APC_RESOURCES_PARAMETER_REQUIRED = "requiredResParam";
 	public final static String PARAMETRO_APC_RESOURCES_PARAMETER_TIPO = "tipoResParam";
 	
-	public final static String PARAMETRO_APC_NASCONDI_SEZIONE_DOWNLOAD_WSDL_CHANGE = "nascSezDownload";
-	
-	
 	/* LABEL PARAMETRI */
 
 	public final static String LABEL_PARAMETRO_APC_NOME = "Nome";
@@ -555,8 +552,6 @@ public class AccordiServizioParteComuneCostanti {
 	public static final String LABEL_PARAMETRO_APC_RESOURCES_PARAMETER_TIPO_PARAMETRO_FORM = "Form";
 	public static final String LABEL_PARAMETRO_APC_RESOURCES_PARAMETER_TIPO_PARAMETRO_HEADER = "Header";
 	public static final String LABEL_PARAMETRO_APC_RESOURCES_PARAMETER_TIPO_PARAMETRO_QUERY = "Query";
-	
-	public final static String LABEL_PARAMETRO_APC_NASCONDI_SEZIONE_DOWNLOAD_WSDL_CHANGE = "Nascondi Sezione Download";
 	
 	public final static String LABEL_SI = "Si";
 	public final static String LABEL_NO = "No";

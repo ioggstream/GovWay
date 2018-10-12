@@ -433,7 +433,7 @@ public class ApiHelper extends AccordiServizioParteComuneHelper {
 		
 		// lista icone a dx 
 		// wsdl change
-		Parameter pNascondiSezioneDownload = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_NASCONDI_SEZIONE_DOWNLOAD_WSDL_CHANGE, Costanti.CHECK_BOX_ENABLED);
+		Parameter pNascondiSezioneDownload = new Parameter(ApiCostanti.PARAMETRO_APC_API_GESTIONE_PARZIALE, ApiCostanti.VALORE_PARAMETRO_APC_API_GESTIONE_PARZIALE_WSDL_CHANGE); 
 		Parameter pTipoWsdl = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_TIPO_WSDL, tipoWsdl);
 		List<Parameter> listParametersApiWsdlChange = new ArrayList<>();
 		listParametersApiWsdlChange.add(pIdAccordo);

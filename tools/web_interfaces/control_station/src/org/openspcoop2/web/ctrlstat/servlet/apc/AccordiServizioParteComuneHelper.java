@@ -2674,8 +2674,11 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 	public void addAccordiWSDLChangeToDati(Vector<DataElement> dati,String id,String tipoAccordo,String tipo,String label,
 			String oldwsdl,String statoPackage,boolean validazioneDocumenti, String tipologiaDocumentoScaricare) throws Exception{
 
-		boolean nascondiSezioneDownload =
-				ServletUtils.isCheckBoxEnabled(this.getParameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_NASCONDI_SEZIONE_DOWNLOAD_WSDL_CHANGE, String.class, ""));
+		String gestioneParziale = this.getParameter(ApiCostanti.PARAMETRO_APC_API_GESTIONE_PARZIALE);
+		if(gestioneParziale == null) {
+			gestioneParziale = "";
+		}
+		boolean nascondiSezioneDownload = gestioneParziale.equals(ApiCostanti.VALORE_PARAMETRO_APC_API_GESTIONE_PARZIALE_WSDL_CHANGE);
 		
 		DataElement de = new DataElement();
 		String labelWSDL = label;
@@ -2713,10 +2716,10 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 		dati.addElement(de);
 		
 		de = new DataElement();
-		de.setLabel(AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_NASCONDI_SEZIONE_DOWNLOAD_WSDL_CHANGE);
+		de.setLabel(ApiCostanti.PARAMETRO_APC_API_GESTIONE_PARZIALE);
 		de.setType(DataElementType.HIDDEN);
-		ServletUtils.setCheckBox(de, nascondiSezioneDownload); 
-		de.setName(AccordiServizioParteComuneCostanti.PARAMETRO_APC_NASCONDI_SEZIONE_DOWNLOAD_WSDL_CHANGE);
+		de.setName(ApiCostanti.PARAMETRO_APC_API_GESTIONE_PARZIALE);
+		de.setValue(gestioneParziale);
 		dati.addElement(de);
 
 		if(this.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(statoPackage)){
