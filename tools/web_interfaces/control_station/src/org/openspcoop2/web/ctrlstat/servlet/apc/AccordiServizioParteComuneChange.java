@@ -216,9 +216,37 @@ public final class AccordiServizioParteComuneChange extends Action {
 
 		String tmpValidazioneDocumenti = apcHelper.getParameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_VALIDAZIONE_DOCUMENTI);
 
-		@SuppressWarnings("unused")
 		String apiGestioneParziale = apcHelper.getParameter(ApiCostanti.PARAMETRO_APC_API_GESTIONE_PARZIALE);
 		Boolean isModalitaVistaApiCustom = ServletUtils.getBooleanAttributeFromSession(ApiCostanti.SESSION_ATTRIBUTE_VISTA_APC_API, session, false);
+		
+		@SuppressWarnings("unused")
+		boolean gestioneInformazioniGenerali = false;
+		boolean gestioneSoggettoReferente = false;
+		boolean gestioneDescrizione = false;
+		boolean gestioneSpecificaInterfacce = false;
+		boolean gestioneInformazioniProtocollo = false;
+		if(isModalitaVistaApiCustom!=null && isModalitaVistaApiCustom) {
+			if(ApiCostanti.VALORE_PARAMETRO_APC_API_INFORMAZIONI_GENERALI.equals(apiGestioneParziale)) {
+				gestioneInformazioniGenerali = true;
+			}
+			else if(ApiCostanti.VALORE_PARAMETRO_APC_API_SOGGETTO_REFERENTE.equals(apiGestioneParziale)) {
+				gestioneSoggettoReferente = true;
+			}
+			else if(ApiCostanti.VALORE_PARAMETRO_APC_API_DESCRIZIONE.equals(apiGestioneParziale)) {
+				gestioneDescrizione = true;
+			}
+			else if(ApiCostanti.VALORE_PARAMETRO_APC_API_GESTIONE_SPECIFICA_INTERFACCE.equals(apiGestioneParziale)) {
+				gestioneSpecificaInterfacce = true;
+			}
+			else if(ApiCostanti.VALORE_PARAMETRO_APC_API_OPZIONI_AVANZATE.equals(apiGestioneParziale)) {
+				gestioneInformazioniProtocollo = true;
+			}
+		}
+		
+		boolean addPropertiesHidden = false;
+		if(gestioneSoggettoReferente || gestioneDescrizione || gestioneSpecificaInterfacce || gestioneInformazioniProtocollo) {
+			addPropertiesHidden = true;
+		}
 		
 		if(ServletUtils.isEditModeInProgress(this.editMode) ){
 
@@ -560,8 +588,12 @@ public final class AccordiServizioParteComuneChange extends Action {
 						this.tipoProtocollo, listaTipiProtocollo,used,asWithAllegati,this.protocolFactory,this.serviceBinding,this.messageType,this.interfaceType);
 
 				// aggiunta campi custom
-				dati = apcHelper.addProtocolPropertiesToDati(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
-
+				if(addPropertiesHidden) {
+					dati = apcHelper.addProtocolPropertiesToDatiAsHidden(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
+				}else {
+					dati = apcHelper.addProtocolPropertiesToDati(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
+				}
+					
 				pd.setDati(dati);
 
 				if(apcHelper.isShowGestioneWorkflowStatoDocumenti() && StatiAccordo.finale.toString().equals(as.getStatoPackage())){
@@ -645,8 +677,12 @@ public final class AccordiServizioParteComuneChange extends Action {
 					this.tipoProtocollo, listaTipiProtocollo,used,asWithAllegati,this.protocolFactory,this.serviceBinding,this.messageType,this.interfaceType);
 
 			// aggiunta campi custom
-			dati = apcHelper.addProtocolPropertiesToDati(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
-
+			if(addPropertiesHidden) {
+				dati = apcHelper.addProtocolPropertiesToDatiAsHidden(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
+			}else {
+				dati = apcHelper.addProtocolPropertiesToDati(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
+			}
+			
 			pd.setDati(dati);
 
 			ServletUtils.setGeneralAndPageDataIntoSession(session, gd, pd);
@@ -700,12 +736,17 @@ public final class AccordiServizioParteComuneChange extends Action {
 					dati.addElement(de);
 				}
 				
+				
 				// aggiunta campi custom
-				dati = apcHelper.addProtocolPropertiesToDati(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
+				if(addPropertiesHidden) {
+					dati = apcHelper.addProtocolPropertiesToDatiAsHidden(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
+				}else {
+					dati = apcHelper.addProtocolPropertiesToDati(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
 				
-				// aggiunta campi custom come hidden, quelli sopra vengono bruciati dal no-edit
-				dati = apcHelper.addProtocolPropertiesToDatiAsHidden(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
-				
+					// aggiunta campi custom come hidden, quelli sopra vengono bruciati dal no-edit
+					dati = apcHelper.addProtocolPropertiesToDatiAsHidden(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
+				}
+					
 				pd.setDati(dati);
 
 				String uriAccordo = idAccordoFactory.getUriFromIDAccordo(idAccordoOLD);
@@ -832,8 +873,12 @@ public final class AccordiServizioParteComuneChange extends Action {
 						this.tipoProtocollo, listaTipiProtocollo,used,asWithAllegati,this.protocolFactory,this.serviceBinding,this.messageType,this.interfaceType);
 
 				// aggiunta campi custom
-				dati = apcHelper.addProtocolPropertiesToDati(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
-
+				if(addPropertiesHidden) {
+					dati = apcHelper.addProtocolPropertiesToDatiAsHidden(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
+				}else {
+					dati = apcHelper.addProtocolPropertiesToDati(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
+				}
+				
 				pd.setDati(dati);
 
 				ServletUtils.setGeneralAndPageDataIntoSession(session, gd, pd);
@@ -936,8 +981,12 @@ public final class AccordiServizioParteComuneChange extends Action {
 									this.serviceBinding,this.messageType,this.interfaceType);
 
 							// aggiunta campi custom
-							dati = apcHelper.addProtocolPropertiesToDati(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
-
+							if(addPropertiesHidden) {
+								dati = apcHelper.addProtocolPropertiesToDatiAsHidden(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
+							}else {
+								dati = apcHelper.addProtocolPropertiesToDati(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
+							}
+								
 							pd.setDati(dati);
 
 							ServletUtils.setGeneralAndPageDataIntoSession(session, gd, pd);

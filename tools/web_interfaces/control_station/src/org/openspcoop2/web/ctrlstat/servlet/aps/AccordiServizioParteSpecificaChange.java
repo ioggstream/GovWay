@@ -298,6 +298,15 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 			String actionConfirm = apsHelper.getParameter(Costanti.PARAMETRO_ACTION_CONFIRM);
 
 			String tmpModificaAPI = apsHelper.getParameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_MODIFICA_API);
+			boolean showModificaAPIErogazioniFruizioniView = false;
+			if(tmpModificaAPI!=null) {
+				showModificaAPIErogazioniFruizioniView = "true".equals(tmpModificaAPI);
+			}
+			
+			boolean addPropertiesHidden = false;
+			if(showModificaAPIErogazioniFruizioniView) {
+				addPropertiesHidden = true;
+			}
 			
 			boolean validazioneDocumenti = true;
 			String tmpValidazioneDocumenti = apsHelper.getParameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_VALIDAZIONE_DOCUMENTI);
@@ -1143,7 +1152,12 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 					}
 					
 					// aggiunta campi custom
-					dati = apsHelper.addProtocolPropertiesToDati(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
+					if(addPropertiesHidden) {
+						dati = apsHelper.addProtocolPropertiesToDatiAsHidden(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
+					}
+					else {
+						dati = apsHelper.addProtocolPropertiesToDati(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
+					}
 
 					pd.setDati(dati);
 
@@ -1310,7 +1324,12 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 				}
 				
 				// aggiunta campi custom
-				dati = apsHelper.addProtocolPropertiesToDati(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
+				if(addPropertiesHidden) {
+					dati = apsHelper.addProtocolPropertiesToDatiAsHidden(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
+				}
+				else {
+					dati = apsHelper.addProtocolPropertiesToDati(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
+				}
 
 				pd.setDati(dati);
 
@@ -1429,11 +1448,16 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 					}
 					
 					// aggiunta campi custom
-					dati = apsHelper.addProtocolPropertiesToDati(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
-					
-					// aggiunta campi custom come hidden, quelli sopra vengono bruciati dal no-edit
-					dati = apsHelper.addProtocolPropertiesToDatiAsHidden(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
-					
+					if(addPropertiesHidden) {
+						dati = apsHelper.addProtocolPropertiesToDatiAsHidden(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
+					}
+					else {
+						dati = apsHelper.addProtocolPropertiesToDati(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
+						
+						// aggiunta campi custom come hidden, quelli sopra vengono bruciati dal no-edit
+						dati = apsHelper.addProtocolPropertiesToDatiAsHidden(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
+					}
+						
 					String msg = null;
 					if(backToStato != null) {
 						msg = "&Egrave; stato richiesto di ripristinare lo stato dell''accordo [{0}] in operativo. Tale operazione permetter&agrave; successive modifiche all''accordo. Vuoi procedere?";
@@ -1728,7 +1752,12 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 					}
 					
 					// aggiunta campi custom
-					dati = apsHelper.addProtocolPropertiesToDati(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
+					if(addPropertiesHidden) {
+						dati = apsHelper.addProtocolPropertiesToDatiAsHidden(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
+					}
+					else {
+						dati = apsHelper.addProtocolPropertiesToDati(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
+					}
 
 					pd.setDati(dati);
 
