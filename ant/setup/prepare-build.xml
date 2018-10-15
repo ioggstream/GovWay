@@ -25,6 +25,7 @@
 	<property name="deploy_jms" location="deploy/jms" />
 	<property name="deploy_resources" location="deploy/resources" />
 	<property name="code_jms_pdd" location="../../core/deploy/code_jms" />
+	<property name="sql_update" location="../../resources/sql_upgrade" />
 
 	<target name="prepare_software" depends="clean_prepare,init_prepare">
 		<antcall target="prepare_shared_jar_setup" />
@@ -105,6 +106,10 @@
 		<move file="./init_soggetto.sql" todir="${deploy_sql}" />
 		<move file="./init_utenzaPddConsole.sql" todir="${deploy_sql}" />
 		<move file="./init_utenzaPddMonitor.sql" todir="${deploy_sql}" />
+		<copy todir="${deploy_sql}/sql_upgrade">
+			<fileset dir="${sql_update}"/>
+		</copy>
+
 	</target>
 
 	
