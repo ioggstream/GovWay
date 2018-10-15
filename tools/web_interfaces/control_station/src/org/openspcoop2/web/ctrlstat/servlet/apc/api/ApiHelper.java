@@ -316,6 +316,8 @@ public class ApiHelper extends AccordiServizioParteComuneHelper {
 		String tipoProtocollo = this.soggettiCore.getProtocolloAssociatoTipoSoggetto(as.getSoggettoReferente().getTipo());
 		String labelASTitle = this.getLabelIdAccordo(tipoProtocollo, idAccordoOLD);
 		
+		ServletUtils.setObjectIntoSession(this.session, new Boolean(true), ApiCostanti.SESSION_ATTRIBUTE_VISTA_APC_API);
+		
 		// setto la barra del titolo
 		List<Parameter> lstParm = new ArrayList<Parameter>();
 		String termine = AccordiServizioParteComuneUtilities.getTerminologiaAccordoServizio(tipoAccordo);

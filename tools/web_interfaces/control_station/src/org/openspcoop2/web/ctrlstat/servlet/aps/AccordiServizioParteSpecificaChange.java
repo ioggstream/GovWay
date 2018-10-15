@@ -709,43 +709,8 @@ public final class AccordiServizioParteSpecificaChange extends Action {
 			
 			
 			// setto la barra del titolo
-			List<Parameter> lstParm = new ArrayList<Parameter>();
+			List<Parameter> lstParm = apsHelper.getTitoloAps(TipoOperazione.CHANGE, asps, gestioneFruitori, tmpTitle, null, true, tipoSoggettoFruitore, nomeSoggettoFruitore); 
 			Boolean vistaErogazioni = ServletUtils.getBooleanAttributeFromSession(ErogazioniCostanti.ASPS_EROGAZIONI_ATTRIBUTO_VISTA_EROGAZIONI, session);
-			if(vistaErogazioni != null && vistaErogazioni.booleanValue()) {
-				Parameter pIdServizio = new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_ID, asps.getId()+ "");
-				Parameter pNomeServizio = new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_NOME_SERVIZIO, asps.getNome());
-				Parameter pTipoServizio = new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_TIPO_SERVIZIO, asps.getTipo());
-				if(gestioneFruitori) {
-					lstParm.add(new Parameter(ErogazioniCostanti.LABEL_ASPS_FRUIZIONI, ErogazioniCostanti.SERVLET_NAME_ASPS_EROGAZIONI_LIST));
-					
-				} else {
-					lstParm.add(new Parameter(ErogazioniCostanti.LABEL_ASPS_EROGAZIONI, ErogazioniCostanti.SERVLET_NAME_ASPS_EROGAZIONI_LIST));
-				}
-				
-				List<Parameter> listParametersErogazioniChange = new ArrayList<>();
-				listParametersErogazioniChange.add(pIdServizio);
-				listParametersErogazioniChange.add(pNomeServizio);
-				listParametersErogazioniChange.add(pTipoServizio);
-				if(gestioneFruitori) {
-					Parameter pTipoSoggettoFruitore = new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_TIPO_SOGGETTO_FRUITORE, tipoSoggettoFruitore);
-					Parameter pNomeSoggettoFruitore = new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_NOME_SOGGETTO_FRUITORE, nomeSoggettoFruitore);
-					listParametersErogazioniChange.add(pTipoSoggettoFruitore);
-					listParametersErogazioniChange.add(pNomeSoggettoFruitore);
-				}
-				lstParm.add(new Parameter(tmpTitle, ErogazioniCostanti.SERVLET_NAME_ASPS_EROGAZIONI_CHANGE, 
-						listParametersErogazioniChange.toArray(new Parameter[1])));
-				
-				lstParm.add(new Parameter(ErogazioniCostanti.LABEL_ASPS_MODIFICA_SERVIZIO_INFO_GENERALI, null));
-				
-			} else {
-				if(gestioneFruitori) {
-					lstParm.add(new Parameter(AccordiServizioParteSpecificaCostanti.LABEL_APS_FRUITORI, AccordiServizioParteSpecificaCostanti.SERVLET_NAME_APS_LIST));
-				}
-				else {
-					lstParm.add(new Parameter(AccordiServizioParteSpecificaCostanti.LABEL_APS, AccordiServizioParteSpecificaCostanti.SERVLET_NAME_APS_LIST));
-				}
-				lstParm.add(new Parameter(tmpTitle, null));
-			}
 			
 			// Se idhid = null, devo visualizzare la pagina per la
 			// modifica dati

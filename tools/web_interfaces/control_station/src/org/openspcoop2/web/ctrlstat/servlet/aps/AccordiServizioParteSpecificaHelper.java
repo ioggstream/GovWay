@@ -87,6 +87,7 @@ import org.openspcoop2.web.ctrlstat.plugins.ExtendedConnettore;
 import org.openspcoop2.web.ctrlstat.plugins.IExtendedListServlet;
 import org.openspcoop2.web.ctrlstat.servlet.apc.AccordiServizioParteComuneCostanti;
 import org.openspcoop2.web.ctrlstat.servlet.apc.AccordiServizioParteComuneUtilities;
+import org.openspcoop2.web.ctrlstat.servlet.apc.api.ApiCostanti;
 import org.openspcoop2.web.ctrlstat.servlet.aps.erogazioni.ErogazioniCostanti;
 import org.openspcoop2.web.ctrlstat.servlet.archivi.ArchiviCostanti;
 import org.openspcoop2.web.ctrlstat.servlet.archivi.ExporterUtils;
@@ -7503,4 +7504,54 @@ public class AccordiServizioParteSpecificaHelper extends ConnettoriHelper {
 		return dati;
 	}
 
+	
+	public List<Parameter> getTitoloAps(TipoOperazione tipoOperazione, AccordoServizioParteSpecifica asps, boolean gestioneFruitori, String labelApsTitle, String servletNameApsChange, boolean addApsChange, String tipoSoggettoFruitore, String nomeSoggettoFruitore) throws Exception {
+		List<Parameter> listaParams = new ArrayList<>();
+		
+		Parameter pIdServizio = new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_ID, asps.getId()+ "");
+		Parameter pNomeServizio = new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_NOME_SERVIZIO, asps.getNome());
+		Parameter pTipoServizio = new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_TIPO_SERVIZIO, asps.getTipo());
+		Boolean vistaErogazioni = ServletUtils.getBooleanAttributeFromSession(ErogazioniCostanti.ASPS_EROGAZIONI_ATTRIBUTO_VISTA_EROGAZIONI, this.session);
+		String labelApsChange = null;
+		
+		List<Parameter> listParametersErogazioniChange = new ArrayList<>();
+		listParametersErogazioniChange.add(pIdServizio);
+		listParametersErogazioniChange.add(pNomeServizio);
+		listParametersErogazioniChange.add(pTipoServizio);
+		if(gestioneFruitori) {
+			Parameter pTipoSoggettoFruitore = new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_TIPO_SOGGETTO_FRUITORE, tipoSoggettoFruitore);
+			Parameter pNomeSoggettoFruitore = new Parameter(AccordiServizioParteSpecificaCostanti.PARAMETRO_APS_NOME_SOGGETTO_FRUITORE, nomeSoggettoFruitore);
+			listParametersErogazioniChange.add(pTipoSoggettoFruitore);
+			listParametersErogazioniChange.add(pNomeSoggettoFruitore);
+		}
+		if(vistaErogazioni != null && vistaErogazioni.booleanValue()) {
+			if(gestioneFruitori) {
+				listaParams.add(new Parameter(ErogazioniCostanti.LABEL_ASPS_FRUIZIONI, ErogazioniCostanti.SERVLET_NAME_ASPS_EROGAZIONI_LIST));
+				
+			} else {
+				listaParams.add(new Parameter(ErogazioniCostanti.LABEL_ASPS_EROGAZIONI, ErogazioniCostanti.SERVLET_NAME_ASPS_EROGAZIONI_LIST));
+			}
+			
+			
+			listaParams.add(new Parameter(labelApsTitle, ErogazioniCostanti.SERVLET_NAME_ASPS_EROGAZIONI_CHANGE, listParametersErogazioniChange));
+			
+			labelApsChange = ErogazioniCostanti.LABEL_ASPS_MODIFICA_SERVIZIO_INFO_GENERALI;
+			
+		} else {
+			if(gestioneFruitori) {
+				listaParams.add(new Parameter(AccordiServizioParteSpecificaCostanti.LABEL_APS_FRUITORI, AccordiServizioParteSpecificaCostanti.SERVLET_NAME_APS_LIST));
+			}
+			else {
+				listaParams.add(new Parameter(AccordiServizioParteSpecificaCostanti.LABEL_APS, AccordiServizioParteSpecificaCostanti.SERVLET_NAME_APS_LIST));
+			}
+			labelApsChange = labelApsTitle;
+		}
+		
+		if(addApsChange) {
+			Parameter parameterApcChange = servletNameApsChange != null ? new Parameter(labelApsChange, servletNameApsChange, listParametersErogazioniChange) : new Parameter(labelApsChange, servletNameApsChange);
+			listaParams.add(parameterApcChange);
+		}
+		
+		return listaParams;
+	}
 }

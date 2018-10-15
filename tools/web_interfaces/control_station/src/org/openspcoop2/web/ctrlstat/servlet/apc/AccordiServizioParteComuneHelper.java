@@ -72,6 +72,7 @@ import org.openspcoop2.core.registry.driver.IDServizioFactory;
 import org.openspcoop2.message.constants.MessageType;
 import org.openspcoop2.message.constants.ServiceBinding;
 import org.openspcoop2.protocol.engine.ProtocolFactoryManager;
+import org.openspcoop2.protocol.engine.utils.NamingUtils;
 import org.openspcoop2.protocol.sdk.IProtocolFactory;
 import org.openspcoop2.protocol.sdk.constants.ArchiveType;
 import org.openspcoop2.protocol.sdk.constants.FunzionalitaProtocollo;
@@ -415,14 +416,11 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 
 	public void prepareAccordiAllegatiList(AccordoServizioParteComune as, ISearch ricerca, List<Documento> lista,String tipoAccordo) throws Exception {
 		try {
-
-			String id = this.getParameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_ID);
-
 			String uri = this.idAccordoFactory.getUriFromAccordo(as);
 			String labelASTitle = this.getLabelIdAccordo(as); 
 			
 			Parameter pTipoAccordo = AccordiServizioParteComuneUtilities.getParametroAccordoServizio(tipoAccordo);
-			Parameter pIdAccordo = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_ID, id);
+			Parameter pIdAccordo = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_ID, as.getId() + "");
 			Parameter pNomeAccordo = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_NOME, uri);
 
 			ServletUtils.addListElementIntoSession(this.session, AccordiServizioParteComuneCostanti.OBJECT_NAME_APC_ALLEGATI,pIdAccordo, pNomeAccordo, pTipoAccordo);
@@ -2639,12 +2637,15 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 		
 		DataElement de = new DataElement();
 		String labelWSDL = label;
-		if(label.contains(" di ")){
-			labelWSDL = label.split(" di")[0];
-		}else{
-			labelWSDL = tipologiaDocumentoScaricare.toUpperCase().charAt(0)+tipologiaDocumentoScaricare.substring(1);
-		}
 		
+		Boolean isModalitaVistaApiCustom = ServletUtils.getBooleanAttributeFromSession(ApiCostanti.SESSION_ATTRIBUTE_VISTA_APC_API, this.session, false);
+		if(!isModalitaVistaApiCustom) {
+			if(label.contains(" di ")){
+				labelWSDL = label.split(" di")[0];
+			}else{
+				labelWSDL = tipologiaDocumentoScaricare.toUpperCase().charAt(0)+tipologiaDocumentoScaricare.substring(1);
+			}
+		}
 		if(!nascondiSezioneDownload) {
 			de.setLabel(labelWSDL);
 			de.setType(DataElementType.TITLE);
@@ -6701,7 +6702,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 	}
 	
 	
-	public void prepareAccordiResourcesResponseList(ISearch ricerca, List<org.openspcoop2.core.registry.ResourceResponse> lista, String idApc,AccordoServizioParteComune as, String tipoAccordo, String nomeRisorsa)
+	public void prepareAccordiResourcesResponseList(ISearch ricerca, List<org.openspcoop2.core.registry.ResourceResponse> lista, String idApc,AccordoServizioParteComune as, String tipoAccordo, Resource risorsa)
 			throws Exception {
 		try {
 			String uri = null;
@@ -6711,10 +6712,10 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 			Parameter pTipoAccordo = AccordiServizioParteComuneUtilities.getParametroAccordoServizio(tipoAccordo);
 			Parameter pIdAccordo = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_ID, idApc);
 			Parameter pNomeAccordo = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_NOME, uri);
-
-			Parameter pNomeRisorsa = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_RESOURCES_NOME, nomeRisorsa);
+			Parameter pIdRisorsa = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_RESOURCES_ID, risorsa.getId()+"");
+			Parameter pNomeRisorsa = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_RESOURCES_NOME, risorsa.getNome());
 			ServletUtils.addListElementIntoSession(this.session, AccordiServizioParteComuneCostanti.OBJECT_NAME_APC_RESOURCES_RISPOSTE,
-					pIdAccordo,pTipoAccordo,pNomeAccordo, pNomeRisorsa);
+					pIdAccordo,pTipoAccordo,pNomeAccordo, pNomeRisorsa,pIdRisorsa);
 
 			int idLista = Liste.ACCORDI_API_RESOURCES_RESPONSE;
 			int limit = ricerca.getPageSize(idLista);
@@ -6733,7 +6734,10 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 			
 			listaParams.add(new Parameter(labelRisorse, AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_RESOURCES_LIST, pIdAccordo, pNomeAccordo, pTipoAccordo));
 			
-			String labelResponse = AccordiServizioParteComuneCostanti.LABEL_RISPOSTE  + " di " + nomeRisorsa;
+			String labelRisorsa = NamingUtils.getLabelResource(risorsa);
+			listaParams.add(new Parameter(labelRisorsa, AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_RESOURCES_CHANGE, pIdAccordo, pNomeAccordo, pTipoAccordo,pNomeRisorsa,pIdRisorsa));
+			
+			String labelResponse = AccordiServizioParteComuneCostanti.LABEL_RISPOSTE;
 			// setto la barra del titolo
 			if (search.equals("")) {
 				this.pd.setSearchDescription("");
@@ -6868,7 +6872,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 
 
 	public void prepareAccordiResourcesRepresentationsList(String id, AccordoServizioParteComune as,
-			List<ResourceRepresentation> lista, Search ricerca, String tipoAccordo, boolean isRequest, String nomeRisorsa, Long idRisorsa,
+			List<ResourceRepresentation> lista, Search ricerca, String tipoAccordo, boolean isRequest, Resource risorsa,
 			ResourceRequest resourceRequest, ResourceResponse resourceResponse) throws Exception {
 		try {
 			String uri = null;
@@ -6878,8 +6882,9 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 			Parameter pTipoAccordo = AccordiServizioParteComuneUtilities.getParametroAccordoServizio(tipoAccordo);
 			Parameter pIdAccordo = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_ID, id);
 			Parameter pNomeAccordo = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_NOME, uri);
-			Parameter pNomeRisorsa = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_RESOURCES_NOME, nomeRisorsa);
+			Parameter pNomeRisorsa = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_RESOURCES_NOME, risorsa.getNome());
 			Parameter pIsRequest = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_RESOURCE_REQUEST, isRequest+"");
+			Parameter pIdRisorsa = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_RESOURCES_ID, risorsa.getId()+"");
 
 			String statusS = resourceResponse != null ? resourceResponse.getStatus()+ "" : "";
 			int status = resourceResponse != null ? resourceResponse.getStatus() : -1;
@@ -6904,22 +6909,27 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 			
 			listaParams.add(new Parameter(labelRisorse, AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_RESOURCES_LIST, pIdAccordo, pNomeAccordo, pTipoAccordo));
 			
-			String labelOwner = nomeRisorsa;
+			String labelRisorsa = NamingUtils.getLabelResource(risorsa); 
+			listaParams.add(new Parameter(labelRisorsa, AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_RESOURCES_CHANGE, pIdAccordo, pNomeAccordo, pTipoAccordo,pNomeRisorsa,pIdRisorsa));
+			
 			if(!isRequest) {
-				String labelResponse = AccordiServizioParteComuneCostanti.LABEL_RISPOSTE  + " di " + nomeRisorsa;
+				String labelResponse = AccordiServizioParteComuneCostanti.LABEL_RISPOSTE;
 				listaParams.add(new Parameter(labelResponse, AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_RESOURCES_RISPOSTE_LIST, pIdAccordo, pNomeAccordo, pTipoAccordo,pNomeRisorsa));
-				labelOwner = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_RESOURCES_RESPONSE_STATUS+" "+
+				
+				String labelRisposta = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_RESOURCES_RESPONSE_STATUS +" "+
 						(ApiResponse.isDefaultHttpReturnCode(status)? AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_RESOURCES_RESPONSE_STATUS_DEFAULT : statusS);
+				
+				listaParams.add(new Parameter(labelRisposta, AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_RESOURCES_RISPOSTE_CHANGE, pIdAccordo, pTipoAccordo, pNomeAccordo, pNomeRisorsa,pResponseStatus));
 			}
 			
-			labelOwner = AccordiServizioParteComuneCostanti.LABEL_REPRESENTATION + " di " + labelOwner;
+			String labelRepresentation = AccordiServizioParteComuneCostanti.LABEL_REPRESENTATION;
 			
 			// setto la barra del titolo
 			if (search.equals("")) {
 				this.pd.setSearchDescription("");
-				listaParams.add(new Parameter(labelOwner, null));
+				listaParams.add(new Parameter(labelRepresentation, null));
 			}else{
-				listaParams.add(new Parameter(labelOwner, AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_RESOURCES_REPRESENTATIONS_LIST, pIdAccordo, pNomeAccordo, pTipoAccordo,pNomeRisorsa,pIsRequest, pResponseStatus));
+				listaParams.add(new Parameter(labelRepresentation, AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_RESOURCES_REPRESENTATIONS_LIST, pIdAccordo, pNomeAccordo, pTipoAccordo,pNomeRisorsa,pIsRequest, pResponseStatus));
 				listaParams.add(new Parameter(Costanti.PAGE_DATA_TITLE_LABEL_RISULTATI_RICERCA, null));
 			}
 			ServletUtils.setPageDataTitle(this.pd, listaParams);
@@ -6961,7 +6971,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 							new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_NOME, uri),
 							pIsRequest,
 							new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_RESOURCES_RESPONSE_STATUS, status+""),
-							new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_RESOURCES_NOME, nomeRisorsa),
+							new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_RESOURCES_NOME, risorsa.getNome()),
 							new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_RESOURCES_REPRESENTATION_ID, representation.getId()+"")
 							);
 					de.setValue(representation.getMediaType());
@@ -7017,7 +7027,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 	}
 	
 	public void prepareAccordiResourcesParametersList(String id, AccordoServizioParteComune as,
-			List<ResourceParameter> lista, Search ricerca, String tipoAccordo, boolean isRequest, String nomeRisorsa, Long idRisorsa,
+			List<ResourceParameter> lista, Search ricerca, String tipoAccordo, boolean isRequest, Resource risorsa,
 			ResourceRequest resourceRequest, ResourceResponse resourceResponse) throws Exception {
 		try {
 			String uri = null;
@@ -7028,12 +7038,13 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 			Parameter pIdAccordo = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_ID, id);
 			Parameter pNomeAccordo = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_NOME, uri);
 			Parameter pIsRequest = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_RESOURCE_REQUEST, isRequest+"");
+			Parameter pIdRisorsa = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_RESOURCES_ID, risorsa.getId()+"");
 
 			String statusS = resourceResponse != null ? resourceResponse.getStatus()+ "" : "";
 			int status = resourceResponse != null ? resourceResponse.getStatus() : -1;
 			Parameter pResponseStatus = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_RESOURCES_RESPONSE_STATUS, statusS);
 
-			Parameter pNomeRisorsa = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_RESOURCES_NOME, nomeRisorsa);
+			Parameter pNomeRisorsa = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_RESOURCES_NOME, risorsa.getNome());
 			ServletUtils.addListElementIntoSession(this.session, AccordiServizioParteComuneCostanti.OBJECT_NAME_APC_RESOURCES_PARAMETERS,
 					pIdAccordo, pTipoAccordo,pNomeAccordo, pIsRequest, pResponseStatus,	pNomeRisorsa);
 
@@ -7053,22 +7064,27 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 			
 			listaParams.add(new Parameter(labelRisorse, AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_RESOURCES_LIST, pIdAccordo, pNomeAccordo, pTipoAccordo));
 			
-			String labelOwner = nomeRisorsa;
+			String labelRisorsa = NamingUtils.getLabelResource(risorsa);
+			listaParams.add(new Parameter(labelRisorsa, AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_RESOURCES_CHANGE, pIdAccordo, pNomeAccordo, pTipoAccordo,pNomeRisorsa,pIdRisorsa));
+			
 			if(!isRequest) {
-				String labelResponse = AccordiServizioParteComuneCostanti.LABEL_RISPOSTE  + " di " + nomeRisorsa;
+				String labelResponse = AccordiServizioParteComuneCostanti.LABEL_RISPOSTE;
 				listaParams.add(new Parameter(labelResponse, AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_RESOURCES_RISPOSTE_LIST, pIdAccordo, pNomeAccordo, pTipoAccordo,pNomeRisorsa));
-				labelOwner = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_RESOURCES_RESPONSE_STATUS+" "+
+
+				String labelRisposta = AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_RESOURCES_RESPONSE_STATUS +" "+
 						(ApiResponse.isDefaultHttpReturnCode(status)? AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_RESOURCES_RESPONSE_STATUS_DEFAULT : statusS);
+				
+				listaParams.add(new Parameter(labelRisposta, AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_RESOURCES_RISPOSTE_CHANGE, pIdAccordo, pTipoAccordo, pNomeAccordo, pNomeRisorsa,pResponseStatus));
 			}
 			
-			labelOwner = AccordiServizioParteComuneCostanti.LABEL_PARAMETERS + " di " + labelOwner;
+			String labelParameters = AccordiServizioParteComuneCostanti.LABEL_PARAMETERS;
 			
 			// setto la barra del titolo
 			if (search.equals("")) {
 				this.pd.setSearchDescription("");
-				listaParams.add(new Parameter(labelOwner, null));
+				listaParams.add(new Parameter(labelParameters, null));
 			}else{
-				listaParams.add(new Parameter(labelOwner, AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_RESOURCES_PARAMETERS_LIST, pIdAccordo, pNomeAccordo, pTipoAccordo,pNomeRisorsa,pIsRequest, pResponseStatus));
+				listaParams.add(new Parameter(labelParameters, AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_RESOURCES_PARAMETERS_LIST, pIdAccordo, pNomeAccordo, pTipoAccordo,pNomeRisorsa,pIsRequest, pResponseStatus));
 				listaParams.add(new Parameter(Costanti.PAGE_DATA_TITLE_LABEL_RISULTATI_RICERCA, null));
 			}
 			ServletUtils.setPageDataTitle(this.pd, listaParams);
@@ -7903,8 +7919,11 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 		}
 	}
 
+	public List<Parameter> getTitoloApc(TipoOperazione tipoOperazione, AccordoServizioParteComune as, String tipoAccordo, String labelASTitle, String servletNameApcChange, boolean addApcChange) throws Exception {
+		return getTitoloApc(tipoOperazione, as, tipoAccordo, labelASTitle, servletNameApcChange, this.getParameter(ApiCostanti.PARAMETRO_APC_API_GESTIONE_PARZIALE), addApcChange);
+	}
 
-	public List<Parameter> getTitoloApc(TipoOperazione tipoOperazione, AccordoServizioParteComune as, String tipoAccordo, String labelASTitle, String servletNameApcChange, boolean addApcChange) throws Exception { 
+	public List<Parameter> getTitoloApc(TipoOperazione tipoOperazione, AccordoServizioParteComune as, String tipoAccordo, String labelASTitle, String servletNameApcChange, String apiGestioneParziale, boolean addApcChange) throws Exception { 
 		
 		String labelAccordoServizio = AccordiServizioParteComuneUtilities.getTerminologiaAccordoServizio(tipoAccordo);
 		Boolean isModalitaVistaApiCustom = ServletUtils.getBooleanAttributeFromSession(ApiCostanti.SESSION_ATTRIBUTE_VISTA_APC_API, this.session, false);
@@ -7912,7 +7931,6 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 		Parameter pIdAccordo = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_ID, as.getId()+"");
 		Parameter pNomeAccordo = new Parameter(AccordiServizioParteComuneCostanti.PARAMETRO_APC_NOME, as.getNome());
 		Parameter pTipoAccordo = AccordiServizioParteComuneUtilities.getParametroAccordoServizio(tipoAccordo);
-		String apiGestioneParziale = this.getParameter(ApiCostanti.PARAMETRO_APC_API_GESTIONE_PARZIALE);
 		
 		List<Parameter> listaParams = new ArrayList<>();
 		listaParams.add(new Parameter(labelAccordoServizio, servletNameApcList, pTipoAccordo));
