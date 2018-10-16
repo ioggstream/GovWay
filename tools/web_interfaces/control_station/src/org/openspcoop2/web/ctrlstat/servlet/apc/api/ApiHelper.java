@@ -47,6 +47,7 @@ import org.openspcoop2.web.ctrlstat.costanti.CostantiControlStation;
 import org.openspcoop2.web.ctrlstat.servlet.apc.AccordiServizioParteComuneCostanti;
 import org.openspcoop2.web.ctrlstat.servlet.apc.AccordiServizioParteComuneHelper;
 import org.openspcoop2.web.ctrlstat.servlet.apc.AccordiServizioParteComuneUtilities;
+import org.openspcoop2.web.ctrlstat.servlet.aps.erogazioni.ErogazioniCostanti;
 import org.openspcoop2.web.ctrlstat.servlet.archivi.ArchiviCostanti;
 import org.openspcoop2.web.ctrlstat.servlet.archivi.ExporterUtils;
 import org.openspcoop2.web.lib.mvc.AreaBottoni;
@@ -374,6 +375,57 @@ public class ApiHelper extends AccordiServizioParteComuneHelper {
 		de.setUrl(AccordiServizioParteComuneCostanti.SERVLET_NAME_APC_CHANGE, listParametersApi.toArray(new Parameter[1]));
 		de.setToolTip(MessageFormat.format(ApiCostanti.APC_API_ICONA_MODIFICA_API_TOOLTIP_CON_PARAMETRO, ApiCostanti.APC_API_LABEL_APS_INFO_GENERALI));
 		de.setIcon(ApiCostanti.APC_API_ICONA_MODIFICA_API);
+		dati.addElement(de);
+		
+		
+		// stato dell'API
+		de = new DataElement();
+		de.setName(ErogazioniCostanti.ASPS_EROGAZIONI_PARAMETRO_STATO_CONFIGURAZIONI);
+		de.setType(DataElementType.CHECKBOX);
+		Search searchForCount = new Search(true);
+		switch (serviceBinding) {
+		case REST:
+			// caso REST: l'API e' abilitata se ha almeno una risorsa
+			
+			this.apcCore.accordiResourceList(as.getId().intValue(), searchForCount);
+			int numRisorse = searchForCount.getNumEntries(Liste.ACCORDI_API_RESOURCES);
+			
+			if(numRisorse > 0) {
+				de.setValue(ApiCostanti.APC_API_ICONA_STATO_SERVIZI_TUTTI_ABILITATI);
+			} else {
+				de.setValue(ApiCostanti.APC_API_ICONA_STATO_SERVIZI_TUTTI_DISABILITATI);
+				de.setToolTip(ApiCostanti.APC_API_ICONA_STATO_RISORSE_TUTTE_DISABILITATE_TOOLTIP);
+			}
+			break;
+		case SOAP:
+		default:
+			List<PortType> accordiPorttypeList = this.apcCore.accordiPorttypeList(as.getId().intValue(), searchForCount);
+			int numeroTotaleServizi = accordiPorttypeList.size();
+			int numeroServiziAbilitati = 0;
+			
+			for (PortType portType : accordiPorttypeList) {
+				if(portType.sizeAzioneList()>0) {
+					numeroServiziAbilitati ++;
+				}	
+			}
+			
+			if(numeroTotaleServizi == 0) {
+				de.setValue(ApiCostanti.APC_API_ICONA_STATO_SERVIZI_TUTTI_DISABILITATI);
+				de.setToolTip(ApiCostanti.APC_API_ICONA_STATO_SERVIZI_TUTTI_DISABILITATI_TOOLTIP);
+			}
+			else if(numeroTotaleServizi==1 && numeroServiziAbilitati==0) {
+				de.setValue(ApiCostanti.APC_API_ICONA_STATO_SERVIZI_TUTTI_DISABILITATI);
+				de.setToolTip(ApiCostanti.APC_API_ICONA_STATO_SERVIZIO_PARZIALMENTE_CONFIGURATO_DISABILITATI_TOOLTIP);
+			} else if(numeroServiziAbilitati == numeroTotaleServizi) {
+				de.setValue(ApiCostanti.APC_API_ICONA_STATO_SERVIZI_TUTTI_ABILITATI);
+			} else {
+				de.setValue(ApiCostanti.APC_API_ICONA_STATO_SERVIZI_PARZIALMENTE_ABILITATI);
+				de.setToolTip(ApiCostanti.APC_API_ICONA_STATO_SERVIZI_PARZIALMENTE_ABILITATI_TOOLTIP);
+			}
+			break;
+		}
+		
+		
 		dati.addElement(de);
 		
 		// soggetto referente
