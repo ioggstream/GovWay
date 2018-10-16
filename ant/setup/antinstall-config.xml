@@ -157,7 +157,7 @@
         <comment displayText=""/>
 
 	<comment bold="true" displayText="Attenzione:"/>
-	<comment displayText="In fase di aggiornamento è necessario indicare lo stesso DBMS della precedente installazione"/>
+	<comment displayText="In fase di aggiornamento indicare lo stesso DBMS della precedente installazione"/>
         
         <!-- <comment displayText="DB Platform" bold="true"/>  sotto come display c'era tipo -->
         <large-select defaultValue="postgresql" property="antinstaller_tipo_database" displayText="DBMS">

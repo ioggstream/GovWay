@@ -112,6 +112,33 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 		super(request, pd,  session);
 	}
 
+	public boolean asWithAllegatiXsd(AccordoServizioParteComune as) {
+		boolean asWithAllegati = false;
+		
+		if(as.getByteWsdlDefinitorio()!=null) {
+			asWithAllegati = true;
+		}
+		
+		if(as.sizeAllegatoList()>0) {
+			for (Documento doc : as.getAllegatoList()) {
+				if("xsd".equalsIgnoreCase(doc.getTipo()) || "xml".equalsIgnoreCase(doc.getTipo())) {
+					asWithAllegati = true;
+					break;
+				}
+			}
+		}
+		
+		if(as.sizeSpecificaSemiformaleList()>0) {
+			for (Documento doc : as.getSpecificaSemiformaleList()) {
+				if("xsd".equalsIgnoreCase(doc.getTipo()) || "xml".equalsIgnoreCase(doc.getTipo())) {
+					asWithAllegati = true;
+					break;
+				}
+			}
+		}
+		
+		return asWithAllegati;
+	}
 
 
 	/**
@@ -3909,7 +3936,8 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 		}
 		
 		de = new DataElement();
-		if(TipoOperazione.CHANGE.equals(tipoOperazione) && isModalitaVistaApiCustom) {
+		//if(TipoOperazione.CHANGE.equals(tipoOperazione) && isModalitaVistaApiCustom) {
+		if(isModalitaVistaApiCustom) {
 			de.setLabel(ApiCostanti.APC_API_LABEL_GESTIONE_OPZIONI_AVANZATE);
 		}
 		else {

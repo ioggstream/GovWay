@@ -229,11 +229,9 @@ public class ApiHelper extends AccordiServizioParteComuneHelper {
 					int numeroServiziAbilitati = 0;
 					
 					for (PortType portType : accordiPorttypeList) {
-						Search searchForCountAzioni = new Search(true,1);
-						this.apcCore.accordiPorttypeOperationList(portType.getId().intValue(), searchForCountAzioni);
-						int numAzioni = searchForCount.getNumEntries(Liste.ACCORDI_PORTTYPE_AZIONI);
-						if(numAzioni > 0)
+						if(portType.sizeAzioneList()>0) {
 							numeroServiziAbilitati ++;
+						}	
 					}
 					
 					if(numeroTotaleServizi == 0) {

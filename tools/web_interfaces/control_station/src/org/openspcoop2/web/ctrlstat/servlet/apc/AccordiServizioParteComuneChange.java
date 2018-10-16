@@ -275,7 +275,7 @@ public final class AccordiServizioParteComuneChange extends Action {
 		Search ricerca = (Search) ServletUtils.getSearchObjectFromSession(session, Search.class);
 
 		AccordoServizioParteComune as = apcCore.getAccordoServizio(idAcc);
-		boolean asWithAllegati = (as.sizeAllegatoList()>0 || as.sizeSpecificaSemiformaleList()>0 || as.getByteWsdlDefinitorio()!=null);
+		boolean asWithAllegati = apcHelper.asWithAllegatiXsd(as);
 
 		String[] providersList = null;
 		String[] providersListLabel = null;
