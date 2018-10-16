@@ -29,7 +29,18 @@
 	           		<table style="width:100%;">
 	            		<tbody>
 		            		<tr>
-				                <td class="tdTitolo">
+		            			<c:if test="#{applicationBean.amministratore or applicationBean.operatore}">
+			            			<td class="tdTitoloStatusPdd">
+										<a4j:outputPanel layout="block" rendered="#{statusBean.enable}" id="statusPdd" styleClass="">
+											<a href="#{facesContext.externalContext.request.contextPath}/commons/pages/statoPdd.jsf?usaSVG=true" class="titleStatusIconLinkRight">
+												<h:graphicImage value="#{statusBean.iconaStato}" width="16" height="16" id="iconaStatusPdd" style="vertical-align: bottom;" >
+													<rich:toolTip id="toolIconaStatusPdd" for="iconaStatusPdd" mode="client" value="#{statusBean.tooltipIconaStato}" direction="bottom-left"/>
+												</h:graphicImage>
+											</a>
+										</a4j:outputPanel>
+		            				</td>
+								</c:if>
+				                <td class="#{(applicationBean.amministratore or applicationBean.operatore) ? 'tdTitoloNoPaddingLeft' : 'tdTitolo'}">
 			                		<a href="#{facesContext.externalContext.request.contextPath}/commons/pages/welcome.jsf?usaSVG=true" class="titleStatusIconLinkLeft">
 										<h:outputText value="#{loginBean.title}" id="licenseOutputText"  styleClass="appTitle"/>
 									</a>
@@ -167,18 +178,6 @@
 									                </rich:menuItem>
 									                <rich:menuItem submitMode="server" value="Logout" action="#{loginBean.logout}" actionListener="#{loginBean.logoutListener}"  rendered="#{loginBean.showLogout == 'true'}"/>
 									            </rich:dropDownMenu>
-												
-												<c:if test="#{applicationBean.amministratore or applicationBean.operatore}">
-													<a4j:outputPanel layout="block" rendered="#{statusBean.enable}" id="statusPdd" styleClass="">
-														<a4j:outputPanel layout="block" styleClass="rich-label-text-decor">
-															<a href="#{facesContext.externalContext.request.contextPath}/commons/pages/statoPdd.jsf?usaSVG=true" class="titleStatusIconLinkRight">
-																<h:graphicImage value="#{statusBean.iconaStato}" width="16" height="16" id="iconaStatusPdd" style="vertical-align: bottom;" >
-																	<rich:toolTip id="toolIconaStatusPdd" for="iconaStatusPdd" mode="client" value="#{statusBean.tooltipIconaStato}" direction="bottom-left"/>
-																</h:graphicImage>
-															</a>
-														</a4j:outputPanel>
-													</a4j:outputPanel>
-												</c:if>
 											</h:panelGrid>
 										</h:panelGroup>
 									</c:if>

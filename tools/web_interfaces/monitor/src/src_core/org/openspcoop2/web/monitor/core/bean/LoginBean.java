@@ -278,11 +278,8 @@ public class LoginBean extends AbstractLoginBean {
 
 	public int getColonneUserInfo() {
 		if(this.colonneUserInfo == null) {
-			boolean admin = this.getLoggedUser().isAdmin();
-			boolean operatore = this.getLoggedUser().isOperatore();
-
-			// visualizzazione icona stato
-			int v1 = (admin || operatore) ? 1 : 0;
+			// visualizzazione icona stato (spostata a sx)
+			int v1 = 0; //(admin || operatore) ? 1 : 0;
 
 			//2 visualizzazione modalita'
 			int v2 = this.isVisualizzaSezioneModalita() ? 1 : 0;
@@ -679,8 +676,12 @@ public class LoginBean extends AbstractLoginBean {
 	public String getLabelSoggettoNormalized() throws Exception {
 		String label = _getLabelSoggetto(true);
 		
-		if(label.length() > PddMonitorProperties.getInstance(this.log).getLunghezzaMassimaLabelSoggettiOperativiMenuUtente()) {
-			return Utility.normalizeLabel(label, PddMonitorProperties.getInstance(this.log).getLunghezzaMassimaLabelSoggettiOperativiMenuUtente());
+//		if(label.length() > PddMonitorProperties.getInstance(this.log).getLunghezzaMassimaLabelButtonSoggettiOperativiMenuUtente()) {
+//			return Utility.normalizeLabel(label, PddMonitorProperties.getInstance(this.log).getLunghezzaMassimaLabelButtonSoggettiOperativiMenuUtente());
+//		}
+		
+		if(label.length() > PddMonitorProperties.getInstance(this.log).getLunghezzaMassimaLabelSelectListSoggettiOperativiMenuUtente()) {
+			return Utility.normalizeLabel(label, PddMonitorProperties.getInstance(this.log).getLunghezzaMassimaLabelSelectListSoggettiOperativiMenuUtente());
 		}
 		
 		return null;
@@ -815,12 +816,15 @@ public class LoginBean extends AbstractLoginBean {
 							if(soggettoOperativoSelezionato != null && mapLabelIds.get(label).toString().equals(idSoggettoOperativo.toString()))
 								menuItem.setDisabled(true);
 							
-							if(labelSoggetto.length() > PddMonitorProperties.getInstance(this.log).getLunghezzaMassimaLabelSoggettiOperativiMenuUtente()) {
+							Integer labelSoggettoWidth = DynamicPdDBeanUtils.getInstance(this.log).getFontWidth(menuItem.getLabel()); 
+							if(labelSoggetto.length() > PddMonitorProperties.getInstance(this.log).getLunghezzaMassimaLabelSelectListSoggettiOperativiMenuUtente()) {
 								menuItem.setTooltip(labelSoggetto);
-								menuItem.setLabel(Utility.normalizeLabel(labelSoggetto, PddMonitorProperties.getInstance(this.log).getLunghezzaMassimaLabelSoggettiOperativiMenuUtente()));
+								menuItem.setLabel(Utility.normalizeLabel(labelSoggetto, PddMonitorProperties.getInstance(this.log).getLunghezzaMassimaLabelSelectListSoggettiOperativiMenuUtente()));
+								// per misurare la dimensione utilizzo solo la prima linea
+								labelSoggettoWidth = DynamicPdDBeanUtils.getInstance(this.log).getFontWidth(Utility.normalizeLabel(labelSoggetto, 
+										PddMonitorProperties.getInstance(this.log).getLunghezzaMassimaLabelSelectListSoggettiOperativiMenuUtente())); 
 							}
 							
-							Integer labelSoggettoWidth = DynamicPdDBeanUtils.getInstance(this.log).getFontWidth(menuItem.getLabel()); 
 							menuItem.setLabelWidth(labelSoggettoWidth); 
 							
 							menuItem.setId("voceSoggetto_"+ (i++));

@@ -802,8 +802,47 @@ public class Utility {
 	}
 	
 	public static String normalizeLabel(String label, int maxWidth) {
+		return normalizeLabel(label, maxWidth, false,false);
+	}
+	
+	public static String normalizeLabel(String label, int maxWidth, boolean multiline, boolean soloTestoPrimaLinea) {
 		if(label.length() > maxWidth) {
-			return label.substring(0, maxWidth - 3) + "...";
+			if(multiline) {
+				StringBuilder sb = new StringBuilder();
+				
+				int startToken = 0;
+				int endToken = startToken + maxWidth;
+				
+				if(!soloTestoPrimaLinea) {
+					sb.append("<p>");
+					sb.append(label.substring(startToken, endToken)).append("-");
+					sb.append("</p>");
+					do {
+						startToken += maxWidth;
+						endToken = startToken + maxWidth;
+						if(endToken >= label.length()) {
+							endToken = label.length();
+						}
+						
+						if(startToken < label.length()) {
+							sb.append("<p>");
+							
+							sb.append(label.substring(startToken, endToken));
+							
+							if(endToken < label.length())
+								sb.append("-");
+							
+							sb.append("</p>");
+						}
+					} while(endToken < label.length());
+				} else {
+					sb.append(label.substring(startToken, endToken)).append("-");
+				}
+								
+				return sb.toString();
+			} else {
+				return label.substring(0, maxWidth - 3) + "...";
+			}
 		}
 		
 		return label;

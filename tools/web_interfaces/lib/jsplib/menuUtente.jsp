@@ -108,8 +108,13 @@ $(document).ready(function(){
 	        }
 	    );
 	
-	$('#menuUtente_menu span[class*="icon-check"]').click(function() {
+	$('#menuUtente_menu span[class*="item-icon"]').click(function() {
 		var destinazione = $( this ).parent().children('span[class*="label"]').children().attr('href');
+		window.location = destinazione;
+	});
+	
+	$('#menuUtente_menu div[class*="menu-item"]').click(function() {
+		var destinazione = $( this ).children('span[class*="label"]').children().attr('href');
 		window.location = destinazione;
 	});
 	
@@ -156,11 +161,15 @@ $(document).ready(function(){
 			        }
 			    );
 			
-			$('#menuModalita_menu span[class*="icon-check"]').click(function() {
+			$('#menuModalita_menu span[class*="item-icon"]').click(function() {
 				var destinazione = $( this ).parent().children('span[class*="label"]').children().attr('href');
 				window.location = destinazione;
 			});
 			
+			$('#menuModalita_menu div[class*="menu-item"]').click(function() {
+				var destinazione = $( this ).children('span[class*="label"]').children().attr('href');
+				window.location = destinazione;
+			});
 			
 			$('#menuModalita_menu').css('width', newItemWidth +'px');
 		<% 	
@@ -205,8 +214,13 @@ if(soggettoLinks!= null && soggettoLinks.size() > 0) {
 			        }
 			    );
 			
-			$('#menuSoggetto_menu span[class*="icon-check"]').click(function() {
+			$('#menuSoggetto_menu span[class*="item-icon"]').click(function() {
 				var destinazione = $( this ).parent().children('span[class*="label"]').children().attr('href');
+				window.location = destinazione;
+			});
+			
+			$('#menuSoggetto_menu div[class*="menu-item"]').click(function() {
+				var destinazione = $( this ).children('span[class*="label"]').children().attr('href');
 				window.location = destinazione;
 			});
 			

@@ -843,7 +843,11 @@ public class PddMonitorProperties {
 		return new Integer(this.appProperties.getProperty("console.selectListSoggettiOperativi.numeroMassimoSoggettiVisualizzati",true,true));
 	}
 	
-	public Integer getLunghezzaMassimaLabelSoggettiOperativiMenuUtente() throws Exception{
+	public Integer getLunghezzaMassimaLabelSelectListSoggettiOperativiMenuUtente() throws Exception{
 		return new Integer(this.appProperties.getProperty("console.selectListSoggettiOperativi.lunghezzaMassimaLabel",true,true));
 	}
+	
+//	public Integer getLunghezzaMassimaLabelButtonSoggettiOperativiMenuUtente() throws Exception{
+//		return new Integer(this.appProperties.getProperty("console.buttonMenuSoggettiOperativi.lunghezzaMassimaLabel",true,true));
+//	}
 }
