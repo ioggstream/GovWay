@@ -511,7 +511,7 @@ public class LoginBean extends AbstractLoginBean {
 				 
 		}
 		
-		return 24 + max;
+		return 44 + max;
 	}
 
 	public void setVociMenuModalita(List<MenuModalitaItem> vociMenuModalita) {
@@ -862,7 +862,7 @@ public class LoginBean extends AbstractLoginBean {
 				 
 		}
 		
-		return 24 + max;
+		return 44 + max;
 	}
 
 	public void setVociMenuSoggetto(List<MenuModalitaItem> vociMenuModalita) {

@@ -98,10 +98,12 @@ $(document).ready(function(){
 	            //mostra sottomenu
 	            // $('ul', this).stop(true, true).delay(50).slideDown(100); versione jquery > 1.3
 	            //.animate({top: 0}, 50)
+	            $('#menuUtente').addClass('tastoMenuHover');
 	            $('#menuUtente_menu', this).stop(true, true).delay(50).slideDown(100);
 	        }, 
 	        function () {
 	            //nascondi sottomenu
+	            $('#menuUtente').removeClass('tastoMenuHover');
 	            $('#menuUtente_menu', this).stop(true, true).delay(150).slideUp(200);        
 	        }
 	    );
@@ -113,6 +115,8 @@ $(document).ready(function(){
 	
 	var paddLabelLeft = $(".item-label").css('padding-left');
 	var paddLabelRight = $(".item-label").css('padding-right');
+	var paddParentLabelLeft = $(".item-label").parent('.menu-item-no-icon').css('padding-left');
+	var paddParentLabelRight = $(".item-label").parent('.menu-item-no-icon').css('padding-right');
 	
 <% if(modalitaLinks!= null && modalitaLinks.size() > 0) { 
 	GeneralLink modalitaTitoloLink = modalitaLinks.get(0);
@@ -134,7 +138,7 @@ $(document).ready(function(){
 		
 			%>
 		
-			var newItemWidth = <%=max %> + parseInt(paddLabelLeft) + parseInt(paddLabelRight);
+			var newItemWidth = <%=max %> + parseInt(paddLabelLeft) + parseInt(paddLabelRight) + parseInt(paddParentLabelLeft) + parseInt(paddParentLabelRight);
 			
 			// menu modalita
 			$('#menuModalita').hover(
@@ -142,10 +146,12 @@ $(document).ready(function(){
 			            //mostra sottomenu
 			            // $('ul', this).stop(true, true).delay(50).slideDown(100); versione jquery > 1.3
 			            //.animate({top: 0}, 50)
+			            $('#menuModalita').addClass('tastoMenuHover');
 			            $('#menuModalita_menu', this).stop(true, true).delay(50).slideDown(100);
 			        }, 
 			        function () {
 			            //nascondi sottomenu
+			            $('#menuModalita').removeClass('tastoMenuHover');
 			            $('#menuModalita_menu', this).stop(true, true).delay(150).slideUp(200);        
 			        }
 			    );
@@ -181,7 +187,7 @@ if(soggettoLinks!= null && soggettoLinks.size() > 0) {
 		}
 		%>	
 
-			var newItemSoggettoWidth = <%=max %> + parseInt(paddLabelLeft) + parseInt(paddLabelRight);
+			var newItemSoggettoWidth = <%=max %> + parseInt(paddLabelLeft) + parseInt(paddLabelRight) + parseInt(paddParentLabelLeft) + parseInt(paddParentLabelRight);
 			
 			// menu soggetto
 			$('#menuSoggetto').hover(
@@ -189,10 +195,12 @@ if(soggettoLinks!= null && soggettoLinks.size() > 0) {
 			            //mostra sottomenu
 			            // $('ul', this).stop(true, true).delay(50).slideDown(100); versione jquery > 1.3
 			            //.animate({top: 0}, 50)
+			            $('#menuSoggetto').addClass('tastoMenuHover');
 			            $('#menuSoggetto_menu', this).stop(true, true).delay(50).slideDown(100);
 			        }, 
 			        function () {
 			            //nascondi sottomenu
+			            $('#menuSoggetto').removeClass('tastoMenuHover');
 			            $('#menuSoggetto_menu', this).stop(true, true).delay(150).slideUp(200);        
 			        }
 			    );

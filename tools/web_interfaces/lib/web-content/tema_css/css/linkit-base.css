@@ -261,10 +261,10 @@ textarea.inputLinkLong {
 }
 
 .tdPageHeader {
-	padding: 16px 20px 16px 20px;
 } 
 
 .td1PageHeader {
+	padding: 16px 20px 16px 20px;
 } 
 
 .td2PageHeader {
@@ -838,6 +838,17 @@ span.soggettoImg {
 /* 	padding: 4px 8px; */
 	text-align: right;
 	white-space: nowrap;
+	padding: 19px 16px 19px 16px;
+}
+
+.ddmenu-label.tastoMenuHover,
+#menuSoggetto.ddmenu-label.tastoMenuHover,
+#menuUtente.ddmenu-label.tastoMenuHover,
+#menuModalita.ddmenu-label.tastoMenuHover {
+   	background-color: ${menu.header.background.color};
+	border-color: ${menu.header.background.color};
+	color: ${menu.element.hover.color};
+	cursor: pointer;
 }
 
 .ddmenu-label {
@@ -849,58 +860,57 @@ span.soggettoImg {
    	background-color: ${page.header.background.color};
 	border-color: ${page.header.background.color};
 	color: ${page.header.text.color};
-	padding-right: 16px;
+	margin-right: 16px;
 	cursor: pointer;
 }  
 
 #menuUtente_menu {
-	background-color: ${page.header.background.color};
-	border-color: ${page.header.background.color};
+	background-color: ${menu.background.color};
+	border-color: ${menu.background.color};
 	min-width: 170px;
 	display:none;
 	position:absolute;
 	color: ${page.header.text.color};
-	top: 18px;
+	top: 0px;
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
-	right: -10px;
+	right: 0px;
 } 
 
 #menuModalita {
    	background-color: ${page.header.background.color};
 	border-color: ${page.header.background.color};
 	color: ${page.header.text.color};
-	padding-right: 16px;
+/* 	margin-right: 16px; */
 	cursor: pointer;
 }  
 
 #menuModalita_menu {
-	background-color: ${page.header.background.color};
-	border-color: ${page.header.background.color};
+	background-color: ${menu.background.color};
+	border-color: ${menu.background.color};
 	display:none;
 	position:absolute;
 	color: ${page.header.text.color};
-	top: 18px;
+	top: 0px;
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
-	right: -10px;
+	right: 0px;
 } 
 
 #menuSoggetto {
    	background-color: ${page.header.background.color};
 	border-color: ${page.header.background.color};
 	color: ${page.header.text.color};
-	padding-right: 16px;
 	cursor: pointer;
 }  
 
 #menuSoggetto_menu {
-	background-color: ${page.header.background.color};
-	border-color: ${page.header.background.color};
+	background-color: ${menu.background.color};
+	border-color: ${menu.background.color};
 	display:none;
 	position:absolute;
 	color: ${page.header.text.color};
-	top: 18px;
+	top: 0px;
 	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
-	right: -10px;
+	right: 0px;
 }
 
 .menu-separator {
@@ -909,11 +919,22 @@ span.soggettoImg {
 
 .menu-no-pointer {
 	cursor: default;
+	font-weight: 600;
 }
 
 .menu-item-no-icon {
 	color: ${page.header.text.color};
-	padding: 8px 0px 8px 0px; 
+	padding: 8px 8px 8px 16px; 
+}
+
+.menu-item-no-icon:hover {
+	border-left: 12px solid ${menu.element.hover.border.color};
+    padding-left: 4px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    background: ${menu.element.hover.background.color};
+	color: ${page.header.text.hover.color};
+    font-weight: 600;
 }
 
 .menu-item {
@@ -921,9 +942,29 @@ span.soggettoImg {
 	padding: 8px 0px 8px 24px; 
 }
 
+.menu-item:hover {
+	border-left: 12px solid ${menu.element.hover.border.color};
+	background: ${menu.element.hover.background.color};
+	color: ${page.header.text.hover.color};
+	padding-left: 12px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+	font-weight: 600;
+}
+
 .menu-item-with-icon {
 	color: ${page.header.text.color};
 	padding: 8px 0px 8px 8px;
+}
+
+.menu-item-with-icon:hover {
+	border-left: 4px solid ${menu.element.hover.border.color};
+	background: ${menu.element.hover.background.color};
+	color: ${page.header.text.hover.color};
+	padding-left: 4px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+	font-weight: 600;
 }
 
 .menu-item a,
@@ -933,7 +974,7 @@ span.soggettoImg {
 }
 
 span.item-label {
-	padding: 12px 12px 12px 12px;
+	padding: 12px 12px 12px 16px;
     white-space: nowrap;
 }
 
