@@ -2987,13 +2987,13 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 			de.setType(DataElementType.TITLE);
 			dati.addElement(de);
 		}
-		if(isModalitaVistaApiCustom && gestioneSoggettoReferente) {
+		if(TipoOperazione.CHANGE.equals(tipoOperazione) && isModalitaVistaApiCustom && gestioneSoggettoReferente) {
 			de = new DataElement();
 			de.setLabel(AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_REFERENTE);
 			de.setType(DataElementType.TITLE);
 			dati.addElement(de);
 		}
-		if(isModalitaVistaApiCustom && gestioneDescrizione) {
+		if(TipoOperazione.CHANGE.equals(tipoOperazione) && isModalitaVistaApiCustom && gestioneDescrizione) {
 			de = new DataElement();
 			de.setLabel(AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_DESCRIZIONE);
 			de.setType(DataElementType.TITLE);
@@ -3090,7 +3090,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 		}
 		
 		de = new DataElement();
-		if(isModalitaVistaApiCustom==null || !isModalitaVistaApiCustom) {
+		if(TipoOperazione.ADD.equals(tipoOperazione) || isModalitaVistaApiCustom==null || !isModalitaVistaApiCustom) {
 			de.setLabel(AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_REFERENTE);
 		}
 		else {
@@ -3909,7 +3909,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 		}
 		
 		de = new DataElement();
-		if(isModalitaVistaApiCustom) {
+		if(TipoOperazione.CHANGE.equals(tipoOperazione) && isModalitaVistaApiCustom) {
 			de.setLabel(ApiCostanti.APC_API_LABEL_GESTIONE_OPZIONI_AVANZATE);
 		}
 		else {
@@ -4124,7 +4124,7 @@ public class AccordiServizioParteComuneHelper extends ConnettoriHelper {
 		
 		
 		
-		if(gestioneSpecificaInterfacce) {
+		if(TipoOperazione.CHANGE.equals(tipoOperazione) && isModalitaVistaApiCustom && gestioneSpecificaInterfacce) {
 			this.pd.disableEditMode();
 		}
 		
