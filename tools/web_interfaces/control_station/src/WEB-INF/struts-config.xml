@@ -379,6 +379,7 @@
             <forward name="accordiServizioParteComuneWSDLChangeOk" path="/jsplib/addElement.jsp"/>
             <forward name="accordiServizioParteComuneWSDLChangeCheckError" path="/jsplib/addElement.jsp"/>
             <forward name="accordiServizioParteComuneError" path="/jsplib/info.jsp"/>
+            <forward name="accordiServizioParteComuneApiChangeOk" path="/jsplib/addElement.jsp"/>
         </action>
         
         <!-- Accordi di Servizio Parte Comune (Vista API) -->

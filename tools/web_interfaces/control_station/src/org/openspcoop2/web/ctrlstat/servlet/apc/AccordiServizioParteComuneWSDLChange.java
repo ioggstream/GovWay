@@ -71,6 +71,7 @@ import org.openspcoop2.web.ctrlstat.core.Search;
 import org.openspcoop2.web.ctrlstat.servlet.GeneralHelper;
 import org.openspcoop2.web.ctrlstat.servlet.ac.AccordiCooperazioneCore;
 import org.openspcoop2.web.ctrlstat.servlet.apc.api.ApiCostanti;
+import org.openspcoop2.web.ctrlstat.servlet.apc.api.ApiHelper;
 import org.openspcoop2.web.ctrlstat.servlet.aps.AccordiServizioParteSpecificaCore;
 import org.openspcoop2.web.ctrlstat.servlet.archivi.ArchiviCostanti;
 import org.openspcoop2.web.ctrlstat.servlet.protocol_properties.ProtocolPropertiesCostanti;
@@ -79,6 +80,7 @@ import org.openspcoop2.web.ctrlstat.servlet.soggetti.SoggettiCore;
 import org.openspcoop2.web.lib.mvc.BinaryParameter;
 import org.openspcoop2.web.lib.mvc.Costanti;
 import org.openspcoop2.web.lib.mvc.DataElement;
+import org.openspcoop2.web.lib.mvc.ForwardParams;
 import org.openspcoop2.web.lib.mvc.GeneralData;
 import org.openspcoop2.web.lib.mvc.PageData;
 import org.openspcoop2.web.lib.mvc.Parameter;
@@ -136,7 +138,7 @@ public final class AccordiServizioParteComuneWSDLChange extends Action {
 		this.consoleOperationType = ConsoleOperationType.CHANGE;
 		
 		try {
-			AccordiServizioParteComuneHelper apcHelper = new AccordiServizioParteComuneHelper(request, pd, session);
+			ApiHelper apcHelper = new ApiHelper(request, pd, session);
 			this.consoleInterfaceType = ProtocolPropertiesUtilities.getTipoInterfaccia(apcHelper); 
 
 			boolean isModalitaAvanzata = apcHelper.isModalitaAvanzata();
@@ -592,9 +594,18 @@ public final class AccordiServizioParteComuneWSDLChange extends Action {
 			
 			// effettuo le operazioni
 			apcCore.performUpdateOperation(userLogin, apcHelper.smista(), as);
+			
+			//se sono in modalita' standard
+			if(apcHelper.isModalitaStandard()) {
+				apcHelper.prepareApiChange(TipoOperazione.OTHER, as); 
+				ServletUtils.setGeneralAndPageDataIntoSession(session, gd, pd);
+				return ServletUtils.getStrutsForwardEditModeFinished(mapping, ApiCostanti.OBJECT_NAME_APC_API, ForwardParams.CHANGE());
+			}
+			
 
 			// visualizzo il form di modifica accordo come in accordiChange
 			// setto la barra del titolo
+			listaParams = apcHelper.getTitoloApc(TipoOperazione.OTHER, as, this.tipoAccordo, labelASTitle, null, isGestioneAllegati); 
 			ServletUtils.setPageDataTitle(pd, listaParams);
 
 			String descr = as.getDescrizione();
@@ -732,8 +743,6 @@ public final class AccordiServizioParteComuneWSDLChange extends Action {
 
 			// aggiunta campi custom
 			dati = apcHelper.addProtocolPropertiesToDati(dati, this.consoleConfiguration,this.consoleOperationType, this.consoleInterfaceType, this.protocolProperties,oldProtocolPropertyList,propertiesProprietario);
-
-			
 			pd.setDati(dati);
 
 			// setto la baseurl per il redirect (alla servlet accordiChange)
