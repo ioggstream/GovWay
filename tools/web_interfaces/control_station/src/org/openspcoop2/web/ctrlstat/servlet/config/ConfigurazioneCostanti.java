@@ -446,6 +446,10 @@ public class ConfigurazioneCostanti {
 	public final static String LABEL_CONFIGURAZIONE_REGISTRAZIONE_ESITI_MAX_REQUESTS = "Superamento Limite Richieste";
 	public final static String LABEL_CONFIGURAZIONE_REGISTRAZIONE_ESITI_STATO = "Stato";
 	
+	public final static String LABEL_CONFIGURAZIONE_INFORMAZIONI_TRANSAZIONE = "Informazioni Transazione";
+	public final static String LABEL_CONFIGURAZIONE_INFORMAZIONI_TRANSAZIONE_TEMPI_ELABORAZIONE = "Tempi Elaborazione";
+	public final static String LABEL_CONFIGURAZIONE_INFORMAZIONI_TRANSAZIONE_TOKEN = "Token";
+	
 	
 	public final static String LABEL_CONFIGURAZIONE_CONTROLLO_TRAFFICO = "Controllo del Traffico";
 	public final static String LABEL_CONFIGURAZIONE_LIMITAZIONE_NUMERO_RICHIESTE_COMPLESSIVE = "Limitazione Numero di Richieste Complessive";
@@ -639,6 +643,9 @@ public class ConfigurazioneCostanti {
 	public final static String PARAMETRO_CONFIGURAZIONE_REGISTRAZIONE_ESITI_FAULT = "RecEsitiStatoFault";
 	public final static String PARAMETRO_CONFIGURAZIONE_REGISTRAZIONE_ESITI_FALLITE = "RecEsitiStatoFallite";
 	public final static String PARAMETRO_CONFIGURAZIONE_REGISTRAZIONE_ESITI_MAX_REQUEST = "RecEsitiStatoMaxRequests";
+	
+	public final static String PARAMETRO_CONFIGURAZIONE_REGISTRAZIONE_TRANSAZIONE_TEMPI = "TransazioneRecTempi";
+	public final static String PARAMETRO_CONFIGURAZIONE_REGISTRAZIONE_TRANSAZIONE_TOKEN = "TransazioneRecToken";
 	
 	public final static String PARAMETRO_CONFIGURAZIONE_CONTROLLO_TRAFFICO_JMX_STATE = "CTViewJmxState";
 	

@@ -88,6 +88,9 @@ CREATE TABLE configurazione
 	-- Tracciamento Buste
 	tracciamento_buste VARCHAR2(255),
 	tracciamento_esiti VARCHAR2(255),
+	-- Transazione
+	transazioni_tempi VARCHAR2(255),
+	transazioni_token VARCHAR2(255),
 	-- Dump
 	dump VARCHAR2(255),
 	dump_bin_pd VARCHAR2(255),

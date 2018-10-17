@@ -59,6 +59,7 @@ public class ConfigurazioneModel extends AbstractModel<Configurazione> {
 		this.MESSAGGI_DIAGNOSTICI = new org.openspcoop2.core.config.model.MessaggiDiagnosticiModel(new Field("messaggi-diagnostici",org.openspcoop2.core.config.MessaggiDiagnostici.class,"configurazione",Configurazione.class));
 		this.TRACCIAMENTO = new org.openspcoop2.core.config.model.TracciamentoModel(new Field("tracciamento",org.openspcoop2.core.config.Tracciamento.class,"configurazione",Configurazione.class));
 		this.DUMP = new org.openspcoop2.core.config.model.DumpModel(new Field("dump",org.openspcoop2.core.config.Dump.class,"configurazione",Configurazione.class));
+		this.TRANSAZIONI = new org.openspcoop2.core.config.model.TransazioniModel(new Field("transazioni",org.openspcoop2.core.config.Transazioni.class,"configurazione",Configurazione.class));
 		this.GESTIONE_ERRORE = new org.openspcoop2.core.config.model.ConfigurazioneGestioneErroreModel(new Field("gestione-errore",org.openspcoop2.core.config.ConfigurazioneGestioneErrore.class,"configurazione",Configurazione.class));
 		this.INTEGRATION_MANAGER = new org.openspcoop2.core.config.model.IntegrationManagerModel(new Field("integration-manager",org.openspcoop2.core.config.IntegrationManager.class,"configurazione",Configurazione.class));
 		this.STATO_SERVIZI_PDD = new org.openspcoop2.core.config.model.StatoServiziPddModel(new Field("stato-servizi-pdd",org.openspcoop2.core.config.StatoServiziPdd.class,"configurazione",Configurazione.class));
@@ -88,6 +89,7 @@ public class ConfigurazioneModel extends AbstractModel<Configurazione> {
 		this.MESSAGGI_DIAGNOSTICI = new org.openspcoop2.core.config.model.MessaggiDiagnosticiModel(new ComplexField(father,"messaggi-diagnostici",org.openspcoop2.core.config.MessaggiDiagnostici.class,"configurazione",Configurazione.class));
 		this.TRACCIAMENTO = new org.openspcoop2.core.config.model.TracciamentoModel(new ComplexField(father,"tracciamento",org.openspcoop2.core.config.Tracciamento.class,"configurazione",Configurazione.class));
 		this.DUMP = new org.openspcoop2.core.config.model.DumpModel(new ComplexField(father,"dump",org.openspcoop2.core.config.Dump.class,"configurazione",Configurazione.class));
+		this.TRANSAZIONI = new org.openspcoop2.core.config.model.TransazioniModel(new ComplexField(father,"transazioni",org.openspcoop2.core.config.Transazioni.class,"configurazione",Configurazione.class));
 		this.GESTIONE_ERRORE = new org.openspcoop2.core.config.model.ConfigurazioneGestioneErroreModel(new ComplexField(father,"gestione-errore",org.openspcoop2.core.config.ConfigurazioneGestioneErrore.class,"configurazione",Configurazione.class));
 		this.INTEGRATION_MANAGER = new org.openspcoop2.core.config.model.IntegrationManagerModel(new ComplexField(father,"integration-manager",org.openspcoop2.core.config.IntegrationManager.class,"configurazione",Configurazione.class));
 		this.STATO_SERVIZI_PDD = new org.openspcoop2.core.config.model.StatoServiziPddModel(new ComplexField(father,"stato-servizi-pdd",org.openspcoop2.core.config.StatoServiziPdd.class,"configurazione",Configurazione.class));
@@ -131,6 +133,8 @@ public class ConfigurazioneModel extends AbstractModel<Configurazione> {
 	public org.openspcoop2.core.config.model.TracciamentoModel TRACCIAMENTO = null;
 	 
 	public org.openspcoop2.core.config.model.DumpModel DUMP = null;
+	 
+	public org.openspcoop2.core.config.model.TransazioniModel TRANSAZIONI = null;
 	 
 	public org.openspcoop2.core.config.model.ConfigurazioneGestioneErroreModel GESTIONE_ERRORE = null;
 	 

@@ -130,6 +130,7 @@ import org.openspcoop2.core.config.StatoServiziPddPortaDelegata;
 import org.openspcoop2.core.config.SystemProperties;
 import org.openspcoop2.core.config.TipoFiltroAbilitazioneServizi;
 import org.openspcoop2.core.config.Tracciamento;
+import org.openspcoop2.core.config.Transazioni;
 import org.openspcoop2.core.config.ValidazioneBuste;
 import org.openspcoop2.core.config.ValidazioneContenutiApplicativi;
 import org.openspcoop2.core.config.constants.CostantiConfigurazione;
@@ -6927,6 +6928,25 @@ implements IDriverConfigurazioneGet, IDriverConfigurazioneCRUD, IDriverWS, IMoni
 
 				config.setTracciamento(tracciamento);
 
+				
+				// Transazioni
+				String transazioniTempiElaborazione = rs.getString("transazioni_tempi");
+				String transazioniToken = rs.getString("transazioni_token");
+				config.setTransazioni(new Transazioni());
+				
+				StatoFunzionalita statoTransazioniTempiElaborazione = DriverConfigurazioneDB_LIB.getEnumStatoFunzionalita(transazioniTempiElaborazione);
+				if(statoTransazioniTempiElaborazione!=null) {
+					config.getTransazioni().setTempiElaborazione(statoTransazioniTempiElaborazione);
+				}
+				// else lascio il default
+				
+				StatoFunzionalita statoTransazioniToken = DriverConfigurazioneDB_LIB.getEnumStatoFunzionalita(transazioniToken);
+				if(statoTransazioniToken!=null) {
+					config.getTransazioni().setToken(statoTransazioniToken);
+				}
+				// else lascio il default
+
+				
 				
 				// Dump
 				String dump_stato = rs.getString("dump");

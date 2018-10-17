@@ -255,7 +255,12 @@ public final class UtentiAdd extends Action {
 			}
 			
 			if (ServletUtils.isCheckBoxEnabled(isDiagnostica) || ServletUtils.isCheckBoxEnabled(isReportistica)) {
-				newU.setPermitAllSoggetti(ServletUtils.isCheckBoxEnabled(isSoggettiAll));
+				if(utentiCore.isMultitenant()) {
+					newU.setPermitAllSoggetti(ServletUtils.isCheckBoxEnabled(isSoggettiAll));
+				}
+				else {
+					newU.setPermitAllSoggetti(true);
+				}
 				newU.setPermitAllServizi(ServletUtils.isCheckBoxEnabled(isServiziAll));
 			}
 			

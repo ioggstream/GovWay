@@ -6803,6 +6803,54 @@ public class ConsoleHelper {
 
 	}
 	
+	public void addToDatiRegistrazioneTransazione(Vector<DataElement> dati, TipoOperazione tipoOperazione, 
+			String transazioniTempiElaborazione, String transazioniToken) throws Exception {
+		
+		if(!this.isModalitaStandard()) {
+			
+			DataElement de = new DataElement();
+			de.setLabel(ConfigurazioneCostanti.LABEL_CONFIGURAZIONE_INFORMAZIONI_TRANSAZIONE);
+			de.setType(DataElementType.TITLE);
+			dati.addElement(de);
+			
+		}
+			
+		List<String> values = new ArrayList<>();
+		values.add(ConfigurazioneCostanti.DEFAULT_VALUE_ABILITATO);
+		values.add(ConfigurazioneCostanti.DEFAULT_VALUE_DISABILITATO);
+			
+		DataElement de = new DataElement();
+		de.setLabel(ConfigurazioneCostanti.LABEL_CONFIGURAZIONE_INFORMAZIONI_TRANSAZIONE_TEMPI_ELABORAZIONE);
+		de.setName(ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_REGISTRAZIONE_TRANSAZIONE_TEMPI);
+		if(!this.isModalitaStandard()) {
+			de.setType(DataElementType.SELECT);
+			de.setValues(values);
+			de.setLabels(values);
+			de.setSelected(transazioniTempiElaborazione);
+		}
+		else {
+			de.setType(DataElementType.HIDDEN);
+			de.setValue(transazioniTempiElaborazione);
+		}
+		dati.addElement(de);	
+		
+		de = new DataElement();
+		de.setLabel(ConfigurazioneCostanti.LABEL_CONFIGURAZIONE_INFORMAZIONI_TRANSAZIONE_TOKEN);
+		de.setName(ConfigurazioneCostanti.PARAMETRO_CONFIGURAZIONE_REGISTRAZIONE_TRANSAZIONE_TOKEN);
+		if(!this.isModalitaStandard()) {
+			de.setType(DataElementType.SELECT);
+			de.setValues(values);
+			de.setLabels(values);
+			de.setSelected(transazioniToken);
+		}
+		else {
+			de.setType(DataElementType.HIDDEN);
+			de.setValue(transazioniToken);
+		}
+		dati.addElement(de);	
+		
+	}
+	
 	public void addSeveritaMessaggiDiagnosticiToDati(String severita, String severita_log4j, Vector<DataElement> dati) {
 		
 		DataElement de;

@@ -110,6 +110,13 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link Transazioni }
+     */
+    public Transazioni createTransazioni() {
+        return new Transazioni();
+    }
+
+    /**
      * Create an instance of {@link MtomProcessor }
      */
     public MtomProcessor createMtomProcessor() {

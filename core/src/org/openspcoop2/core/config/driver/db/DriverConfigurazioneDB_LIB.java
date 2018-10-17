@@ -113,6 +113,7 @@ import org.openspcoop2.core.config.StatoServiziPddPortaDelegata;
 import org.openspcoop2.core.config.SystemProperties;
 import org.openspcoop2.core.config.TipoFiltroAbilitazioneServizi;
 import org.openspcoop2.core.config.Tracciamento;
+import org.openspcoop2.core.config.Transazioni;
 import org.openspcoop2.core.config.ValidazioneBuste;
 import org.openspcoop2.core.config.MessageSecurity;
 import org.openspcoop2.core.config.MessageSecurityFlow;
@@ -6652,6 +6653,7 @@ public class DriverConfigurazioneDB_LIB {
 				config.getInoltroBusteNonRiscontrate()==null && 
 				config.getMessaggiDiagnostici()==null && 
 				config.getTracciamento()==null &&
+				config.getTransazioni()==null &&
 				config.getDump()==null &&		
 				config.getGestioneErrore()==null && 
 				config.getIntegrationManager()==null &&
@@ -6882,6 +6884,14 @@ public class DriverConfigurazioneDB_LIB {
 			dumpConfig = d.getConfigurazione();
 		}
 
+		Transazioni transazioni = config.getTransazioni();
+		String transazioniTempiElaborazione = null;
+		String transazioniToken = null;
+		if(transazioni!=null) {
+			transazioniTempiElaborazione = DriverConfigurazioneDB_LIB.getValue(transazioni.getTempiElaborazione());
+			transazioniToken = DriverConfigurazioneDB_LIB.getValue(transazioni.getToken());
+		}
+		
 		String modRisposta = CostantiConfigurazione.CONNECTION_REPLY.toString();
 		if(risposte!=null){
 			modRisposta = (risposte.getConnessione().equals(CostantiConfigurazione.CONNECTION_REPLY) ? 
@@ -6926,6 +6936,8 @@ public class DriverConfigurazioneDB_LIB {
 				sqlQueryObject.addInsertField("validazione_manifest", "?");
 				sqlQueryObject.addInsertField("tracciamento_buste", "?");
 				sqlQueryObject.addInsertField("tracciamento_esiti", "?");
+				sqlQueryObject.addInsertField("transazioni_tempi", "?");
+				sqlQueryObject.addInsertField("transazioni_token", "?");
 				sqlQueryObject.addInsertField("dump", "?");
 				sqlQueryObject.addInsertField("dump_bin_pd", "?");
 				sqlQueryObject.addInsertField("dump_bin_pa", "?");
@@ -6986,6 +6998,8 @@ public class DriverConfigurazioneDB_LIB {
 				updateStmt.setString(index++, val_manifest);
 				updateStmt.setString(index++, tracciamentoBuste);
 				updateStmt.setString(index++, tracciamentoEsiti);
+				updateStmt.setString(index++, transazioniTempiElaborazione);
+				updateStmt.setString(index++, transazioniToken);
 				updateStmt.setString(index++, dumpApplicativo);
 				updateStmt.setString(index++, dumpPD);
 				updateStmt.setString(index++, dumpPA);
@@ -7036,7 +7050,7 @@ public class DriverConfigurazioneDB_LIB {
 								val_profiloCollaborazione, 
 								modRisposta, utilizzoIndTelematico, 
 								routingEnabled, gestioneManifest, 
-								val_manifest, tracciamentoBuste, dumpApplicativo, dumpPD, dumpPA,
+								val_manifest, tracciamentoBuste, transazioniTempiElaborazione, transazioniToken, dumpApplicativo, dumpPD, dumpPA,
 								validazione_contenuti_stato,validazione_contenuti_tipo,validazione_contenuti_acceptMtomMessage,
 								registro_statoCache, registro_dimensioneCache, registro_algoritmoCache, registro_idleCache, registro_lifeCache,
 								config_statoCache, config_dimensioneCache, config_algoritmoCache, config_idleCache, config_lifeCache,
@@ -7371,6 +7385,8 @@ public class DriverConfigurazioneDB_LIB {
 				sqlQueryObject.addUpdateField("validazione_manifest", "?");
 				sqlQueryObject.addUpdateField("tracciamento_buste", "?");
 				sqlQueryObject.addUpdateField("tracciamento_esiti", "?");
+				sqlQueryObject.addUpdateField("transazioni_tempi", "?");
+				sqlQueryObject.addUpdateField("transazioni_token", "?");
 				sqlQueryObject.addUpdateField("dump", "?");
 				sqlQueryObject.addUpdateField("dump_bin_pd", "?");
 				sqlQueryObject.addUpdateField("dump_bin_pa", "?");
@@ -7431,6 +7447,8 @@ public class DriverConfigurazioneDB_LIB {
 				updateStmt.setString(index++, val_manifest);
 				updateStmt.setString(index++, tracciamentoBuste);
 				updateStmt.setString(index++, tracciamentoEsiti);
+				updateStmt.setString(index++, transazioniTempiElaborazione);
+				updateStmt.setString(index++, transazioniToken);
 				updateStmt.setString(index++, dumpApplicativo);
 				updateStmt.setString(index++, dumpPD);
 				updateStmt.setString(index++, dumpPA);
@@ -7482,7 +7500,7 @@ public class DriverConfigurazioneDB_LIB {
 								modRisposta, utilizzoIndTelematico, 
 								routingEnabled, gestioneManifest, 
 								val_manifest, 
-								tracciamentoBuste, dumpApplicativo, dumpPD, dumpPA,
+								tracciamentoBuste, transazioniTempiElaborazione, transazioniToken, dumpApplicativo, dumpPD, dumpPA,
 								validazione_contenuti_stato,validazione_contenuti_tipo,
 								registro_statoCache, registro_dimensioneCache, registro_algoritmoCache, registro_idleCache, registro_lifeCache,
 								config_statoCache, config_dimensioneCache, config_algoritmoCache, config_idleCache, config_lifeCache,

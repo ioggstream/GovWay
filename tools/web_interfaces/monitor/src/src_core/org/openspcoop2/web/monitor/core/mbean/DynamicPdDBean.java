@@ -415,13 +415,15 @@ public class DynamicPdDBean<T,K,ServiceType extends IService> extends PdDBaseBea
 			String nomeSoggetto = null;
 			String tipoSoggetto = null;
 			
-			if(StringUtils.isNotBlank(this.search.getTipoNomeMittente()) && 
+			if( // StringUtils.isNotBlank(this.search.getTipoNomeMittente()) && 
 					TipologiaRicerca.ingresso.equals(this.search.getTipologiaRicercaEnum()) &&
 					StringUtils.isNotEmpty(this.search.getRiconoscimento()) &&
 					this.search.getRiconoscimento().equals(org.openspcoop2.web.monitor.core.constants.Costanti.VALUE_TIPO_RICONOSCIMENTO_APPLICATIVO) 
 				) {
-				tipoSoggetto = this.search.getTipoMittente();
-				nomeSoggetto = this.search.getNomeMittente();
+				if( StringUtils.isNotBlank(this.search.getTipoNomeMittente()) ) {
+					tipoSoggetto = this.search.getTipoMittente();
+					nomeSoggetto = this.search.getNomeMittente();
+				}
 			}
 			else if (StringUtils.isNotBlank(this.search.getSoggettoLocale()) ) {
 				tipoSoggetto = this.search.getTipoSoggettoLocale();
@@ -438,7 +440,9 @@ public class DynamicPdDBean<T,K,ServiceType extends IService> extends PdDBaseBea
 				}
 			}
 
-			this.serviziApplicativi = this.dynamicUtils.getListaSelectItemsServiziApplicativiFromSoggettoLocale(tipoProtocollo,tipoSoggetto, nomeSoggetto);
+			if(tipoSoggetto!=null && nomeSoggetto!=null) {
+				this.serviziApplicativi = this.dynamicUtils.getListaSelectItemsServiziApplicativiFromSoggettoLocale(tipoProtocollo,tipoSoggetto, nomeSoggetto);
+			}
 			Integer lunghezzaSelectList = this.dynamicUtils.getLunghezzaSelectList(this.serviziApplicativi);
 			this.serviziApplicativiSelectItemsWidth = Math.max(this.serviziApplicativiSelectItemsWidth,  lunghezzaSelectList);
 		}

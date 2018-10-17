@@ -74,6 +74,7 @@ import org.openspcoop2.core.config.StatoServiziPdd;
 import org.openspcoop2.core.config.SystemProperties;
 import org.openspcoop2.core.config.TipoFiltroAbilitazioneServizi;
 import org.openspcoop2.core.config.Tracciamento;
+import org.openspcoop2.core.config.Transazioni;
 import org.openspcoop2.core.config.ValidazioneContenutiApplicativi;
 import org.openspcoop2.core.config.constants.CostantiConfigurazione;
 import org.openspcoop2.core.config.constants.RuoloTipoMatch;
@@ -4037,6 +4038,35 @@ public class ConfigurazionePdDReader {
 		return ConfigurazionePdDReader.openSPCoopAppender_Tracciamento;
 	}
 
+	
+	private static Transazioni transazioniConfigurazione = null;
+	public Transazioni getTransazioniConfigurazione(Connection connectionPdD) {
+		
+		if( this.configurazioneDinamica || ConfigurazionePdDReader.transazioniConfigurazione==null){
+			try{
+				Configurazione configurazione = null;
+				try{
+					configurazione = this.configurazionePdD.getConfigurazioneGenerale(connectionPdD);
+				}catch(DriverConfigurazioneNotFound e){
+					this.log.debug("getTransazioniConfigurazione (not found): "+e.getMessage());
+				}catch(Exception e){
+					this.log.error("getTransazioniConfigurazione",e);
+				}
+
+				if(configurazione!=null && configurazione.getTransazioni()!=null){
+					ConfigurazionePdDReader.transazioniConfigurazione = configurazione.getTransazioni();
+				}else{
+					ConfigurazionePdDReader.transazioniConfigurazione = new Transazioni(); // default
+				}
+
+			}catch(Exception e){
+				ConfigurazionePdDReader.transazioniConfigurazione = new Transazioni(); // default
+			}
+		}
+
+		return ConfigurazionePdDReader.transazioniConfigurazione;
+		
+	}
 	
 	private static DumpConfigurazione dumpConfigurazione = null;
 	public DumpConfigurazione getDumpConfigurazione(Connection connectionPdD) {

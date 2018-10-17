@@ -56,6 +56,7 @@ import java.util.List;
  * 			&lt;element name="messaggi-diagnostici" type="{http://www.openspcoop2.org/core/config}messaggi-diagnostici" minOccurs="1" maxOccurs="1"/>
  * 			&lt;element name="tracciamento" type="{http://www.openspcoop2.org/core/config}tracciamento" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="dump" type="{http://www.openspcoop2.org/core/config}dump" minOccurs="0" maxOccurs="1"/>
+ * 			&lt;element name="transazioni" type="{http://www.openspcoop2.org/core/config}transazioni" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="gestione-errore" type="{http://www.openspcoop2.org/core/config}configurazione-gestione-errore" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="integration-manager" type="{http://www.openspcoop2.org/core/config}integration-manager" minOccurs="0" maxOccurs="1"/>
  * 			&lt;element name="stato-servizi-pdd" type="{http://www.openspcoop2.org/core/config}stato-servizi-pdd" minOccurs="0" maxOccurs="1"/>
@@ -91,6 +92,7 @@ import java.util.List;
   	"messaggiDiagnostici",
   	"tracciamento",
   	"dump",
+  	"transazioni",
   	"gestioneErrore",
   	"integrationManager",
   	"statoServiziPdd",
@@ -279,6 +281,14 @@ public class Configurazione extends org.openspcoop2.utils.beans.BaseBean impleme
     this.dump = dump;
   }
 
+  public Transazioni getTransazioni() {
+    return this.transazioni;
+  }
+
+  public void setTransazioni(Transazioni transazioni) {
+    this.transazioni = transazioni;
+  }
+
   public ConfigurazioneGestioneErrore getGestioneErrore() {
     return this.gestioneErrore;
   }
@@ -434,6 +444,9 @@ public class Configurazione extends org.openspcoop2.utils.beans.BaseBean impleme
 
   @XmlElement(name="dump",required=false,nillable=false)
   protected Dump dump;
+
+  @XmlElement(name="transazioni",required=false,nillable=false)
+  protected Transazioni transazioni;
 
   @XmlElement(name="gestione-errore",required=false,nillable=false)
   protected ConfigurazioneGestioneErrore gestioneErrore;

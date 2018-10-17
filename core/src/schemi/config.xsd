@@ -493,6 +493,7 @@
 			<xsd:element name="messaggi-diagnostici" type="messaggi-diagnostici" maxOccurs="1" minOccurs="1" />
 			<xsd:element name="tracciamento" type="tracciamento" maxOccurs="1" minOccurs="0" />
 			<xsd:element name="dump" type="dump" maxOccurs="1" minOccurs="0" />
+			<xsd:element name="transazioni" type="transazioni" maxOccurs="1" minOccurs="0" />
 			<xsd:element name="gestione-errore" type="configurazione-gestione-errore" maxOccurs="1" minOccurs="0"/>
 			<xsd:element name="integration-manager" type="integration-manager" maxOccurs="1" minOccurs="0" />
 			<xsd:element name="stato-servizi-pdd" type="stato-servizi-pdd" maxOccurs="1" minOccurs="0" />
@@ -650,6 +651,12 @@
 		</xsd:sequence>
 		<xsd:attribute name="stato" type="StatoFunzionalita" default="abilitato"/>
 		<xsd:attribute name="esiti" type="xsd:string" use="optional"/>
+	</xsd:complexType>
+	
+	<!-- Transazioni -->
+	<xsd:complexType name="transazioni">
+		<xsd:attribute name="tempi-elaborazione" type="StatoFunzionalita" default="disabilitato"/>
+		<xsd:attribute name="token" type="StatoFunzionalita" default="abilitato"/>
 	</xsd:complexType>
 	
 	<!-- Dump -->
