@@ -95,7 +95,7 @@
 											</c:if>
 										</c:if>
 										
-										<h:panelGroup id="pgTitleDx">
+										<h:panelGroup id="pgTitleDx" layout="block">
 											<h:outputLabel id="cdLabel_stPdd" value="#{statusBean.labelStato}" rendered="#{statusBean.enable}"/>
 											<h:panelGrid columns="#{loginBean.colonneUserInfo}">
 												<c:if test="#{loginBean.visualizzaSezioneSoggetto}">
@@ -163,7 +163,6 @@
 												<rich:dropDownMenu id="menuUtente" direction="bottom-right" jointPoint="br" horizontalOffset="-136" popupWidth="136">
 									                <f:facet name="label"> 
 									                    <h:panelGroup>
-									                        <h:outputText value="" styleClass="nomeUtente"/>
 									                        <h:outputText styleClass="nomeUtenteImg" value=""/>
 									                    </h:panelGroup>
 									                </f:facet>

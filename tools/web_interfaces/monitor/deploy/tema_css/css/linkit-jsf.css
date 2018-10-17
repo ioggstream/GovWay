@@ -420,6 +420,7 @@ th.extdt-empty-cell.rich-extdt-subheadercell {
 
 .rich-ddmenu-label-unselect {
 	padding: 0px;
+	border: none;
 }
 
 .rich-ddmenu-label-select {
@@ -452,7 +453,7 @@ span.nomeUtenteImg {
 	background-position: center center;
 	width: 20px;
     height: 20px;
-    padding: 6px 12px 2px 12px;
+    padding: 4px 12px 6px 12px;
 }
 
 #menuUtente {
@@ -461,6 +462,7 @@ span.nomeUtenteImg {
 	color: ${page.header.text.color};
 	cursor: pointer;
 	margin-right: 16px;
+	height: 60px;
 }
 
 #menuUtente.rich-ddmenu-label-select {
