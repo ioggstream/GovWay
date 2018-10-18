@@ -425,9 +425,10 @@ public class SoggettiHelper extends ConnettoriHelper {
 
 		if(TipoOperazione.CHANGE.equals(tipoOp)){
 
-			boolean showConnettore = !this.isModalitaStandard() && 
-					this.core.isRegistroServiziLocale() &&
-					(this.isModalitaCompleta() || this.pddCore.isPddEsterna(pdd) || multiTenant );
+//			boolean showConnettore = !this.isModalitaStandard() && 
+//					this.core.isRegistroServiziLocale() &&
+//					(this.isModalitaCompleta() || this.pddCore.isPddEsterna(pdd) || multiTenant );
+			boolean showConnettore = this.core.isRegistroServiziLocale() && this.isModalitaCompleta();
 				
 //			if(!showConnettore) {
 //				// guardo se fosse previsto un connettore static
@@ -499,7 +500,7 @@ public class SoggettiHelper extends ConnettoriHelper {
 			}
 		}
 		
-		if(TipoOperazione.CHANGE.equals(tipoOp) && !hiddenDatiDominioInterno){
+		if(TipoOperazione.CHANGE.equals(tipoOp)){
 
 			de = new DataElement();
 			de.setLabel(RuoliCostanti.LABEL_RUOLI);
@@ -508,8 +509,16 @@ public class SoggettiHelper extends ConnettoriHelper {
 			
 			de = new DataElement();
 			de.setType(DataElementType.LINK);
-			de.setUrl(SoggettiCostanti.SERVLET_NAME_SOGGETTI_RUOLI_LIST,
-					new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_ID,id+""));
+			if(this.isModalitaCompleta()) {
+				de.setUrl(SoggettiCostanti.SERVLET_NAME_SOGGETTI_RUOLI_LIST,
+						new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_ID,id+""));
+			}
+			else {
+				// Imposto Accesso da Change!
+				de.setUrl(SoggettiCostanti.SERVLET_NAME_SOGGETTI_RUOLI_LIST,
+						new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_ID,id+""),
+						new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_RUOLI_ACCESSO_DA_CHANGE,Costanti.CHECK_BOX_ENABLED));
+			}
 			if (contaListe) {
 				// BugFix OP-674
 				//List<String> lista1 = this.soggettiCore.soggettiRuoliList(Long.parseLong(id),new Search(true));
@@ -1399,10 +1408,12 @@ public class SoggettiHelper extends ConnettoriHelper {
 					throws Exception {
 		try {
 			String id = this.getParameter(SoggettiCostanti.PARAMETRO_SOGGETTO_ID);
-
+			String accessDaChangeTmp = this.getParameter(SoggettiCostanti.PARAMETRO_SOGGETTO_RUOLI_ACCESSO_DA_CHANGE);
+			boolean accessDaChange = ServletUtils.isCheckBoxEnabled(accessDaChangeTmp);
 
 			ServletUtils.addListElementIntoSession(this.session, SoggettiCostanti.OBJECT_NAME_SOGGETTI_RUOLI, 
-					new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_ID, id));
+					new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_ID, id),
+					new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_RUOLI_ACCESSO_DA_CHANGE, accessDaChangeTmp));
 
 			int idLista = Liste.SOGGETTI_RUOLI;
 			int limit = ricerca.getPageSize(idLista);
@@ -1419,9 +1430,23 @@ public class SoggettiHelper extends ConnettoriHelper {
 
 
 			// setto la barra del titolo
-			ServletUtils.setPageDataTitle_ServletChange(this.pd, SoggettiCostanti.LABEL_SOGGETTI, 
-					SoggettiCostanti.SERVLET_NAME_SOGGETTI_LIST, "Ruoli di " + tmpTitle);
-			
+			if(accessDaChange) {
+				ServletUtils.setPageDataTitle_ServletFirst(this.pd, SoggettiCostanti.LABEL_SOGGETTI, 
+						SoggettiCostanti.SERVLET_NAME_SOGGETTI_LIST);
+				ServletUtils.appendPageDataTitle(this.pd, 
+						new Parameter(tmpTitle, 
+								SoggettiCostanti.SERVLET_NAME_SOGGETTI_CHANGE, 
+								new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_ID,soggettoRegistry.getId()+""),
+								new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_NOME,soggettoRegistry.getNome()),
+								new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_TIPO,soggettoRegistry.getTipo())));
+				ServletUtils.appendPageDataTitle(this.pd, 
+						new Parameter(RuoliCostanti.LABEL_RUOLI, null));
+			}
+			else {
+				ServletUtils.setPageDataTitle_ServletChange(this.pd, SoggettiCostanti.LABEL_SOGGETTI, 
+						SoggettiCostanti.SERVLET_NAME_SOGGETTI_LIST, "Ruoli di " + tmpTitle);
+			}
+
 
 			// controllo eventuali risultati ricerca
 			this.pd.setSearchLabel(CostantiControlStation.LABEL_PARAMETRO_RUOLO);

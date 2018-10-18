@@ -327,6 +327,7 @@ public class CostantiControlStation {
 	public final static String PARAMETRO_SERVIZIO_APPLICATIVO = "servizioApplicativo";
 	public final static String PARAMETRO_VALORE = "valore";
 	public final static String PARAMETRO_PROTOCOLLO = "protocollo";
+	public final static String PARAMETRO_ACCESSO_DA_CHANGE = "accessoDaChange";
 	public final static String PARAMETRO_MESSAGE_SECURITY = "messageSecurity";
 	public final static String PARAMETRO_MTOM_RICHIESTA = "mtomReq";
 	public final static String PARAMETRO_MTOM_RISPOSTA = "mtomRes";

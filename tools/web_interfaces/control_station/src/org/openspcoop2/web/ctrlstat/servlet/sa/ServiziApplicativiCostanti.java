@@ -116,6 +116,7 @@ public class ServiziApplicativiCostanti {
 	public final static String PARAMETRO_SERVIZI_APPLICATIVI_ID_PROVIDER_SERVIZIO_APPLICATIVO = "idprovidersa";
 	public final static String PARAMETRO_SERVIZI_APPLICATIVI_SBUSTAMENTO_SOAP = "sbustamento";
 	public final static String PARAMETRO_SERVIZI_APPLICATIVI_MESSAGE_BOX = "getmsg";
+	public final static String PARAMETRO_SERVIZI_APPLICATIVI_RUOLI_ACCESSO_DA_CHANGE = CostantiControlStation.PARAMETRO_ACCESSO_DA_CHANGE;
 	
 	public final static String PARAMETRO_SERVIZI_APPLICATIVI_SBUSTAMENTO_INFO_PROTOCOLLO_RICHIESTA = "sbustamentoInformazioniProtocolloRichiesta";
 	public final static String PARAMETRO_SERVIZI_APPLICATIVI_SBUSTAMENTO_INFO_PROTOCOLLO_RISPOSTA = "sbustamentoInformazioniProtocolloRisposta";

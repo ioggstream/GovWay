@@ -3292,14 +3292,16 @@ public class ConsoleHelper {
 	
 	public Vector<DataElement> addRuoliToDati(TipoOperazione tipoOp,Vector<DataElement> dati,boolean enableUpdate, FiltroRicercaRuoli filtroRuoli, String nome, 
 			List<String> ruoliGiaConfigurati, boolean addSelezioneVuota, boolean addMsgServiziApplicativoNonDisponibili, 
-			boolean addTitoloSezione) throws DriverRegistroServiziException {
+			boolean addTitoloSezione, 
+			String accessDaChangeTmp) throws DriverRegistroServiziException {
 		return this.addRuoliToDati(tipoOp, dati, enableUpdate, filtroRuoli, nome, ruoliGiaConfigurati, 
 				addSelezioneVuota, addMsgServiziApplicativoNonDisponibili, CostantiControlStation.LABEL_PARAMETRO_RUOLO, 
-				addTitoloSezione);
+				addTitoloSezione, accessDaChangeTmp);
 	}
 	public Vector<DataElement> addRuoliToDati(TipoOperazione tipoOp,Vector<DataElement> dati,boolean enableUpdate, FiltroRicercaRuoli filtroRuoli, String nome, 
 			List<String> ruoliGiaConfigurati, boolean addSelezioneVuota, boolean addMsgServiziApplicativoNonDisponibili, String labelParametro,
-			boolean addTitoloSezione) throws DriverRegistroServiziException {
+			boolean addTitoloSezione,
+			String accessDaChangeTmp) throws DriverRegistroServiziException {
 
 		List<String> allRuoli = this.confCore.getAllRuoli(filtroRuoli);
 		List<String> ruoliDaFarScegliere = new ArrayList<>();
@@ -3314,11 +3316,17 @@ public class ConsoleHelper {
 			ruoliDaFarScegliere.addAll(allRuoli);
 		}
 		
+		DataElement de = new DataElement();
+		de.setName(CostantiControlStation.PARAMETRO_ACCESSO_DA_CHANGE);
+		de.setType(DataElementType.HIDDEN);
+		de.setValue(accessDaChangeTmp);
+		dati.addElement(de);
+		
 		// Nome
 		if(ruoliDaFarScegliere.size()>0){
 			
 			if(addTitoloSezione){
-				DataElement de = new DataElement();
+				de = new DataElement();
 				de.setLabel(RuoliCostanti.LABEL_RUOLO);
 				de.setType(DataElementType.TITLE);
 				dati.addElement(de);
@@ -3330,7 +3338,7 @@ public class ConsoleHelper {
 			}
 			ruoli.addAll(ruoliDaFarScegliere);
 			
-			DataElement de = new DataElement();
+			de = new DataElement();
 			de.setLabel(labelParametro);
 			de.setValue(nome);
 			if (tipoOp.equals(TipoOperazione.ADD) || enableUpdate) {
@@ -4080,7 +4088,7 @@ public class ConsoleHelper {
 							filtroRuoli.setTipologia(RuoloTipologia.ESTERNO);
 						}
 						this.addRuoliToDati(tipoOperazione, dati, false, filtroRuoli, ruolo, null, true, false,
-								AccordiServizioParteSpecificaCostanti.LABEL_PARAMETRO_APS_RUOLO, addTitoloSezione);
+								AccordiServizioParteSpecificaCostanti.LABEL_PARAMETRO_APS_RUOLO, addTitoloSezione, null);
 					}
 				}
 				

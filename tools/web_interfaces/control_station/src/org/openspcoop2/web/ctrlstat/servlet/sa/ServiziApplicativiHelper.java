@@ -574,8 +574,16 @@ public class ServiziApplicativiHelper extends ConnettoriHelper {
 							new Parameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_PROVIDER,sa.getIdSoggetto()+""));
 				}
 				else{
-					de.setUrl(ServiziApplicativiCostanti.SERVLET_NAME_SERVIZI_APPLICATIVI_RUOLI_LIST,
-							new Parameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_ID_SERVIZIO_APPLICATIVO,sa.getId()+""));
+					if(this.isModalitaCompleta()) {
+						de.setUrl(ServiziApplicativiCostanti.SERVLET_NAME_SERVIZI_APPLICATIVI_RUOLI_LIST,
+								new Parameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_ID_SERVIZIO_APPLICATIVO,sa.getId()+""));	
+					}
+					else {
+						// Imposto Accesso da Change!
+						de.setUrl(ServiziApplicativiCostanti.SERVLET_NAME_SERVIZI_APPLICATIVI_RUOLI_LIST,
+								new Parameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_ID_SERVIZIO_APPLICATIVO,sa.getId()+""),
+								new Parameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_RUOLI_ACCESSO_DA_CHANGE,Costanti.CHECK_BOX_ENABLED));
+					}
 				}
 				if (contaListe) {
 					// BugFix OP-674
@@ -2010,6 +2018,8 @@ public class ServiziApplicativiHelper extends ConnettoriHelper {
 		try {
 			String idsil = this.getParameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_ID_SERVIZIO_APPLICATIVO);
 			String idProvider = this.getParameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_PROVIDER);
+			String accessDaChangeTmp = this.getParameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_RUOLI_ACCESSO_DA_CHANGE);
+			boolean accessDaChange = ServletUtils.isCheckBoxEnabled(accessDaChangeTmp);
 			
 			// prelevo il flag che mi dice da quale pagina ho acceduto la sezione
 			Integer parentSA = ServletUtils.getIntegerAttributeFromSession(ServiziApplicativiCostanti.ATTRIBUTO_SERVIZI_APPLICATIVI_PARENT, this.session);
@@ -2022,7 +2032,8 @@ public class ServiziApplicativiHelper extends ConnettoriHelper {
 				Parameter pProvider = new Parameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_PROVIDER, idProvider); 
 				ServletUtils.addListElementIntoSession(this.session, ServiziApplicativiCostanti.OBJECT_NAME_SERVIZI_APPLICATIVI_RUOLI,pSA,pProvider );
 			}else 
-				ServletUtils.addListElementIntoSession(this.session, ServiziApplicativiCostanti.OBJECT_NAME_SERVIZI_APPLICATIVI_RUOLI,pSA);
+				ServletUtils.addListElementIntoSession(this.session, ServiziApplicativiCostanti.OBJECT_NAME_SERVIZI_APPLICATIVI_RUOLI,pSA,
+						new Parameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_RUOLI_ACCESSO_DA_CHANGE, accessDaChangeTmp));
 			
 			int idLista = Liste.SERVIZIO_APPLICATIVO_RUOLI;
 			int limit = ricerca.getPageSize(idLista);
@@ -2054,6 +2065,7 @@ public class ServiziApplicativiHelper extends ConnettoriHelper {
 			}
 		
 			// setto la barra del titolo
+			
 			List<Parameter> listSA = new ArrayList<>();
 			listSA.add(new Parameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_ID, idsil));
 			listSA.add(new Parameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_ID_SERVIZIO_APPLICATIVO, idsil));
@@ -2068,46 +2080,59 @@ public class ServiziApplicativiHelper extends ConnettoriHelper {
 				labelApplicativiDi = ServiziApplicativiCostanti.LABEL_PARAMETRO_APPLICATIVI_DI;
 			}
 			
-			if(!useIdSogg){
-				if (search.equals("")) {
-					this.pd.setSearchDescription("");
-					ServletUtils.setPageDataTitle(this.pd, 
-							new Parameter(labelApplicativi,ServiziApplicativiCostanti.SERVLET_NAME_SERVIZI_APPLICATIVI_LIST),
-							new Parameter(ServiziApplicativiCostanti.LABEL_PARAMETRO_SERVIZI_APPLICATIVI_RUOLI_DI + nomeservizioApplicativo, 
-									ServiziApplicativiCostanti.SERVLET_NAME_SERVIZI_APPLICATIVI_CHANGE,
-									listSA));
-				}
-				else{
-					ServletUtils.setPageDataTitle(this.pd, 
-							new Parameter(labelApplicativi,ServiziApplicativiCostanti.SERVLET_NAME_SERVIZI_APPLICATIVI_LIST),
-							new Parameter(ServiziApplicativiCostanti.LABEL_PARAMETRO_SERVIZI_APPLICATIVI_RUOLI_DI + nomeservizioApplicativo, 
-									ServiziApplicativiCostanti.SERVLET_NAME_SERVIZI_APPLICATIVI_CHANGE,
-									listSA),
-							new Parameter(Costanti.PAGE_DATA_TITLE_LABEL_RISULTATI_RICERCA,null));	
-				}
-			} else {
-				List<Parameter> lstParam = new ArrayList<Parameter>();
-
-				lstParam.add(new Parameter(SoggettiCostanti.LABEL_SOGGETTI, SoggettiCostanti.SERVLET_NAME_SOGGETTI_LIST));
-				lstParam.add(new Parameter(labelApplicativiDi + tipoENomeSoggetto,
-						ServiziApplicativiCostanti.SERVLET_NAME_SERVIZI_APPLICATIVI_LIST,
-						new Parameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_PROVIDER,idProvider)));
-
-				if(search.equals("")){
-					this.pd.setSearchDescription("");
-					lstParam.add(new Parameter(ServiziApplicativiCostanti.LABEL_PARAMETRO_SERVIZI_APPLICATIVI_RUOLI_DI + nomeservizioApplicativo, 
-							ServiziApplicativiCostanti.SERVLET_NAME_SERVIZI_APPLICATIVI_CHANGE,
-							listSA));
-				}else{
-					lstParam.add(new Parameter(ServiziApplicativiCostanti.LABEL_PARAMETRO_SERVIZI_APPLICATIVI_RUOLI_DI + nomeservizioApplicativo, 
-							ServiziApplicativiCostanti.SERVLET_NAME_SERVIZI_APPLICATIVI_CHANGE,
-							listSA));
-					lstParam.add(new Parameter(Costanti.PAGE_DATA_TITLE_LABEL_RISULTATI_RICERCA, null));
-				}
-
-				ServletUtils.setPageDataTitle(this.pd, lstParam.toArray(new Parameter[lstParam.size()]));
+			if(accessDaChange) {
+				ServletUtils.setPageDataTitle_ServletFirst(this.pd, labelApplicativi, 
+						ServiziApplicativiCostanti.SERVLET_NAME_SERVIZI_APPLICATIVI_LIST);
+				ServletUtils.appendPageDataTitle(this.pd, 
+						new Parameter(nomeservizioApplicativo, 
+								ServiziApplicativiCostanti.SERVLET_NAME_SERVIZI_APPLICATIVI_CHANGE, 
+								new Parameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_ID, sa.getId()+""),
+								new Parameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_PROVIDER, sa.getIdSoggetto()+"")));
+				ServletUtils.appendPageDataTitle(this.pd, 
+						new Parameter(RuoliCostanti.LABEL_RUOLI, null));
 			}
-			
+			else {
+				
+				if(!useIdSogg){
+					if (search.equals("")) {
+						this.pd.setSearchDescription("");
+						ServletUtils.setPageDataTitle(this.pd, 
+								new Parameter(labelApplicativi,ServiziApplicativiCostanti.SERVLET_NAME_SERVIZI_APPLICATIVI_LIST),
+								new Parameter(ServiziApplicativiCostanti.LABEL_PARAMETRO_SERVIZI_APPLICATIVI_RUOLI_DI + nomeservizioApplicativo, 
+										ServiziApplicativiCostanti.SERVLET_NAME_SERVIZI_APPLICATIVI_CHANGE,
+										listSA));
+					}
+					else{
+						ServletUtils.setPageDataTitle(this.pd, 
+								new Parameter(labelApplicativi,ServiziApplicativiCostanti.SERVLET_NAME_SERVIZI_APPLICATIVI_LIST),
+								new Parameter(ServiziApplicativiCostanti.LABEL_PARAMETRO_SERVIZI_APPLICATIVI_RUOLI_DI + nomeservizioApplicativo, 
+										ServiziApplicativiCostanti.SERVLET_NAME_SERVIZI_APPLICATIVI_CHANGE,
+										listSA),
+								new Parameter(Costanti.PAGE_DATA_TITLE_LABEL_RISULTATI_RICERCA,null));	
+					}
+				} else {
+					List<Parameter> lstParam = new ArrayList<Parameter>();
+	
+					lstParam.add(new Parameter(SoggettiCostanti.LABEL_SOGGETTI, SoggettiCostanti.SERVLET_NAME_SOGGETTI_LIST));
+					lstParam.add(new Parameter(labelApplicativiDi + tipoENomeSoggetto,
+							ServiziApplicativiCostanti.SERVLET_NAME_SERVIZI_APPLICATIVI_LIST,
+							new Parameter(ServiziApplicativiCostanti.PARAMETRO_SERVIZI_APPLICATIVI_PROVIDER,idProvider)));
+	
+					if(search.equals("")){
+						this.pd.setSearchDescription("");
+						lstParam.add(new Parameter(ServiziApplicativiCostanti.LABEL_PARAMETRO_SERVIZI_APPLICATIVI_RUOLI_DI + nomeservizioApplicativo, 
+								ServiziApplicativiCostanti.SERVLET_NAME_SERVIZI_APPLICATIVI_CHANGE,
+								listSA));
+					}else{
+						lstParam.add(new Parameter(ServiziApplicativiCostanti.LABEL_PARAMETRO_SERVIZI_APPLICATIVI_RUOLI_DI + nomeservizioApplicativo, 
+								ServiziApplicativiCostanti.SERVLET_NAME_SERVIZI_APPLICATIVI_CHANGE,
+								listSA));
+						lstParam.add(new Parameter(Costanti.PAGE_DATA_TITLE_LABEL_RISULTATI_RICERCA, null));
+					}
+	
+					ServletUtils.setPageDataTitle(this.pd, lstParam.toArray(new Parameter[lstParam.size()]));
+				}
+			}
 		
 			// controllo eventuali risultati ricerca
 			this.pd.setSearchLabel(CostantiControlStation.LABEL_PARAMETRO_RUOLO);

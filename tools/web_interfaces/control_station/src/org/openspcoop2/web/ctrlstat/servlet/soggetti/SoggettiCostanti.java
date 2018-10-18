@@ -94,6 +94,7 @@ public class SoggettiCostanti {
 	/* PARAMETRI */
 
 	public final static String PARAMETRO_SOGGETTO_ID = "id";
+	public final static String PARAMETRO_SOGGETTO_RUOLI_ACCESSO_DA_CHANGE = CostantiControlStation.PARAMETRO_ACCESSO_DA_CHANGE;
 	public final static String PARAMETRO_SOGGETTO_PROTOCOLLO = CostantiControlStation.PARAMETRO_PROTOCOLLO;
 	public final static String PARAMETRO_SOGGETTO_DOMINIO = "dominio";
 	public final static String PARAMETRO_SOGGETTO_NOME = "nomeprov";
