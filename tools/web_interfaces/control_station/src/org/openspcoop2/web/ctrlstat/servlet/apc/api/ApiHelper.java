@@ -143,6 +143,11 @@ public class ApiHelper extends AccordiServizioParteComuneHelper {
 						new Parameter(Costanti.PAGE_DATA_TITLE_LABEL_RISULTATI_RICERCA, null));
 			}
 
+			// controllo eventuali risultati ricerca
+			if (!search.equals("")) {
+				ServletUtils.enabledPageDataSearch(this.pd, termine, search);
+			}
+			
 			List<String> labelLst = new ArrayList<>();
 			labelLst.add(""); // colonna stato
 			labelLst.add(AccordiServizioParteComuneCostanti.LABEL_PARAMETRO_APC_NOME);

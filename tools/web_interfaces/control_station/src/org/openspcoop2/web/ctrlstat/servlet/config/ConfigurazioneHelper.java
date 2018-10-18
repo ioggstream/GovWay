@@ -3257,12 +3257,15 @@ public class ConfigurazioneHelper extends ConsoleHelper{
 		
 		if(multitenantEnabled) {
 			
-			de = new DataElement();
-			de.setValue(ConfigurazioneCostanti.LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_SOGGETTI);
-			de.setType(DataElementType.LINK);
-			de.setUrl(SoggettiCostanti.SERVLET_NAME_SOGGETTI_LIST,
-					new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_FILTER_DOMINIO_INTERNO,"true"));
-			dati.addElement(de);
+			boolean linkSoggettiFiltroDominioImpostato = false; // confonde
+			if(linkSoggettiFiltroDominioImpostato) {
+				de = new DataElement();
+				de.setValue(ConfigurazioneCostanti.LABEL_PARAMETRO_CONFIGURAZIONE_MULTITENANT_SOGGETTI);
+				de.setType(DataElementType.LINK);
+				de.setUrl(SoggettiCostanti.SERVLET_NAME_SOGGETTI_LIST,
+						new Parameter(SoggettiCostanti.PARAMETRO_SOGGETTO_FILTER_DOMINIO_INTERNO,"true"));
+				dati.addElement(de);
+			}
 			
 			de = new DataElement();
 			de.setLabel(ConfigurazioneCostanti.LABEL_CONFIGURAZIONE_MULTITENANT_FRUIZIONI);

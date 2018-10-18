@@ -1800,6 +1800,29 @@ public class ConsoleHelper {
 				}
 			}
 
+			for (MenuEntry menuEntry : menu) {
+				String [][] entries = menuEntry.getEntries();
+				if(entries!=null && entries.length>0) {
+					for (int i = 0; i < entries.length; i++) {
+						String [] voce = entries[i];
+						if(voce[1]!=null && !"".equals(voce[1])) {
+							String newUrl = voce[1];
+							if(newUrl.contains("?")) {
+								newUrl = newUrl + "&";
+							}
+							else {
+								newUrl = newUrl + "?";
+							}
+							newUrl = newUrl + CostantiControlStation.PARAMETRO_RESET_SEARCH;
+							newUrl = newUrl + "=";
+							newUrl = newUrl + Costanti.CHECK_BOX_ENABLED;
+							voce[1] = newUrl;
+						}
+					}
+				}
+			}
+			
+			
 			this.pd.setMenu(menu);
 		} catch (Exception e) {
 			this.log.error("Exception: " + e.getMessage(), e);
